@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div onMouseDown="{{ onDown }}" style="position:absolute;inset:0;border-radius:12px;overflow:hidden;border:1px solid #dfe3e7;background:#5f7f47;cursor:ew-resize;user-select:none;font-family:Questrial,sans-serif">
+  <dc-import name="SceneImage" scene="{{ b }}" style="position:absolute;inset:0" hint-size="100%,100%"></dc-import>
+  <div style="position:absolute;inset:0;clip-path:{{ clip }}">
+    <dc-import name="SceneImage" scene="{{ a }}" style="position:absolute;inset:0" hint-size="100%,100%"></dc-import>
+  </div>
+  <span style="position:absolute;top:0;bottom:0;left:{{ left }};width:2px;margin-left:-1px;background:#ffffff;box-shadow:0 0 0 1px rgba(20,28,36,.25)"></span>
+  <span style="position:absolute;top:50%;left:{{ left }};width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:999px;background:#ffffff;box-shadow:0 1px 4px rgba(20,28,36,.35);display:flex;align-items:center;justify-content:center;color:#232343"><i class="ph ph-arrows-horizontal" style="font-size:15px"></i></span>
+  <sc-if value="{{ detail }}" hint-placeholder-val="{{ false }}">
+    <span style="position:absolute;top:10px;left:10px;display:flex;flex-direction:column;align-items:flex-start;gap:1px;max-width:calc(50% - 20px);background:rgba(20,28,36,.72);border-radius:10px;padding:5px 10px;color:#fff;font-size:12px;line-height:16px;font-variant-numeric:tabular-nums;pointer-events:none;opacity:{{ aOp }};transition:opacity .15s ease"><b style="font-size:13px;line-height:17px">{{ a.label }}</b><span style="display:flex;align-items:center;gap:4px;white-space:nowrap;opacity:.9">{{ a.date }}<span style="opacity:.6">·</span><i class="ph ph-cloud" style="font-size:13px"></i>{{ a.cloud }}</span></span>
+    <span style="position:absolute;top:10px;right:10px;display:flex;flex-direction:column;align-items:flex-end;gap:1px;max-width:calc(50% - 20px);background:rgba(20,28,36,.72);border-radius:10px;padding:5px 10px;color:#fff;font-size:12px;line-height:16px;font-variant-numeric:tabular-nums;pointer-events:none;opacity:{{ bOp }};transition:opacity .15s ease"><b style="font-size:13px;line-height:17px">{{ b.label }}</b><span style="display:flex;align-items:center;gap:4px;white-space:nowrap;opacity:.9">{{ b.date }}<span style="opacity:.6">·</span><i class="ph ph-cloud" style="font-size:13px"></i>{{ b.cloud }}</span></span>
+  </sc-if>
+  <sc-if value="{{ compact }}" hint-placeholder-val="{{ true }}">
+    <span style="position:absolute;top:7px;left:7px;display:flex;flex-direction:column;align-items:flex-start;gap:1px;max-width:calc(50% - 14px);background:rgba(20,28,36,.72);border-radius:10px;padding:5px 10px;color:#fff;font-size:11px;line-height:15px;font-variant-numeric:tabular-nums;pointer-events:none;opacity:{{ aOp }};transition:opacity .15s ease"><b style="font-size:12px;line-height:16px">{{ a.label }}</b><span style="display:flex;align-items:center;gap:4px;white-space:nowrap;opacity:.9">{{ a.date }}<span style="opacity:.6">·</span><i class="ph ph-cloud" style="font-size:12px"></i>{{ a.cloud }}</span></span>
+    <span style="position:absolute;top:7px;right:7px;display:flex;flex-direction:column;align-items:flex-end;gap:1px;max-width:calc(50% - 14px);background:rgba(20,28,36,.72);border-radius:10px;padding:5px 10px;color:#fff;font-size:11px;line-height:15px;font-variant-numeric:tabular-nums;pointer-events:none;opacity:{{ bOp }};transition:opacity .15s ease"><b style="font-size:12px;line-height:16px">{{ b.label }}</b><span style="display:flex;align-items:center;gap:4px;white-space:nowrap;opacity:.9">{{ b.date }}<span style="opacity:.6">·</span><i class="ph ph-cloud" style="font-size:12px"></i>{{ b.cloud }}</span></span>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:640,&quot;height&quot;:360},&quot;a&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;Scene &amp; { label: string; date: string; cloud: string }&quot;},&quot;b&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;Scene &amp; { label: string; date: string; cloud: string }&quot;},&quot;detail&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { pos: 50 };
+  onDown = (e) => {
+    const rc = e.currentTarget.getBoundingClientRect();
+    const set = (cx) => this.setState({ pos: Math.max(0, Math.min(100, Math.round((cx - rc.left) / rc.width * 1000) / 10)) });
+    if (e.preventDefault) e.preventDefault();
+    set(e.clientX);
+    const mv = (ev) => set(ev.clientX);
+    const up = () => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up); };
+    window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up);
+  };
+  renderVals() {
+    const p = this.state.pos, detail = !!this.props.detail;
+    const lim = detail ? 18 : 30;
+    return { aOp: p > lim ? 1 : 0, bOp: p < 100 - lim ? 1 : 0, a: this.props.a || {}, b: this.props.b || {}, detail, compact: !detail, clip: 'inset(0 ' + (100 - p) + '% 0 0)', left: p + '%', onDown: this.onDown };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="position:absolute;inset:0;overflow:hidden;background:#5f7f47">
+  <svg viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;display:block">
+    <sc-for list="{{ scene.tiles }}" as="t" hint-placeholder-count="0">
+      <image href="{{ t.href }}" x="{{ t.x }}" y="{{ t.y }}" width="256" height="256"></image>
+    </sc-for>
+    <sc-if value="{{ scene.hasBurn }}" hint-placeholder-val="{{ false }}">
+      <path d="{{ scene.burnD }}" fill="rgba(38,27,20,0.66)"></path>
+    </sc-if>
+    <sc-if value="{{ scene.hasPoly }}" hint-placeholder-val="{{ false }}">
+      <path d="{{ scene.polyD }}" fill="{{ scene.polyColor }}" fill-opacity="0.35" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+    </sc-if>
+  </svg>
+  <span style="position:absolute;inset:0;background-image:{{ scene.cloudBg }}"></span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:320,&quot;height&quot;:200},&quot;scene&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;{ tiles: {href:string,x:string,y:string}[]; hasPoly: boolean; polyD: string; hasBurn: boolean; burnD: string; cloudBg: string }&quot;}}"></script>
+</body>
+</html>
