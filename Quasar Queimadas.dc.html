@@ -37,6 +37,8 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
 @keyframes qzspin{to{transform:rotate(360deg)}}
 .qz-scroll::-webkit-scrollbar{width:0;height:0}
 @keyframes qzpulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes qzbell{0%{box-shadow:0 0 0 0 rgba(220,38,38,.55)}70%{box-shadow:0 0 0 11px rgba(220,38,38,0)}100%{box-shadow:0 0 0 0 rgba(220,38,38,0)}}
+@keyframes qzhalo{0%{transform:scale(.55);opacity:.75}100%{transform:scale(1.35);opacity:0}}
 @keyframes qzbar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
 @keyframes qzell2{0%,32%{opacity:0}33%,100%{opacity:1}}
 @keyframes qzell3{0%,65%{opacity:0}66%,100%{opacity:1}}
@@ -746,7 +748,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
       </sc-if>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex:0 1 auto;min-width:0">
-      <button onClick="{{ onToggleAlerts }}" onMouseEnter="{{ tipBellEnter }}" onMouseLeave="{{ tipBellLeave }}" onFocus="{{ tipBellFocus }}" onBlur="{{ tipBellLeave }}" style="position:relative;height:40px;padding:0 14px;background:{{ bellBg }};border:1px solid {{ bellBorder }};border-radius:999px;cursor:pointer;font-size:14px;font-weight:400;color:{{ bellFg }};display:flex;align-items:center;gap:8px;flex:0 0 auto" style-hover="border-color:#232343">
+      <button onClick="{{ onToggleAlerts }}" onMouseEnter="{{ tipBellEnter }}" onMouseLeave="{{ tipBellLeave }}" onFocus="{{ tipBellFocus }}" onBlur="{{ tipBellLeave }}" style="animation:{{ bellAnim }};position:relative;height:40px;padding:0 14px;background:{{ bellBg }};border:1px solid {{ bellBorder }};border-radius:999px;cursor:pointer;font-size:14px;font-weight:400;color:{{ bellFg }};display:flex;align-items:center;gap:8px;flex:0 0 auto" style-hover="border-color:#232343">
         <i class="ph ph-bell" style="font-size:18px"></i><span>Alertas</span>
         <span style="min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:{{ badgeBg }};color:#fff;font-size:12px;font-weight:700;line-height:20px;text-align:center">{{ alertBadge }}</span>
       </button>
@@ -855,6 +857,15 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
                         <button onClick="{{ l.onExpand }}" aria-label="{{ l.expandTitle }}" style="width:32px;height:32px;flex:0 0 32px;border-radius:999px;border:0;background:transparent;cursor:pointer;color:#5b6672;display:flex;align-items:center;justify-content:center" style-hover="background:#f2f5f7"><i class="ph {{ l.caret }}" style="font-size:15px"></i></button>
                       </sc-if>
                     </div>
+                    <sc-if value="{{ l.hasScarPeriod }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:0 14px 12px 46px;display:flex;flex-direction:column;gap:8px;min-width:0">
+                        <div style="display:flex;align-items:center;gap:6px;min-width:0">
+                          <button onClick="{{ scarFromSel.onOpen }}" aria-label="Cicatrizes a partir de" style="flex:1 1 0;min-width:0;height:32px;display:flex;align-items:center;gap:6px;border:1px solid {{ scarFromSel.border }};border-radius:999px;padding:0 10px;background:#fff;cursor:pointer;font-family:Questrial,sans-serif;font-size:12px;color:{{ scarFromSel.fg }}" style-hover="border-color:#232343"><span style="color:#8a949e;flex:0 0 auto">De</span><span style="flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;font-variant-numeric:tabular-nums">{{ scarFromSel.label }}</span></button>
+                          <button onClick="{{ scarToSel.onOpen }}" aria-label="Cicatrizes até" style="flex:1 1 0;min-width:0;height:32px;display:flex;align-items:center;gap:6px;border:1px solid {{ scarToSel.border }};border-radius:999px;padding:0 10px;background:#fff;cursor:pointer;font-family:Questrial,sans-serif;font-size:12px;color:{{ scarToSel.fg }}" style-hover="border-color:#232343"><span style="color:#8a949e;flex:0 0 auto">Até</span><span style="flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;font-variant-numeric:tabular-nums">{{ scarToSel.label }}</span></button>
+                        </div>
+                        <sc-if value="{{ scarEmpty }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;line-height:16px;color:#5b6672">Nenhuma cicatriz neste período.</span></sc-if>
+                      </div>
+                    </sc-if>
                     <sc-if value="{{ l.infoOpen }}" hint-placeholder-val="{{ false }}">
                       <div style="padding:0 14px 12px 46px;min-width:0">
                         <span style="display:block;font-size:12px;line-height:17px;color:#5b6672;text-wrap:pretty">{{ l.desc }}</span>
@@ -948,6 +959,9 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
                 <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
                   <sc-for list="{{ g.layers }}" as="l" hint-placeholder-count="3">
                     <div style="border-top:1px solid #eceff1">
+                      <sc-if value="{{ l.hasSubhead }}" hint-placeholder-val="{{ false }}">
+                        <div style="padding:10px 16px 6px;font:700 11px/15px Questrial,sans-serif;letter-spacing:.07em;color:#8a949e;background:#fff;border-bottom:1px solid #f2f5f7">{{ l.subhead }}</div>
+                      </sc-if>
                       <div style="display:flex;align-items:center;gap:10px;min-height:54px;padding:{{ l.rowPad }}">
                         <input type="checkbox" checked="{{ l.on }}" onChange="{{ l.onToggle }}" disabled="{{ l.locked }}" style="width:16px;height:16px;flex:0 0 16px;accent-color:#232343;cursor:pointer" />
                         <span style="display:flex;align-items:center;justify-content:center;width:20px;height:20px;flex:0 0 20px"><i class="ph {{ l.ic }}" style="font-size:19px;line-height:1;color:{{ l.icColor }}"></i></span>
@@ -975,6 +989,15 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
                           <button onClick="{{ l.onExpand }}" onMouseEnter="{{ l.tipExpEnter }}" onMouseLeave="{{ l.tipExpLeave }}" onFocus="{{ l.tipExpFocus }}" onBlur="{{ l.tipExpLeave }}" aria-label="{{ l.expandTitle }}" style="width:32px;height:32px;flex:0 0 32px;border-radius:999px;border:0;background:transparent;cursor:pointer;color:#5b6672;display:flex;align-items:center;justify-content:center" style-hover="background:#f2f5f7"><i class="ph {{ l.caret }}" style="font-size:15px"></i></button>
                         </sc-if>
                       </div>
+                      <sc-if value="{{ l.hasStationCfg }}" hint-placeholder-val="{{ false }}">
+                        <div style="padding:0 14px 12px 46px;display:flex;flex-direction:column;gap:6px;min-width:0">
+                          <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                            <span style="flex:1 1 auto;font-size:13px;line-height:18px;color:#5b6672">Origem</span>
+                            <button onClick="{{ l.stationOrgSel.onOpen }}" aria-label="Origem da estação" style="height:30px;min-width:124px;display:flex;align-items:center;gap:6px;border:1px solid {{ l.stationOrgSel.border }};border-radius:999px;background:#fff;padding:0 10px 0 12px;font-family:Questrial,sans-serif;font-size:12px;color:#1b2026;cursor:pointer" style-hover="border-color:#232343"><span style="flex:1 1 auto;text-align:left">{{ l.stationOrgSel.label }}</span><i class="ph {{ l.stationOrgSel.caret }}" style="font-size:12px;color:#8a949e"></i></button>
+                          </div>
+                          <button onClick="{{ l.onStationDry }}" role="switch" aria-checked="{{ l.stationShowDry }}" style="display:flex;align-items:center;gap:10px;height:30px;padding:0;border:0;background:transparent;cursor:pointer;font-family:Questrial,sans-serif;font-size:13px;line-height:18px;color:#5b6672;text-align:left"><span style="flex:1 1 auto">Exibir estações sem chuva</span><span style="position:relative;width:30px;height:18px;flex:0 0 30px;border-radius:999px;background:{{ l.stationDryTrack }}"><span style="position:absolute;top:2px;left:{{ l.stationDryKnob }};width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3)"></span></span></button>
+                        </div>
+                      </sc-if>
                       <sc-if value="{{ l.infoOpen }}" hint-placeholder-val="{{ false }}">
                         <div style="padding:0 14px 12px 46px;min-width:0">
                           <span style="display:block;font-size:12px;line-height:17px;color:#5b6672;text-wrap:pretty">{{ l.desc }}</span>
@@ -1309,7 +1332,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
         <button onClick="{{ onStvTool }}" onMouseEnter="{{ tipStv.enter }}" onMouseLeave="{{ tipStv.leave }}" onFocus="{{ tipStv.focus }}" onBlur="{{ tipStv.leave }}" aria-label="Street View 360°" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid {{ stvBtnBorder }};border-radius:999px;background:{{ stvBtnBg }};color:{{ stvBtnFg }};box-shadow:0 1px 3px rgba(20,28,36,.16);cursor:pointer" style-hover="background:#ececf3;border-color:#232343">
           <i class="ph ph-person" style="font-size:20px"></i>
         </button>
-        <button onClick="{{ onSatTool }}" onMouseEnter="{{ tipSat.enter }}" onMouseLeave="{{ tipSat.leave }}" onFocus="{{ tipSat.focus }}" onBlur="{{ tipSat.leave }}" aria-label="Satélite" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid {{ satBtnBorder }};border-radius:999px;background:{{ satBtnBg }};color:{{ satBtnFg }};box-shadow:0 1px 3px rgba(20,28,36,.16);cursor:pointer" style-hover="background:#ececf3;border-color:#232343">
+        <button onClick="{{ onSatTool }}" onMouseEnter="{{ tipSat.enter }}" onMouseLeave="{{ tipSat.leave }}" onFocus="{{ tipSat.focus }}" onBlur="{{ tipSat.leave }}" aria-label="Imagens de satélite" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid {{ satBtnBorder }};border-radius:999px;background:{{ satBtnBg }};color:{{ satBtnFg }};box-shadow:0 1px 3px rgba(20,28,36,.16);cursor:pointer" style-hover="background:#ececf3;border-color:#232343">
           <i class="ph ph-globe-simple" style="font-size:20px"></i>
         </button>
         </div>
@@ -1344,10 +1367,12 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
         </button>
       </div>
       </sc-if>
-      <div data-wxrow="1" style="display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap;box-sizing:border-box;width:100%;max-width:100%;align-self:stretch;min-width:0;padding-right:{{ wxBarMr }};padding-left:{{ wxBarMl }}">
+      <div data-wxrow="1" style="display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:nowrap;box-sizing:border-box;width:100%;max-width:100%;align-self:stretch;min-width:0;padding-right:{{ wxBarMr }};padding-left:{{ wxBarMl }}">
       <sc-if value="{{ wxBarOn }}" hint-placeholder-val="{{ false }}">
-        <div data-wxbar="1" style="position:relative;flex:1 1 560px;min-width:0;max-width:100%;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;pointer-events:auto">
-          <div style="flex:1 1 240px;min-width:180px;max-width:520px;height:36px;box-sizing:border-box;display:flex;align-items:center;gap:2px;padding:0 3px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14)">
+        <div data-wxbar="1" style="position:relative;flex:1 1 auto;min-width:0;max-width:100%;display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:6px;pointer-events:auto">
+          <div style="flex:1 1 260px;min-width:{{ wxHoursMin }};max-width:560px;margin-left:auto;overflow:hidden;height:36px;box-sizing:border-box;display:flex;align-items:center;gap:2px;padding:0 3px 0 10px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14)">
+            <sc-if value="{{ wxShowTag }}" hint-placeholder-val="{{ false }}"><span style="flex:0 0 auto;font:700 10px/14px Questrial,sans-serif;letter-spacing:.08em;color:#0369A1;padding-right:2px">PREVISÃO</span></sc-if>
+            <sc-if value="{{ wxShowTagIcon }}" hint-placeholder-val="{{ true }}"><i class="ph ph-cloud-sun" title="Previsão meteorológica" aria-label="Previsão meteorológica" style="flex:0 0 auto;font-size:15px;color:#0369A1;padding-right:2px"></i></sc-if>
             <button onClick="{{ onWxTlPrev }}" aria-label="Horários anteriores" style="width:24px;height:24px;flex:0 0 24px;border:0;border-radius:999px;background:transparent;color:#5b6672;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7"><i class="ph ph-caret-left" style="font-size:12px"></i></button>
             <div ref="{{ wxTlRef }}" role="group" aria-label="Horário da previsão" style="position:relative;flex:1 1 auto;min-width:0;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;scroll-behavior:smooth">
               <sc-for list="{{ wxDays }}" as="dg" hint-placeholder-count="3">
@@ -1362,10 +1387,10 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
             </div>
             <button onClick="{{ onWxTlNext }}" aria-label="Próximos horários" style="width:24px;height:24px;flex:0 0 24px;border:0;border-radius:999px;background:transparent;color:#5b6672;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7"><i class="ph ph-caret-right" style="font-size:12px"></i></button>
           </div>
-          <div style="flex:0 0 auto;display:flex;flex-direction:row-reverse;align-items:center;gap:8px">
-          <sc-if value="{{ wxScaleOn }}" hint-placeholder-val="{{ false }}">
-            <div style="width:170px;flex:0 0 170px;height:36px;display:flex;flex-direction:column;justify-content:center;gap:2px;box-sizing:border-box;padding:3px 14px;border-radius:999px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;box-shadow:0 1px 3px rgba(20,28,36,.14)">
-              <span style="font-size:11px;line-height:13px;font-weight:700;color:#1b2026;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ wxTitle }}<sc-if value="{{ wxSrcLabel }}" hint-placeholder-val="{{ false }}"><span style="font-weight:400;color:#8a949e"> · {{ wxSrcLabel }}</span></sc-if></span>
+          <div style="flex:0 0 auto;display:flex;flex-direction:row-reverse;flex-wrap:nowrap;align-items:center;gap:6px">
+          <sc-if value="{{ wxScaleShow }}" hint-placeholder-val="{{ false }}">
+            <div style="width:{{ wxScaleW }};flex:0 0 auto;height:36px;display:flex;flex-direction:column;justify-content:center;gap:2px;box-sizing:border-box;padding:3px 14px;border-radius:999px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;box-shadow:0 1px 3px rgba(20,28,36,.14)">
+              <sc-if value="{{ wxScaleTitle }}" hint-placeholder-val="{{ true }}"><span style="font-size:11px;line-height:13px;font-weight:700;color:#1b2026;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ wxTitle }}<sc-if value="{{ wxSrcLabel }}" hint-placeholder-val="{{ false }}"><span style="font-weight:400;color:#8a949e"> · {{ wxSrcLabel }}</span></sc-if></span></sc-if>
               <div style="display:flex;align-items:center;gap:6px;font-size:10px;line-height:11px;color:#5b6672;font-variant-numeric:tabular-nums;white-space:nowrap">
                 <span>{{ wxMin }}</span>
                 <div style="flex:1 1 auto;height:5px;border-radius:999px;background:{{ wxGrad }}"></div>
@@ -1387,14 +1412,16 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
               </div>
             </sc-if>
           </div>
+          <button onClick="{{ wxSrcSel.onOpen }}" aria-label="Fonte da previsão" onMouseEnter="{{ wxSrcTip.enter }}" onMouseLeave="{{ wxSrcTip.leave }}" style="flex:0 0 auto;height:36px;display:flex;align-items:center;gap:6px;box-sizing:border-box;padding:0 10px 0 12px;background:rgba(255,255,255,.97);border:1px solid {{ wxSrcSel.border }};border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14);cursor:pointer;font-family:Questrial,sans-serif;font-size:12px;color:#1b2026;white-space:nowrap" style-hover="border-color:#232343"><sc-if value="{{ wxWide }}" hint-placeholder-val="{{ true }}"><i class="ph ph-database" style="font-size:14px;color:#5b6672"></i></sc-if><span>{{ wxSrcSel.label }}</span><i class="ph {{ wxSrcSel.caret }}" style="font-size:11px;color:#8a949e"></i></button>
           </div>
         </div>
       </sc-if>
       <div style="position:relative;display:flex;pointer-events:auto">
       <sc-if value="{{ legendChip }}" hint-placeholder-val="{{ true }}">
-        <div style="display:flex;align-items:center;height:38px;padding:0 4px 0 13px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14)">
+        <div style="display:flex;align-items:center;height:38px;padding:0 4px 0 {{ legendPadL }};background:rgba(255,255,255,.97);border:1px solid #D8DEE5;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14)">
           <button onClick="{{ onLegendToggle }}" aria-label="Abrir a legenda do mapa" style="display:flex;align-items:center;gap:8px;height:34px;border:0;background:transparent;cursor:pointer;padding:0 6px 0 0">
-            <span style="font-size:13px;line-height:18px;font-weight:700;color:#1b2026;white-space:nowrap">Legenda</span>
+            <sc-if value="{{ wxRowFull }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px;line-height:18px;font-weight:700;color:#1b2026;white-space:nowrap">Legenda</span></sc-if>
+            <sc-if value="{{ wxBarOn }}" hint-placeholder-val="{{ false }}"><i class="ph ph-stack" title="Legenda" style="font-size:16px;color:#1b2026"></i></sc-if>
           </button>
           <button onClick="{{ onLegendToggle }}" aria-label="Abrir a legenda do mapa" style="width:32px;height:32px;flex:0 0 32px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#5b6672;display:flex;align-items:center;justify-content:center" style-hover="background:#f2f5f7"><i class="ph {{ legendCaret }}" style="font-size:15px"></i></button>
         </div>
@@ -1443,6 +1470,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
       </sc-if>
       </div>
       <div style="flex:0 0 auto;display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:nowrap;pointer-events:auto">
+        <sc-if value="{{ wxRowFull }}" hint-placeholder-val="{{ true }}">
         <span style="display:flex;visibility:{{ coordVis }};pointer-events:{{ coordPe }}">
         <button onClick="{{ onCopyCoord }}" onMouseEnter="{{ tipCopyEnter }}" onMouseLeave="{{ tipCopyLeave }}" onFocus="{{ tipCopyFocus }}" onBlur="{{ tipCopyLeave }}" style="display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;background:rgba(255,255,255,.96);border:1px solid #E5E7EB;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14);cursor:pointer;color:#1b2026" style-hover="background:#fff;border-color:#232343">
           <i class="ph ph-crosshair" style="font-size:16px;color:#5b6672"></i>
@@ -1450,12 +1478,15 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
           <i class="ph ph-copy" style="font-size:16px;color:#8a949e"></i>
         </button>
         </span>
+        </sc-if>
+        <sc-if value="{{ mapScaleShow }}" hint-placeholder-val="{{ true }}">
         <span style="display:flex;visibility:{{ scaleVis }};pointer-events:{{ scalePe }}">
         <div aria-label="Escala gráfica" style="display:flex;align-items:center;gap:8px;height:36px;padding:0 14px;background:rgba(255,255,255,.96);border:1px solid #E5E7EB;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14)">
           <span style="display:block;width:{{ scalePx }};height:6px;border:1px solid #5b6672;border-top:0;flex:0 0 auto"></span>
           <span style="font-size:12px;line-height:16px;font-weight:400;color:#5b6672;white-space:nowrap;font-variant-numeric:tabular-nums">{{ scaleText }}</span>
         </div>
         </span>
+        </sc-if>
       </div>
       </div>
       </div>
@@ -1505,10 +1536,10 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
             <div style="padding:10px 10px 12px;display:flex;flex-direction:column;gap:12px;border-top:1px solid #eceff1;background:#fff">
               <div style="display:flex;flex-direction:column;gap:6px">
                 <span style="font:700 11px/15px Questrial,sans-serif;letter-spacing:.07em;color:#8a949e">PRIORIDADE</span>
-                <div style="display:flex;flex-wrap:wrap;gap:5px">
+                <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px">
                   <sc-for list="{{ critOptions }}" as="c" hint-placeholder-count="4">
-                    <button onClick="{{ c.onClick }}" style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:1px solid {{ c.border }};background:{{ c.bg }};cursor:pointer;font-size:12px;color:{{ c.fg }};border-radius:999px">
-                      <span style="width:8px;height:8px;border-radius:4px;background:{{ c.dot }}"></span>{{ c.label }}
+                    <button onClick="{{ c.onClick }}" title="{{ c.label }}" style="width:100%;min-width:0;box-sizing:border-box;justify-content:center;white-space:nowrap;overflow:hidden;display:flex;align-items:center;gap:5px;height:30px;padding:0 6px;border:1px solid {{ c.border }};background:{{ c.bg }};cursor:pointer;font-size:12px;color:{{ c.fg }};border-radius:999px">
+                      <span style="width:8px;height:8px;flex:0 0 8px;border-radius:4px;background:{{ c.dot }}"></span><span style="font-weight:700">{{ c.code }}</span><span style="overflow:hidden;text-overflow:ellipsis">{{ c.name }}</span>
                     </button>
                   </sc-for>
                 </div>
@@ -1595,12 +1626,17 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
           <sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
             <div onClick="{{ r.onClick }}" onMouseEnter="{{ r.onEnter }}" onMouseLeave="{{ r.onLeave }}" style="display:flex;flex-direction:column;gap:3px;padding:9px 12px;border-bottom:1px solid #eceff1;border-left:3px solid {{ r.accent }};background:{{ r.bg }};cursor:pointer">
               <div style="display:flex;align-items:center;gap:8px;min-width:0">
+                <button onClick="{{ r.onCopyId }}" aria-label="Copiar ID" title="Copiar ID" style="width:22px;height:22px;flex:0 0 22px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#eceff1;color:#1b2026"><i class="ph ph-copy" style="font-size:13px"></i></button>
                 <span style="font:400 12px/16px Questrial,sans-serif;color:#1b2026;font-variant-numeric:tabular-nums;flex:0 0 auto">{{ r.id }}</span>
+                <sc-if value="{{ r.isNew }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:999px;background:#fff1f0;border:1px solid #fecaca;color:#b42318;font-size:10px;line-height:18px;font-weight:700;letter-spacing:.06em;flex:0 0 auto">NOVO</span></sc-if>
                 <span style="flex:1 1 auto"></span>
                 <span style="display:inline-flex;align-items:center;gap:6px;height:20px;padding:0 8px;border-radius:999px;border:1px solid {{ r.critBorder }};background:#fff;color:#1b2026;font:700 11px/18px Questrial,sans-serif;flex:0 0 auto;white-space:nowrap"><span style="width:7px;height:7px;border-radius:50%;background:{{ r.critColor }}"></span>{{ r.critFull }}</span>
               </div>
-              <div style="font-size:12px;line-height:16px;color:#1b2026;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.asset }}</div>
-              <div style="font-size:12px;line-height:16px;color:#5b6672;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.meta }}</div>
+              <div title="Distância do foco até a geometria da rede elétrica mais próxima." style="font-size:12px;line-height:16px;color:#1b2026;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.netLine }}</div>
+              <div style="display:flex;align-items:baseline;gap:10px;min-width:0">
+                <span title="Distância do foco até o equipamento individual mais próximo." style="flex:1 1 auto;min-width:0;font-size:12px;line-height:16px;color:#5b6672;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.meta }}</span>
+                <span style="flex:0 0 auto;font-size:12px;line-height:16px;color:#8a949e;font-variant-numeric:tabular-nums;white-space:nowrap">{{ r.ago }}</span>
+              </div>
             </div>
           </sc-for>
         </div>
@@ -1611,6 +1647,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
         <div style="flex:1 1 auto;overflow:auto;min-height:0">
           <div style="padding:13px 14px;border-bottom:1px solid #eceff1;background:#f7f9fa">
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <button onClick="{{ det.onCopyId }}" aria-label="Copiar ID" title="Copiar ID" style="width:22px;height:22px;flex:0 0 22px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#eceff1;color:#1b2026"><i class="ph ph-copy" style="font-size:13px"></i></button>
               <span style="font:700 13px/18px Questrial,sans-serif;color:#1b2026;font-variant-numeric:tabular-nums">{{ det.id }}</span>
               <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:{{ det.critColor }};color:#fff;font:700 12px/22px Questrial,sans-serif;white-space:nowrap">{{ det.critFull }}</span>
               <span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid {{ det.statusBorder }};color:{{ det.statusFg }};background:{{ det.statusBg }}">{{ det.status }}</span>
@@ -1619,12 +1656,28 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
               <span style="font-size:14px;line-height:20px;font-weight:700;color:#1b2026;text-wrap:pretty">{{ det.assetName }}</span>
               <span style="font-size:12px;line-height:17px;color:#5b6672">{{ det.assetKind }}</span>
             </div>
-            <div style="font-size:13px;line-height:19px;font-weight:400;color:{{ det.sumColor }};margin-top:9px;font-variant-numeric:tabular-nums;text-wrap:pretty">{{ det.sumLine }}</div>
-            <div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap">
-              <button onClick="{{ onCenterDetail }}" aria-label="Centralizar o foco no mapa" style="height:30px;padding:0 12px;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #cfd6dc;font-size:12px;cursor:pointer;color:#1b2026;border-radius:999px" style-hover="border-color:#232343"><i class="ph ph-crosshair" style="font-size:15px;color:#5b6672"></i>Centralizar</button>
-              <button onClick="{{ onAskAiAboutOcc }}" aria-label="Analisar esta ocorrência com IA" style="height:30px;padding:0 12px;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #cfd6dc;font-size:12px;cursor:pointer;color:#1b2026;border-radius:999px" style-hover="border-color:#232343"><i class="ph ph-sparkle" style="font-size:15px;color:#5b6672"></i>Analisar com IA</button>
-              <button onClick="{{ onDetailStv }}" aria-label="Abrir Street View deste foco" style="height:30px;padding:0 12px;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #cfd6dc;font-size:12px;cursor:pointer;color:#1b2026;border-radius:999px" style-hover="border-color:#232343"><i class="ph ph-person" style="font-size:15px;color:#5b6672"></i>Street View</button>
-              <button onClick="{{ onDetailSat }}" aria-label="Abrir imagens de satélite deste foco" style="height:30px;padding:0 12px;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #cfd6dc;font-size:12px;cursor:pointer;color:#1b2026;border-radius:999px" style-hover="border-color:#232343"><i class="ph ph-globe-simple" style="font-size:15px;color:#5b6672"></i>Satélite</button>
+            <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:10px">
+              <div style="display:flex;flex-direction:column;gap:2px;padding:8px 10px;border:1px solid #dfe3e7;border-radius:12px;background:#fff;min-width:0">
+                <span style="font:700 10px/14px Questrial,sans-serif;letter-spacing:.08em;color:#8a949e">DISTÂNCIA DA REDE</span>
+                <span style="font-size:12px;line-height:16px;color:#5b6672;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ det.netLabel }}</span>
+                <span style="font:700 15px/20px Questrial,sans-serif;color:#1b2026;font-variant-numeric:tabular-nums">{{ det.netDist }}</span>
+              </div>
+              <button onClick="{{ det.onNearAsset }}" aria-label="Abrir o ativo mais próximo" style="display:flex;flex-direction:column;align-items:stretch;gap:2px;padding:8px 10px;border:1px solid #dfe3e7;border-radius:12px;background:#fff;min-width:0;text-align:left;cursor:{{ det.nearCursor }};font-family:Questrial,sans-serif" style-hover="border-color:#232343">
+                <span style="font:700 10px/14px Questrial,sans-serif;letter-spacing:.08em;color:#8a949e">ATIVO MAIS PRÓXIMO</span>
+                <span style="font-size:12px;line-height:16px;color:#5b6672;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ det.nearType }}</span>
+                <span style="font:700 15px/20px Questrial,sans-serif;color:#1b2026;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ det.nearIdDist }}</span>
+              </button>
+            </div>
+            <div style="position:relative;display:flex;gap:7px;margin-top:12px;flex-wrap:nowrap;min-width:0">
+              <button onClick="{{ onCenterDetail }}" aria-label="Centralizar o foco no mapa" style="height:30px;padding:0 12px;white-space:nowrap;flex:0 0 auto;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #cfd6dc;font-size:12px;cursor:pointer;color:#1b2026;border-radius:999px" style-hover="border-color:#232343"><i class="ph ph-crosshair" style="font-size:15px;color:#5b6672"></i>Centralizar</button>
+              <button onClick="{{ onAskAiAboutOcc }}" aria-label="Analisar esta ocorrência com IA" style="height:30px;padding:0 12px;white-space:nowrap;flex:0 0 auto;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #cfd6dc;font-size:12px;cursor:pointer;color:#1b2026;border-radius:999px" style-hover="border-color:#232343"><i class="ph ph-sparkle" style="font-size:15px;color:#5b6672"></i>Analisar com IA</button>
+              <button onClick="{{ onDetMore }}" aria-label="Mais ações" aria-expanded="{{ detMoreOpen }}" style="width:30px;height:30px;flex:0 0 30px;display:flex;align-items:center;justify-content:center;background:{{ detMoreBg }};border:1px solid #cfd6dc;cursor:pointer;color:#1b2026;border-radius:999px" style-hover="border-color:#232343"><i class="ph ph-dots-three" style="font-size:16px"></i></button>
+              <sc-if value="{{ detMoreOpen }}" hint-placeholder-val="{{ false }}">
+                <div role="menu" style="position:absolute;top:36px;right:0;z-index:30;min-width:200px;padding:4px;background:#fff;border:1px solid #dfe3e7;border-radius:10px;box-shadow:0 8px 24px rgba(20,28,36,.16);display:flex;flex-direction:column">
+                  <button role="menuitem" onClick="{{ onDetailStvMenu }}" style="height:34px;padding:0 10px;display:flex;align-items:center;gap:8px;border:0;background:transparent;border-radius:6px;font-family:Questrial,sans-serif;font-size:13px;color:#1b2026;cursor:pointer;white-space:nowrap;text-align:left" style-hover="background:#f2f5f7"><i class="ph ph-person" style="font-size:15px;color:#5b6672"></i>Street View</button>
+                  <button role="menuitem" onClick="{{ onDetailSatMenu }}" style="height:34px;padding:0 10px;display:flex;align-items:center;gap:8px;border:0;background:transparent;border-radius:6px;font-family:Questrial,sans-serif;font-size:13px;color:#1b2026;cursor:pointer;white-space:nowrap;text-align:left" style-hover="background:#f2f5f7"><i class="ph ph-globe-simple" style="font-size:15px;color:#5b6672"></i>Imagens de satélite</button>
+                </div>
+              </sc-if>
             </div>
           </div>
           <sc-for list="{{ det.blocks }}" as="b" hint-placeholder-count="3">
@@ -1721,23 +1774,28 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
           <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700">Central de alertas<i class="ph ph-info" tabIndex="0" role="button" aria-label="Gatilhos e cadência de e-mail são parametrizados pela Quasar por cliente." onMouseEnter="{{ tipAlertCfgEnter }}" onMouseLeave="{{ tipAlertCfgLeave }}" onFocus="{{ tipAlertCfgFocus }}" onBlur="{{ tipAlertCfgLeave }}" style="font-size:14px;font-weight:400;color:#8a949e;cursor:help" style-hover="color:#232343"></i></div>
           <div style="font-size:12px;color:#8a949e;margin-top:2px">{{ alertSummary }}</div>
         </div>
-        <button onClick="{{ onToggleAlerts }}" style="width:24px;height:24px;border:0;background:transparent;cursor:pointer;color:#8a949e;font-size:15px" style-hover="color:#1b2026">×</button>
+        <span style="display:flex;align-items:center;gap:4px;flex:0 0 auto">
+          <button onClick="{{ onAlertMute }}" aria-label="{{ alertMuteLabel }}" title="{{ alertMuteLabel }}" aria-pressed="{{ alertMuted }}" style="width:30px;height:30px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#5b6672;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7;color:#232343"><i class="ph {{ alertMuteIcon }}" style="font-size:17px"></i></button>
+          <button onClick="{{ onToggleAlerts }}" aria-label="Fechar Central de alertas" style="width:24px;height:24px;border:0;background:transparent;cursor:pointer;color:#8a949e;font-size:15px" style-hover="color:#1b2026">×</button>
+        </span>
       </div>
       <div style="flex:1 1 auto;overflow:auto;min-height:0">
         <sc-if value="{{ noAlerts }}" hint-placeholder-val="{{ false }}">
           <div style="padding:26px 18px;text-align:center;font-size:12px;color:#8a949e;line-height:1.5">Nenhum alerta gerado no período monitorado.</div>
         </sc-if>
         <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="4">
-          <div onClick="{{ a.onClick }}" style="display:flex;gap:10px;padding:12px 14px;background:{{ a.bg }};cursor:pointer" style-hover="background:#f7f9fa">
-            <span style="width:7px;height:7px;border-radius:50%;background:{{ a.dot }};margin-top:7px;flex:0 0 7px"></span>
+          <div onClick="{{ a.onClick }}" style="display:flex;gap:10px;padding:12px 14px;background:{{ a.bg }};cursor:pointer;box-shadow:{{ a.shadow }}" style-hover="background:#f7f9fa">
+            <span style="width:8px;height:8px;border-radius:50%;background:{{ a.dot }};margin-top:7px;flex:0 0 8px;animation:{{ a.anim }}"></span>
             <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:4px">
               <div style="display:flex;align-items:center;gap:8px;min-width:0">
+                <button onClick="{{ a.onCopyId }}" aria-label="Copiar ID" title="Copiar ID" style="width:22px;height:22px;flex:0 0 22px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#eceff1;color:#1b2026"><i class="ph ph-copy" style="font-size:13px"></i></button>
                 <span style="font-size:13px;line-height:18px;font-weight:{{ a.weight }};color:#1b2026;flex:0 0 auto;font-variant-numeric:tabular-nums">{{ a.id }}</span>
-                <span style="display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;background:{{ a.critColor }};color:#fff;font-size:12px;line-height:20px;font-weight:700;flex:0 0 auto;white-space:nowrap">{{ a.critFull }}</span>
+                <span style="display:inline-flex;align-items:center;gap:6px;height:20px;padding:0 8px;border-radius:999px;border:1px solid {{ a.critBorder }};background:#fff;color:#1b2026;font:700 11px/18px Questrial,sans-serif;flex:0 0 auto;white-space:nowrap"><span style="width:7px;height:7px;border-radius:50%;background:{{ a.critColor }}"></span>{{ a.critFull }}</span>
+                <sc-if value="{{ a.unread }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:999px;background:#fff1f0;border:1px solid #fecaca;color:#b42318;font-size:10px;line-height:20px;font-weight:700;letter-spacing:.05em;flex:0 0 auto">NOVO</span></sc-if>
               </div>
-              <div style="font-size:13px;line-height:18px;color:#1b2026;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.asset }}</div>
+              <div title="Distância do foco até a geometria da rede elétrica mais próxima." style="font-size:12px;line-height:16px;color:#1b2026;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.netLine }}</div>
               <div style="display:flex;align-items:baseline;gap:10px;min-width:0">
-                <span style="flex:1 1 auto;min-width:0;font-size:12px;line-height:17px;color:#5b6672;text-wrap:pretty">{{ a.body }}</span>
+                <span title="Distância do foco até o equipamento individual mais próximo." style="flex:1 1 auto;min-width:0;font-size:12px;line-height:16px;color:#5b6672;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.body }}</span>
                 <span style="flex:0 0 auto;font-size:12px;line-height:17px;color:#8a949e;font-variant-numeric:tabular-nums;white-space:nowrap">{{ a.at }}</span>
               </div>
             </div>
@@ -2197,7 +2255,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
             </div>
             <sc-for list="{{ hqRows }}" as="r" hint-placeholder-count="6">
               <div onClick="{{ r.onClick }}" aria-label="Abrir no mapa" style="display:grid;grid-template-columns:1fr .95fr 1.15fr 1.7fr 1.05fr 1fr .9fr;gap:12px;padding:11px 16px;border-bottom:1px solid #f2f5f7;align-items:center;font-size:13px;line-height:18px;cursor:pointer;background:#fff" style-hover="background:#f7f9fa">
-                <span style="font-weight:400;color:#1b2026;font-variant-numeric:tabular-nums">{{ r.id }}</span>
+                <span style="display:flex;align-items:center;gap:4px;min-width:0;font-weight:400;color:#1b2026;font-variant-numeric:tabular-nums"><button onClick="{{ r.onCopyId }}" aria-label="Copiar ID" title="Copiar ID" style="width:22px;height:22px;flex:0 0 22px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#eceff1;color:#1b2026"><i class="ph ph-copy" style="font-size:13px"></i></button>{{ r.id }}</span>
                 <span style="color:#5b6672;font-variant-numeric:tabular-nums">{{ r.at }}</span>
                 <span style="color:#5b6672;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.place }}</span>
                 <span style="min-width:0;display:flex;flex-direction:column;gap:1px">
@@ -2520,7 +2578,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
           </div>
         </div>
       </sc-if>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <div style="display:flex;align-items:center;gap:10px;row-gap:6px;flex-wrap:wrap;margin-bottom:4px">
         <span style="font:700 12px/1 Questrial,sans-serif;letter-spacing:.08em;color:#8a949e">PERÍODO</span>
         <sc-if value="{{ tl24 }}" hint-placeholder-val="{{ false }}">
           <span style="display:flex;align-items:center;gap:7px">
@@ -2550,7 +2608,13 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
             <button onClick="{{ p.onClick }}" aria-label="{{ p.title }}" style="height:32px;padding:0 12px;border:1px solid {{ p.border }};background:{{ p.bg }};color:{{ p.fg }};font:700 12px/1 Questrial,sans-serif;cursor:pointer;border-radius:999px" style-hover="border-color:#232343">{{ p.label }}</button>
           </sc-for>
         </div>
-        <button onClick="{{ onTaToggle }}" aria-label="Recolher o eixo de tempo" style="display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border:1px solid #dfe3e7;background:#fff;font-size:12px;font-weight:400;color:#5b6672;cursor:pointer;border-radius:999px" style-hover="background:#f2f5f7;border-color:#232343;color:#232343"><i class="ph ph-caret-down" style="font-size:14px"></i>Recolher</button>
+        <div style="display:flex;align-items:center;gap:4px;flex:0 0 auto">
+          <button onClick="{{ onReplay }}" aria-label="{{ replayTitle }}" onMouseEnter="{{ tipReplay.enter }}" onMouseLeave="{{ tipReplay.leave }}" onFocus="{{ tipReplay.focus }}" onBlur="{{ tipReplay.leave }}" style="display:flex;align-items:center;justify-content:center;gap:5px;height:32px;min-width:32px;padding:0 {{ replayPad }};border:1px solid {{ replayBorder }};background:{{ replayBg }};font-size:12px;font-weight:400;color:#232343;cursor:pointer;border-radius:999px" style-hover="border-color:#232343"><i class="ph {{ replayIcon }}" style="font-size:14px"></i><sc-if value="{{ replayShowLabel }}" hint-placeholder-val="{{ true }}"><span>Reproduzir</span></sc-if></button>
+          <sc-if value="{{ replayOn }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ onReplaySpeed }}" aria-label="{{ replaySpeedTitle }}" onMouseEnter="{{ tipReplaySpeed.enter }}" onMouseLeave="{{ tipReplaySpeed.leave }}" style="height:32px;min-width:36px;padding:0 8px;border:1px solid #dfe3e7;background:#fff;color:#232343;cursor:pointer;border-radius:999px;font:700 12px/1 Questrial,sans-serif;font-variant-numeric:tabular-nums" style-hover="border-color:#232343">{{ replaySpeedLabel }}</button>
+          </sc-if>
+        </div>
+        <button onClick="{{ onTaToggle }}" aria-label="Recolher o eixo de tempo" title="Recolher" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;padding:0;border:1px solid #dfe3e7;background:#fff;color:#5b6672;cursor:pointer;border-radius:999px" style-hover="background:#f2f5f7;border-color:#232343;color:#232343"><i class="ph ph-caret-down" style="font-size:14px"></i></button>
       </div>
       <div ref="{{ trackRef }}" onMouseDown="{{ onTrackDown }}" style="position:relative;height:28px;background:#f7f9fa;border:1px solid #eceff1;cursor:crosshair;user-select:none">
         <div style="position:absolute;inset:0;display:flex;align-items:flex-end;padding:0 1px">
@@ -2627,6 +2691,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
             </sc-if>
             <span style="display:flex;align-items:center;gap:7px">
               <sc-if value="{{ ctxHideKind }}" hint-placeholder-val="{{ false }}"><i class="ph {{ ctxIcon }}" style="font-size:17px;color:{{ ctxAccent }}"></i></sc-if>
+              <sc-if value="{{ ctxHasIdCopy }}" hint-placeholder-val="{{ false }}"><button onClick="{{ onCtxIdCopy }}" aria-label="Copiar ID" title="Copiar ID" style="width:22px;height:22px;flex:0 0 22px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#eceff1;color:#1b2026"><i class="ph ph-copy" style="font-size:13px"></i></button></sc-if>
               <span style="font:700 14px/19px Questrial,sans-serif;color:#1b2026;text-wrap:pretty">{{ ctxTitle }}</span>
             </span>
             <sc-if value="{{ ctxHasSub }}" hint-placeholder-val="{{ false }}">
@@ -2645,6 +2710,9 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
             <sc-if value="{{ ctxHasBadge }}" hint-placeholder-val="{{ false }}">
               <span style="font:700 10px/14px Questrial,sans-serif;letter-spacing:.08em;color:{{ ctxBadgeFg }};background:{{ ctxBadgeBg }};border:1px solid {{ ctxBadgeBorder }};border-radius:999px;padding:3px 8px;white-space:nowrap">{{ ctxBadge }}</span>
             </sc-if>
+            <sc-if value="{{ ctxHasChart }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ onChartZoom }}" aria-label="{{ chartZoomLabel }}" style="height:36px;padding:0 13px;flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid #232343;border-radius:999px;background:#ffffff;color:#232343;font-family:Questrial,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap" style-hover="background:#f2f5f7"><i class="ph {{ chartZoomIcon }}" style="font-size:15px"></i>{{ chartZoomLabel }}</button>
+            </sc-if>
             <sc-if value="{{ ctxHasExpand }}" hint-placeholder-val="{{ false }}">
               <button onClick="{{ onCtxExpand }}" aria-label="{{ ctxExpandLabel }}" style="height:28px;padding:0 12px;flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid #232343;border-radius:999px;background:transparent;cursor:pointer;color:#232343;font-family:Questrial,sans-serif;font-size:12px;font-weight:700" style-hover="background:#f2f5f7"><i class="ph {{ ctxExpandIcon }}" style="font-size:14px"></i>{{ ctxExpandLabel }}</button>
             </sc-if>
@@ -2654,7 +2722,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
             <sc-if value="{{ ctxHasCenter }}" hint-placeholder-val="{{ false }}">
               <button onClick="{{ onCtxCenter }}" aria-label="Centralizar no mapa" title="Centralizar no mapa" style="width:28px;height:28px;flex:0 0 28px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#5b6672;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7;color:#1b2026"><i class="ph ph-crosshair" style="font-size:15px"></i></button>
             </sc-if>
-            <button onClick="{{ onCtxClose }}" aria-label="Fechar inspector" style="width:28px;height:28px;flex:0 0 28px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7;color:#1b2026"><i class="ph ph-x" style="font-size:14px"></i></button>
+            <button onClick="{{ onCtxClose }}" aria-label="Fechar inspector" style="width:36px;height:36px;flex:0 0 36px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#5b6672;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7;color:#1b2026"><i class="ph ph-x" style="font-size:18px"></i></button>
           </span>
         </div>
         <div style="flex:1 1 auto;overflow:auto;min-height:0">
@@ -2760,6 +2828,16 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
               </div>
             </sc-if>
             <sc-if value="{{ metShowSeries }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ metFcModelsOn }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:11px;line-height:15px;font-weight:700;letter-spacing:.07em;color:#8a949e">MODELOS</span>
+                <div style="display:flex;flex-wrap:wrap;gap:6px 14px">
+                  <sc-for list="{{ metFcModels }}" as="fm" hint-placeholder-count="3">
+                    <label title="{{ fm.title }}" style="display:flex;align-items:center;gap:6px;font-size:12px;line-height:16px;color:{{ fm.fg }};cursor:{{ fm.cursor }}"><input type="checkbox" checked="{{ fm.on }}" disabled="{{ fm.disabled }}" onChange="{{ fm.onToggle }}" aria-label="{{ fm.label }}" style="width:14px;height:14px;margin:0;accent-color:#232343;cursor:{{ fm.cursor }}" /><span aria-hidden="true" style="width:14px;height:3px;border-radius:2px;background:{{ fm.color }}"></span>{{ fm.label }}</label>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
             <sc-if value="{{ metLatestLine }}" hint-placeholder-val="{{ false }}">
               <span style="font:700 14px/19px Questrial,sans-serif;color:#1b2026;font-variant-numeric:tabular-nums;text-align:center">{{ metLatestLine }}</span>
             </sc-if>
@@ -2767,11 +2845,12 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
               <span style="font:700 12px/16px Questrial,sans-serif;color:#1b2026;min-width:0;text-wrap:pretty">{{ metChartTitle }}</span>
               <span style="font-size:12px;line-height:16px;color:#8a949e;flex:0 0 auto">{{ metUnit }}</span>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;min-height:30px;padding:5px 10px;border-radius:8px;background:{{ metHov.bg }};font-size:12px;line-height:16px;font-variant-numeric:tabular-nums">
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;min-height:30px;padding:5px 10px;border-radius:8px;background:{{ metHov.bg }};font-size:12px;line-height:16px;font-variant-numeric:tabular-nums">
               <span style="color:{{ metHov.whenFg }};flex:1 1 auto;min-width:0">{{ metHov.when }}</span>
               <span style="font-weight:700;color:#1b2026;flex:0 0 auto">{{ metHov.val }}</span>
+              <sc-for list="{{ metHovModels }}" as="hm" hint-placeholder-count="0"><span style="display:flex;align-items:center;gap:5px;font-weight:700;color:#1b2026;flex:0 0 auto;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:{{ hm.color }}"></span>{{ hm.val }}</span></sc-for>
             </div>
-            <div onMouseLeave="{{ onMetHovLeave }}" style="position:relative;height:124px;border-left:1px solid #dfe3e7;border-bottom:1px solid #dfe3e7">
+            <div onMouseLeave="{{ onMetHovLeave }}" style="position:relative;height:{{ chHMet }};margin-bottom:{{ chMb }};border-left:1px solid #dfe3e7;border-bottom:1px solid #dfe3e7">
               <span style="position:absolute;left:0;right:0;top:0;border-top:1px dashed #eceff1"></span>
               <span style="position:absolute;left:0;right:0;top:50%;border-top:1px dashed #eceff1"></span>
               <span style="position:absolute;left:5px;top:-1px;font-size:10px;line-height:12px;color:#8a949e;background:#fff;padding:0 2px">{{ metHi }}</span>
@@ -2789,6 +2868,12 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
                 <sc-for list="{{ metPts }}" as="pt" hint-placeholder-count="7">
                   <span aria-hidden="true" style="position:absolute;left:{{ pt.left }};bottom:{{ pt.bottom }};width:7px;height:7px;margin:0 0 -4px -4px;border-radius:50%;background:#fff;border:2px solid {{ pt.color }};pointer-events:none"></span>
                 </sc-for>
+              </sc-if>
+              <sc-if value="{{ metCmpBar }}" hint-placeholder-val="{{ false }}">
+                <sc-for list="{{ metCmpBars }}" as="cbr" hint-placeholder-count="0"><span aria-hidden="true" style="pointer-events:none;position:absolute;bottom:0;left:{{ cbr.left }};width:{{ cbr.width }};height:{{ cbr.height }};background:{{ cbr.color }};border-radius:2px 2px 0 0"></span></sc-for>
+              </sc-if>
+              <sc-if value="{{ metCmpLine }}" hint-placeholder-val="{{ false }}">
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible"><sc-for list="{{ metCmpLines }}" as="cl" hint-placeholder-count="0"><polyline points="{{ cl.pts }}" fill="none" stroke="{{ cl.color }}" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"></polyline></sc-for></svg>
               </sc-if>
               <sc-if value="{{ metHasTl }}" hint-placeholder-val="{{ false }}">
                 <span aria-hidden="true" style="position:absolute;top:0;bottom:0;left:0;width:{{ metTlEnd }};background:rgba(35,35,67,.045);pointer-events:none"></span>
@@ -2817,6 +2902,22 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
               <span style="font-size:12px;line-height:16px;color:#5b6672;text-wrap:pretty">{{ metNote }}</span>
             </sc-if>
             <span style="font-size:12px;line-height:16px;color:#8a949e;text-wrap:pretty">{{ metFoot }}</span>
+            <sc-if value="{{ metHasStDet }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:2px;border-top:1px solid #eceff1">
+                <button onClick="{{ onMetStDetToggle }}" aria-expanded="{{ metStDetOpen }}" style="display:flex;align-items:center;gap:8px;height:36px;padding:0 2px;border:0;background:transparent;cursor:pointer;font:700 12px/16px Questrial,sans-serif;color:#1b2026;text-align:left"><i class="ph ph-info" style="font-size:15px;color:#5b6672"></i><span style="flex:1 1 auto">Detalhes da estação</span><i class="ph {{ metStDetCaret }}" style="font-size:14px;color:#5b6672"></i></button>
+                <sc-if value="{{ metStDetOpen }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:2px;padding-bottom:4px">
+                    <sc-for list="{{ metStDet }}" as="sr" hint-placeholder-count="4">
+                      <span style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:17px;padding:4px 0;border-bottom:1px solid #f2f5f7">
+                        <span style="color:#8a949e;flex:0 0 auto">{{ sr.label }}</span>
+                        <span style="flex:1 1 auto;min-width:0;text-align:right;color:#1b2026;font-variant-numeric:tabular-nums;text-wrap:pretty">{{ sr.value }}</span>
+                        <sc-if value="{{ sr.hasCopy }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sr.onCopy }}" aria-label="Copiar coordenadas" style="width:22px;height:22px;flex:0 0 22px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7;color:#232343"><i class="ph ph-copy" style="font-size:13px"></i></button></sc-if>
+                      </span>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
             <sc-if value="{{ metHasFcDet }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;flex-direction:column;gap:6px;order:6">
                 <button onClick="{{ onFcDetToggle }}" aria-expanded="{{ metFcDetOpen }}" style="display:flex;align-items:center;gap:8px;height:36px;padding:0 2px;border:0;border-top:1px solid #eceff1;background:transparent;cursor:pointer;font:700 12px/16px Questrial,sans-serif;color:#1b2026;text-align:left"><i class="ph ph-info" style="font-size:15px;color:#5b6672"></i><span style="flex:1 1 auto">Detalhes da previsão</span><i class="ph {{ metFcDetCaret }}" style="font-size:14px;color:#5b6672"></i></button>
@@ -2950,6 +3051,43 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
           </div>
           </sc-if>
 
+          <sc-if value="{{ ctxIsAsset }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;flex-direction:column;gap:2px">
+              <sc-for list="{{ assetMainRows }}" as="r" hint-placeholder-count="3">
+                <span style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:17px;padding:4px 0;border-bottom:1px solid #f2f5f7">
+                  <span style="color:#8a949e;flex:0 0 auto">{{ r.label }}</span>
+                  <span style="flex:1 1 auto"></span>
+                  <sc-if value="{{ r.hasCopy }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onCopy }}" aria-label="{{ r.copyLabel }}" title="{{ r.copyLabel }}" style="width:22px;height:22px;flex:0 0 22px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#eceff1;color:#1b2026"><i class="ph ph-copy" style="font-size:13px"></i></button></sc-if>
+                  <span style="flex:0 1 auto;min-width:0;text-align:right;color:#1b2026;font-weight:700;font-variant-numeric:tabular-nums;text-wrap:pretty">{{ r.value }}</span>
+                </span>
+              </sc-for>
+            </div>
+            <sc-if value="{{ assetHasDet }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ onAssetDetails }}" aria-expanded="{{ assetDetOpen }}" style="display:flex;align-items:center;gap:8px;height:30px;padding:0;border:0;background:transparent;cursor:pointer;text-align:left;font-family:Questrial,sans-serif">
+              <span style="flex:1 1 auto;font:700 11px/15px Questrial,sans-serif;letter-spacing:.07em;color:#8a949e">DETALHES</span>
+              <i class="ph {{ assetDetCaret }}" style="font-size:14px;color:#8a949e"></i>
+            </button>
+            </sc-if>
+            <sc-if value="{{ assetDetOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <sc-for list="{{ assetDetRows }}" as="r" hint-placeholder-count="4">
+                  <span style="display:flex;align-items:center;gap:10px;font-size:12px;line-height:17px;padding:3px 0;border-bottom:1px solid #f2f5f7">
+                    <span style="color:#8a949e;flex:0 0 auto">{{ r.label }}</span>
+                    <span style="flex:1 1 auto"></span>
+                    <sc-if value="{{ r.hasCopy }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onCopy }}" aria-label="{{ r.copyLabel }}" title="{{ r.copyLabel }}" style="width:22px;height:22px;flex:0 0 22px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7;color:#232343"><i class="ph ph-copy" style="font-size:13px"></i></button></sc-if>
+                    <span style="flex:0 1 auto;min-width:0;text-align:right;color:#1b2026;font-variant-numeric:tabular-nums;text-wrap:pretty">{{ r.value }}</span>
+                  </span>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ assetHasAct }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ onAssetAct }}" style="align-self:flex-start;height:30px;padding:0 12px;display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #cfd6dc;border-radius:999px;font-family:Questrial,sans-serif;font-size:12px;color:#1b2026;cursor:pointer;white-space:nowrap" style-hover="border-color:#232343"><i class="ph ph-eye" style="font-size:14px;color:#5b6672"></i>{{ assetActLabel }}</button>
+            </sc-if>
+            <span style="font-size:12px;line-height:16px;color:#8a949e;text-wrap:pretty">{{ assetSourceLine }}</span>
+          </div>
+          </sc-if>
+
           <sc-if value="{{ ctxIsScar }}" hint-placeholder-val="{{ false }}">
           <div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:11px">
             <div style="display:flex;flex-direction:column;gap:2px">
@@ -2967,26 +3105,6 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
             <div style="position:relative;height:{{ scarViewH }}">
               <dc-import name="ImageComparison" a="{{ scarA }}" b="{{ scarB }}" detail="{{ false }}" style="position:absolute;inset:0" hint-size="100%,100%"></dc-import>
             </div>
-            <sc-if value="{{ scarHasMonthly }}" hint-placeholder-val="{{ false }}">
-              <div style="display:flex;flex-direction:column;gap:6px;padding-top:8px;border-top:1px solid #eceff1">
-                <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px">
-                  <span style="font:700 12px/16px Questrial,sans-serif;color:#1b2026">Evolução mensal da área impactada</span>
-                  <span style="font-size:12px;line-height:16px;color:#8a949e;flex:0 0 auto">ha</span>
-                </div>
-                <div style="position:relative;height:96px;border-left:1px solid #dfe3e7;border-bottom:1px solid #dfe3e7">
-                  <span style="position:absolute;left:0;right:0;top:0;border-top:1px dashed #eceff1"></span>
-                  <span style="position:absolute;left:5px;top:-1px;font-size:10px;line-height:12px;color:#8a949e;background:#fff;padding:0 2px">{{ scarHi }}</span>
-                  <sc-for list="{{ scarBars }}" as="bar" hint-placeholder-count="2">
-                    <span onMouseEnter="{{ bar.tipEnter }}" onMouseLeave="{{ bar.tipLeave }}" aria-label="{{ bar.aria }}" style="position:absolute;bottom:0;left:{{ bar.left }};width:{{ bar.width }};height:{{ bar.height }};background:{{ bar.color }};border-radius:3px 3px 0 0"></span>
-                  </sc-for>
-                </div>
-                <div style="display:flex">
-                  <sc-for list="{{ scarLabels }}" as="x" hint-placeholder-count="2">
-                    <span style="flex:1 1 0;min-width:0;text-align:center;font-size:10px;line-height:14px;color:#8a949e;white-space:nowrap;overflow:hidden">{{ x.label }}</span>
-                  </sc-for>
-                </div>
-              </div>
-            </sc-if>
           </div>
           </sc-if>
 
@@ -3012,10 +3130,11 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
                 </sc-for>
               </div>
             </div>
+            <button onClick="{{ onCmpOsc }}" aria-pressed="{{ cmpOscOn }}" aria-label="Oscilar entre Antes e Depois" style="height:32px;padding:0 14px;flex:0 0 auto;display:flex;align-items:center;gap:6px;border:1px solid #232343;border-radius:999px;background:{{ cmpOscBg }};color:{{ cmpOscFg }};cursor:pointer;font-family:Questrial,sans-serif;font-size:12px;font-weight:700"><i class="ph {{ cmpOscIcon }}" style="font-size:14px"></i>Oscilar</button>
             <button onClick="{{ onCmpClose }}" aria-label="Fechar comparação" style="width:32px;height:32px;flex:0 0 32px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#8a949e;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7;color:#1b2026"><i class="ph ph-x" style="font-size:16px"></i></button>
           </div>
           <div style="position:relative;height:min(680px,70vh)">
-            <dc-import name="ImageComparison" a="{{ cmpA }}" b="{{ cmpB }}" detail="{{ true }}" style="position:absolute;inset:0" hint-size="100%,100%"></dc-import>
+            <dc-import name="ImageComparison" a="{{ cmpA }}" b="{{ cmpB }}" detail="{{ true }}" osc="{{ cmpOscOn }}" style="position:absolute;inset:0" hint-size="100%,100%"></dc-import>
           </div>
           <sc-if value="{{ cmpHasRows }}" hint-placeholder-val="{{ false }}">
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px;border-top:1px solid #eceff1;padding-top:10px">
@@ -3344,7 +3463,7 @@ class Component extends DCLogic {
     emptyDismissed: '',
     tip: null,
     confirmDiscard: false,
-    groupsOpen: { 'DETECÇÕES': true, 'RESULTADOS': true, 'REDE ELÉTRICA': true },
+    groupsOpen: { 'DETECÇÕES': true, 'RESULTADOS': true, 'FONTES CONHECIDAS': true, 'REDE ELÉTRICA': true },
     layerExpanded: null,
     layerColors: {},
     layerColorOpen: null,
@@ -3397,7 +3516,10 @@ class Component extends DCLogic {
     selected: null,
     hover: null,
     alertsOpen: false,
-    read: [],
+    read: [], alertMute: false,
+    chartZoom: false, stDetOpen: false,
+    replayOn: false, replaySession: false, replaySpeed: 1,
+    assetPanel: null, assetDetOpen: false, scarHi: null, scarFrom: '', scarTo: '',
     legendExpanded: false,
     scene: null,
     techOpen: false,
@@ -3405,6 +3527,8 @@ class Component extends DCLogic {
     capturing: false,
     deniedOpen: false,
     taCollapsed: false,
+    // Queimadas · refinamentos compartilhados com Deslizamento
+    metOrg: 'all', metShowDry: true, fcMain: 'om', fcShow: ['om', 'gfs'],
     from: 0,
     to: 0,
     crit: [],
@@ -3522,7 +3646,14 @@ class Component extends DCLogic {
     ['FOC-24651', 'QMD-8993', -16.8302, -43.9012, 68.4, 'VIIRS / NOAA-20', 81, 54.0, null, 'P2', 'SE-JAIBA-138', 2870, null, null, 'SE', 128, 13, 0, 1.5, 'encerrado'],
     ['FOC-24620', 'QMD-8986', -16.4712, -44.0730, 89.9, 'MODIS / Terra', 55, 15.3, null, 'P3', 'CJ-NORTE', 8940, null, null, 'N', 8, 6, 3.2, 2.2, 'encerrado'],
     ['FOC-24588', 'QMD-8977', -16.7401, -43.6890, 112.5, 'VIIRS / NOAA-20', 93, 158.9, 419, 'P0', 'SE-JAIBA-138', 180, 0, 9, 'SE', 132, 26, 0, 1.1, 'encerrado'],
-    ['FOC-24540', 'QMD-8968', -16.5602, -43.7350, 148.0, 'MODIS / Terra', 60, 20.1, null, 'P3', 'AL-MT-4471', 5510, null, null, 'E', 95, 10, 0, 1.9, 'encerrado']
+    ['FOC-24540', 'QMD-8968', -16.5602, -43.7350, 148.0, 'MODIS / Terra', 60, 20.1, null, 'P3', 'AL-MT-4471', 5510, null, null, 'E', 95, 10, 0, 1.9, 'encerrado'],
+    // DEMO / SYNTHETIC DATA: detecções dentro do buffer de fontes persistentes conhecidas → suprimidas da operação
+    ['FOC-24905', 'QMD-9101', -16.7162, -43.8489, 3.2, 'VIIRS / NOAA-20', 90, 96.0, 404, 'P1', 'AL-MT-4471', 900, null, null, 'NE', 45, 10, 0, 0.8, 'ativo'],
+    ['FOC-24906', 'QMD-9102', -16.7139, -43.8514, 9.8, 'VIIRS / NOAA-20', 86, 71.3, 398, 'P2', 'AL-MT-4471', 1100, null, null, 'NE', 45, 10, 0, 0.8, 'ativo'],
+    ['FOC-24907', 'QMD-9103', -16.7157, -43.8521, 16.4, 'MODIS / Aqua', 74, 48.2, null, 'P2', 'AL-MT-4471', 1000, null, null, 'NE', 45, 10, 0, 0.8, 'ativo'],
+    ['FOC-24908', 'QMD-9104', -16.5611, -43.8991, 6.1, 'VIIRS / NOAA-21', 81, 55.0, 392, 'P2', 'AL-MT-4471', 1500, null, null, 'NE', 45, 10, 0, 0.8, 'ativo'],
+    ['FOC-24909', 'QMD-9105', -16.5591, -43.9011, 13.7, 'VIIRS / NOAA-20', 79, 50.6, 390, 'P3', 'AL-MT-4471', 1600, null, null, 'NE', 45, 10, 0, 0.8, 'ativo'],
+    ['FOC-24910', 'QMD-9106', -16.8209, -43.8011, 4.6, 'VIIRS / NOAA-20', 88, 82.4, 401, 'P1', 'SE-JAIBA-138', 1300, null, null, 'NE', 45, 10, 0, 0.8, 'ativo']
   ].map((r) => this.mkOcc(r, 'MG', r[2] >= -16.72 ? 'MOC' : 'JAIBA'));
   // cenário ativo: montado por escopo em buildScenario()
   occ = [];
@@ -3534,8 +3665,34 @@ class Component extends DCLogic {
       source: r[5], conf: r[6], frp: r[7], tempK: r[8], crit: r[9],
       assetId: r[10], distAsset: r[11], eta: r[13],
       windDir: r[14], windDeg: r[15], windSpd: r[16], prec: r[17], wxAgeH: r[18],
-      status: r[19], uf, mun
+      status: r[19], uf, mun,
+      // DEMO / SYNTHETIC: estado NOVO = acabou de entrar e ainda não foi reconhecido (vem do backend em produção)
+      isNew: ['FOC-24817', 'FOC-24803', 'FOC-24781'].indexOf(r[0]) >= 0,
+      ...this.demoTimes(r)
     };
+  }
+  // DEMO / SYNTHETIC DATA — fontes persistentes de calor conhecidas (substituir pelo dataset real)
+  fphSites = [
+    { id: 'FPH-001', n: 'Siderúrgica Vale Verde', type: 'Siderurgia', c: [-16.7150, -43.8500], buf: 500 },
+    { id: 'FPH-002', n: 'Forno Industrial Norte', type: 'Forno industrial', c: [-16.5600, -43.9000], buf: 500 },
+    { id: 'FPH-003', n: 'Unidade Térmica Santa Luzia', type: 'Fonte industrial persistente', c: [-16.8200, -43.8000], buf: 500 }
+  ];
+  fphList = [];
+  fphSupp = [];
+  fphSuppFor(f) { const s = this.state; return this.fphSupp.filter((o) => o.fph === f.id && o.at >= s.from && o.at <= s.to); }
+  fphById(id) { return this.fphList.filter((f) => f.id === id)[0]; }
+  fphMatch(o) { return this.fphList.filter((f) => this.hav([o.lat, o.lng], f.c) <= f.buf)[0]; }
+  openFph(id) {
+    this.endMeasureCtx('Você abriu uma fonte persistente de calor.');
+    this.closeCtxPanels({ fphPanel: { id }, assetDetOpen: false, fphShowSupp: false });
+    setTimeout(() => this.draw(), 0);
+  }
+  NEW_DEMO = ['FOC-24817', 'FOC-24803', 'FOC-24781'];
+  // DEMO / SYNTHETIC: primeira detecção associada à ocorrência; "Fim" só existe quando o status é encerrado (regra de backend)
+  demoTimes(r) {
+    const n = +String(r[0]).replace(/\D/g, '') || 0, last = this.NOW - r[4] * 3600000;
+    const firstAt = last - (12 + (n % 7) * 11) * 60000;
+    return { firstAt, lastAt: last, endAt: r[19] === 'encerrado' ? last + (10 + (n % 5) * 8) * 60000 : null };
   }
 
   assetsMeta = {
@@ -3622,7 +3779,9 @@ class Component extends DCLogic {
     sc.p = out;
     return out;
   }
-  scarArea(sc) { return sc.initArea != null ? sc.initArea : this.polyArea(this.scarGeom(sc)) / 10000; }
+  // área exibida somente quando o atributo existe no dado da cicatriz (nunca calculada para o hover/comparador)
+  scarAreaAttr(sc) { const v = sc.areaHa != null ? sc.areaHa : sc.initArea; if (v != null && !isNaN(+v)) return +v; const g = this.scarGeom(sc); return g && g.length > 2 ? this.polyArea(g) / 10000 : null; }
+  scarArea(sc) { return sc.areaHa != null ? sc.areaHa : sc.initArea != null ? sc.initArea : this.polyArea(this.scarGeom(sc)) / 10000; }
   // Escopo Região: lista de polígonos; a união deles forma um único escopo
   regs(p) { return !p || !p.length ? [] : (Array.isArray(p[0][0]) ? p : [p]); }
   inPoly(pt, poly) {
@@ -3649,20 +3808,23 @@ class Component extends DCLogic {
     { id: 'focos', g: 'QUEIMADAS', label: 'Focos de calor', count: '14 no período', st: 'ok', locked: true, on: true, op: 100, color: '#dc2626', sym: 'foco', ic: 'ph-fire', dyn: 'din', upd: '14:20', nxt: '14:40', desc: 'Detecções de foco de calor no recorte ativo, agrupadas em cluster quando o zoom está afastado.' },
     // cc: cor livre — nem cicatriz nem histórico carregam criticidade. Focos de calor seguem
     // sem cc porque a cor ali representa prioridade P0–P3 (cor semântica, não decorativa).
-    { id: 'cicatriz', g: 'QUEIMADAS', label: 'Cicatrizes de queimada', count: '11 cicatrizes', st: 'ok', on: false, op: 65, color: '#7a1fa2', sym: 'scar', ic: 'ph-fire-simple', dyn: 'din', cc: true, desc: 'Polígonos de área queimada cadastrados conforme os laudos. A evolução de cada cicatriz é atualizada mensalmente com os dados recebidos. Use as marcas na linha de tempo para navegar entre cicatrizes.' },
+    { id: 'cicatriz', g: 'QUEIMADAS', label: 'Cicatrizes de queimada', count: '', st: 'ok', on: false, op: 65, color: '#7a1fa2', sym: 'scar', ic: 'ph-fire-simple', dyn: 'din', cc: true, desc: 'Polígonos de área queimada mantidos pela Quasar e atualizados periodicamente (cerca de uma vez por mês). Cada cicatriz traz a data do evento no próprio dado. Escolha o período De/Até; o clique em uma cicatriz abre o comparador Antes × Depois com as imagens mais próximas do evento.' },
+    { id: 'fph', g: 'QUEIMADAS', label: 'Fontes persistentes de calor', count: '3 fontes', st: 'ok', on: false, op: 100, color: '#a16207', sym: 'chip', ic: 'ph-factory', cc: true, desc: 'Locais conhecidos com calor contínuo (ex.: siderurgia). Detecções dentro do buffer de exclusão não viram ocorrência. Dado demonstrativo.' },
     { id: 'hist', g: 'QUEIMADAS', label: 'Ocorrências históricas', count: '118 pontos', st: 'ok', on: false, op: 80, color: '#7e57a5', sym: 'histdot', ic: 'ph-clock-counter-clockwise', dyn: 'din', cc: true, desc: 'Registros anteriores de ocorrência, anteriores ao período atual.' },
-    { id: 'conj', g: 'REDE ELÉTRICA', label: 'Conjuntos elétricos', count: '2 conjuntos', st: 'ok', on: false, op: 55, color: '#2563EB', sym: 'area', ic: 'ph-buildings', dyn: 'est', cc: true, desc: 'Áreas de conjunto elétrico usadas como recorte operacional da distribuidora.' },
-    { id: 'bdgd_bt', g: 'REDE ELÉTRICA', label: 'Baixa tensão', count: '6 ramais', st: 'ok', on: false, op: 80, color: '#0284C7', sym: 'line-mt', ic: 'ph-lightning', dyn: 'est', cc: true, desc: 'Ramais de baixa tensão da rede de distribuição.' },
-    { id: 'bdgd_mt', g: 'REDE ELÉTRICA', label: 'Média tensão', count: '4 troncos', st: 'ok', on: false, op: 85, color: '#7C3AED', sym: 'line-mt', ic: 'ph-lightning', dyn: 'est', cc: true, desc: 'Troncos de média tensão da rede de distribuição.' },
-    { id: 'bdgd_at', g: 'REDE ELÉTRICA', label: 'Alta tensão', count: '2 linhas', st: 'ok', on: true, op: 100, color: '#111827', sym: 'line-at', ic: 'ph-lightning', dyn: 'est', cc: true, desc: 'Linhas de transmissão em alta tensão no recorte ativo.' },
-    { id: 'subs', g: 'REDE ELÉTRICA', label: 'Subestações', count: '4 subestações', st: 'ok', on: true, op: 100, color: '#4F46E5', sym: 'sub', ic: 'ph-lightning', dyn: 'est', cc: true, desc: 'Subestações de transmissão e distribuição no recorte ativo.' },
+    { id: 'bdgd_at', g: 'REDE ELÉTRICA', sub: 'REDE', label: 'Alta tensão', count: '2 linhas', st: 'ok', on: true, op: 100, color: '#111827', sym: 'line-at', ic: 'ph-lightning', dyn: 'est', cc: true, desc: 'Linhas de transmissão em alta tensão no recorte ativo.' },
+    { id: 'bdgd_mt', g: 'REDE ELÉTRICA', sub: 'REDE', label: 'Média tensão', count: '4 troncos', st: 'ok', on: false, op: 85, color: '#7C3AED', sym: 'line-mt', ic: 'ph-lightning', dyn: 'est', cc: true, desc: 'Troncos de média tensão da rede de distribuição.' },
+    { id: 'bdgd_bt', g: 'REDE ELÉTRICA', sub: 'REDE', label: 'Baixa tensão', count: '6 ramais', st: 'ok', on: false, op: 80, color: '#0284C7', sym: 'line-mt', ic: 'ph-lightning', dyn: 'est', cc: true, desc: 'Ramais de baixa tensão da rede de distribuição.' },
+    { id: 'subs', g: 'REDE ELÉTRICA', sub: 'ATIVOS DA REDE', assetType: 'sub', label: 'Subestações', count: '4 subestações', st: 'ok', on: true, op: 100, color: '#4F46E5', sym: 'sub', ic: 'ph-lightning', dyn: 'est', cc: true, desc: 'Subestações de transmissão e distribuição no recorte ativo.' },
+    { id: 'bdgd_trafo', g: 'REDE ELÉTRICA', sub: 'ATIVOS DA REDE', assetType: 'trafo', label: 'Transformadores', count: '', st: 'ok', on: false, op: 100, color: '#B45309', sym: 'trafo', ic: 'ph-cube', dyn: 'est', cc: true, desc: 'Transformadores de distribuição da BDGD. Clique em um transformador para ver potência, fases e alimentador.' },
+    { id: 'bdgd_poste', g: 'REDE ELÉTRICA', sub: 'ATIVOS DA REDE', assetType: 'poste', label: 'Postes', count: '', st: 'ok', on: false, op: 100, color: '#475569', sym: 'poste', ic: 'ph-dot-outline', dyn: 'est', cc: true, desc: 'Postes da BDGD. Pela densidade, aparecem no mapa a partir do zoom local.' },
+    { id: 'conj', g: 'REDE ELÉTRICA', sub: 'RECORTE OPERACIONAL', label: 'Conjuntos elétricos', count: '2 conjuntos', st: 'ok', on: false, op: 55, color: '#2563EB', sym: 'area', ic: 'ph-buildings', dyn: 'est', cc: true, desc: 'Áreas de conjunto elétrico usadas como recorte operacional da distribuidora.' },
     { id: 'unid_saude', g: 'UNIDADES CRÍTICAS', label: 'Saúde', count: '9 unidades', st: 'ok', on: false, op: 100, color: '#b3261e', sym: 'chip', ic: 'ph-first-aid', t: 'Saúde', cc: true, desc: 'Hospitais e unidades de atendimento no recorte ativo.' },
     { id: 'unid_bomb', g: 'UNIDADES CRÍTICAS', label: 'Bombeiros', count: '8 unidades', st: 'ok', on: false, op: 100, color: '#c2410c', sym: 'chip', ic: 'ph-fire-truck', t: 'Emergência', cc: true, desc: 'Quartéis e bases de combate a incêndio no recorte ativo.' },
     { id: 'unid_pol', g: 'UNIDADES CRÍTICAS', label: 'Polícia', count: '8 unidades', st: 'ok', on: false, op: 100, color: '#1e40af', sym: 'chip', ic: 'ph-shield', t: 'Segurança', cc: true, desc: 'Unidades de segurança pública no recorte ativo.' },
     { id: 'unid_agua', g: 'UNIDADES CRÍTICAS', label: 'Tratamento de água', count: '8 unidades', st: 'ok', on: false, op: 100, color: '#0e7490', sym: 'chip', ic: 'ph-drop', t: 'Tratamento de água', cc: true, desc: 'Estações de tratamento e reservatórios no recorte ativo.' },
     { id: 'veg', g: 'CLIMA E AMBIENTE', label: 'Vegetação / uso do solo', count: '4 classes', st: 'ok', on: false, op: 55, color: '#3f7d3a', sym: 'area', ic: 'ph-tree', src: 'MapBiomas 2025', dyn: 'est', desc: 'Uso do solo em classes categóricas: vegetação densa, média, rasteira e sem vegetação.' },
     // R5: estações meteorológicas = dado OBSERVADO; cada estação reporta apenas as variáveis que possui
-    { id: 'meteo_est', g: 'CLIMA E AMBIENTE', label: 'Estações meteorológicas', count: '6 estações', st: 'ok', on: false, op: 100, color: '#0f766e', sym: 'chip', ic: 'ph-cell-tower', master: true, obs: 'Observado', src: '', upd: '14:20', desc: 'Estações com séries medidas. Ative as variáveis disponíveis para exibir no mapa as estações que as reportam.' },
+    { id: 'meteo_est', g: 'CLIMA E AMBIENTE', label: 'Estações meteorológicas', count: '6 estações', st: 'ok', on: false, op: 100, color: '#2563EB', sym: 'chip', ic: 'ph-cell-tower', master: true, obs: 'Observado', src: '', upd: '14:20', desc: 'Estações com séries medidas. Ative as variáveis disponíveis para exibir no mapa as estações que as reportam.' },
     { id: 'meteo_prec', parent: 'meteo_est', g: 'CLIMA E AMBIENTE', label: 'Precipitação', count: '4 estações', st: 'ok', on: false, op: 100, color: '#2563EB', sym: 'chip', ic: 'ph-drop', obs: 'Observado', src: '', upd: '14:20', cc: true, desc: 'Precipitação medida, em mm, nas estações que reportam esta variável.' },
     { id: 'meteo_temp', parent: 'meteo_est', g: 'CLIMA E AMBIENTE', label: 'Temperatura', count: '4 estações', st: 'ok', on: false, op: 100, color: '#DC2626', sym: 'chip', ic: 'ph-thermometer-simple', obs: 'Observado', src: '', upd: '14:20', cc: true, desc: 'Temperatura medida, em °C, nas estações que reportam esta variável.' },
     { id: 'meteo_vento', parent: 'meteo_est', g: 'CLIMA E AMBIENTE', label: 'Vento', count: '4 estações', st: 'ok', on: false, op: 100, color: '#0e7490', sym: 'chip', ic: 'ph-wind', obs: 'Observado', src: '', upd: '14:20', cc: true, desc: 'Velocidade do vento medida, em km/h, nas estações que reportam esta variável. A direção aparece como informação complementar.' },
@@ -3857,12 +4019,13 @@ class Component extends DCLogic {
   // ---------- R5: estações meteorológicas (observado) e forecast (projetado) ----------
   // DEMO / SYNTHETIC: estações fixas; a maioria mede as três variáveis (EST-063 exemplifica ausência)
   metStations = [
-    { id: 'EST-021', n: 'Estação Montes Claros Centro', c: [-16.55, -43.80], vars: ['prec', 'temp', 'vento'], src: '' },
-    { id: 'EST-034', n: 'Estação Jaíba', c: [-16.68, -43.95], vars: ['prec', 'temp', 'vento'], src: '' },
-    { id: 'EST-047', n: 'Estação Mirabela', c: [-16.78, -43.78], vars: ['prec', 'temp', 'vento'], src: '' },
-    { id: 'EST-052', n: 'Estação São João da Ponte', c: [-16.48, -44.02], vars: ['prec', 'temp', 'vento'], src: '' },
-    { id: 'EST-063', n: 'Estação Verdelândia', c: [-16.88, -44.05], vars: ['temp', 'vento'], src: '' },
-    { id: 'EST-078', n: 'Estação Capitão Enéas', c: [-16.60, -43.68], vars: ['prec', 'temp', 'vento'], src: '' }
+    // DEMO: origens públicas para demonstrar o filtro; substituir pelos cadastros reais da integração.
+    { id: 'EST-021', n: 'Estação Montes Claros Centro', c: [-16.55, -43.80], vars: ['prec', 'temp', 'vento'], org: 'INMET', online: true, src: 'INMET · estação pública' },
+    { id: 'EST-034', n: 'Estação Jaíba', c: [-16.68, -43.95], vars: ['prec', 'temp', 'vento'], org: 'CEMADEN', online: true, src: 'CEMADEN · estação pública' },
+    { id: 'EST-047', n: 'Estação Mirabela', c: [-16.78, -43.78], vars: ['prec', 'temp', 'vento'], org: 'INMET', online: true, src: 'INMET · estação pública' },
+    { id: 'EST-052', n: 'Estação São João da Ponte', c: [-16.48, -44.02], vars: ['prec', 'temp', 'vento'], org: 'CEMADEN', online: true, src: 'CEMADEN · estação pública' },
+    { id: 'EST-063', n: 'Estação Verdelândia', c: [-16.88, -44.05], vars: ['temp', 'vento'], org: 'CEMADEN', online: false, src: 'CEMADEN · estação pública' },
+    { id: 'EST-078', n: 'Estação Capitão Enéas', c: [-16.60, -43.68], vars: ['prec', 'temp', 'vento'], org: 'INMET', online: true, src: 'INMET · estação pública' }
   ];
   // model / provider / run: preenchidos pela integração; vazios = omitidos na UI
   fcPoints = [
@@ -4111,10 +4274,32 @@ class Component extends DCLogic {
     out.nextRaw = raw.filter((x) => x.at > this.NOW)[0] || raw[0] || null;
     return out;
   }
+  // precipitação da última leitura (mesma série do inspector); null = estação não mede chuva ou está indisponível
+  stationPrec(st) {
+    if (st.online === false || st.vars.indexOf('prec') < 0) return null;
+    const v = this.metValueAt(st.id, 'prec', Math.min(this.state.to || this.NOW, this.NOW));
+    return +v || 0;
+  }
+  stationOffIcon() {
+    return window.L.divIcon({ className: '', iconSize: [26, 26], iconAnchor: [13, 13],
+      html: '<div style="width:26px;height:26px;border-radius:50%;background:#fff;border:2px dashed #9aa3ad;box-sizing:border-box;box-shadow:0 1px 3px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center"><i class="ph ph-cell-tower" style="font-size:14px;color:#9aa3ad;line-height:1"></i></div>' });
+  }
   metTip(st) {
     const vs = st.vars.map((v) => this.MET_VARS[v].label).join(' · ');
-    return '<b>' + st.n + '</b><br/>' + st.id + '<br/>' + vs + (st.src ? '<br/>Fonte: ' + st.src : '');
+    const pv = this.stationPrec(st);
+    const pl = pv === null ? '' : '<br/>Precipitação · ' + (pv === 0 ? '0 mm' : (pv + '').replace('.', ',') + ' mm');
+    const status = st.online === false ? '<br/><span style="color:#8a949e">Sem dados no momento</span>' : '';
+    return '<b>' + st.n + '</b><br/>' + st.id + (st.org ? ' · ' + st.org : '') + '<br/>' + vs + pl + status;
   }
+  // Modelos demonstrativos compartilhados com o componente de Forecast de Deslizamento.
+  // Open-Meteo é a série-base do MVP; ECMWF/GFS servem para demonstrar comparação até a integração final.
+  FC_SRC = {
+    om: { label: 'Open-Meteo', model: '', vars: ['temp', 'wind', 'gust', 'prec', 'rh', 'cloud'] },
+    ecmwf: { label: 'ECMWF', model: 'ecmwf_ifs025', vars: ['temp', 'wind', 'gust', 'prec', 'rh', 'cloud'] },
+    gfs: { label: 'GFS', model: 'gfs_seamless', vars: ['temp', 'wind', 'gust', 'prec', 'rh', 'cloud'] }
+  };
+  // fonte principal conduz o mapa e a consulta por ponto (via Open-Meteo, parâmetro models); comparação do gráfico é independente
+  fcModelParam() { const m = (this.FC_SRC[this.state.fcMain || 'om'] || {}).model; return m ? '&models=' + m : ''; }
   fcActive() { const l = this.state.layers && this.state.layers.forecast; return !!(l && l.on && l.st !== 'error'); }
   // Forecast: a coordenada clicada é a referência da consulta; a grade/ponto real virá da integração
   openFcAt(lat, lng) {
@@ -4122,10 +4307,10 @@ class Component extends DCLogic {
     this._fcQuery = { id: 'FC|' + lat.toFixed(3) + '|' + lng.toFixed(3), n: this.fmtLL(lat, lng), c: [lat, lng], vars: ['prec', 'temp', 'vento', 'gust', 'rh', 'cloud'] };
     const q = this._fcQuery; this._fcLive = null;
     // evolução do ponto: série horária real (5 dias); sem resposta, o gráfico usa a série de demonstração
-    fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat.toFixed(3) + '&longitude=' + lng.toFixed(3) + '&hourly=temperature_2m,precipitation,wind_speed_10m,wind_direction_10m,wind_gusts_10m,relative_humidity_2m,cloud_cover&forecast_hours=' + (this.FC_HORIZON_H + 6) + '&timezone=auto')
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat.toFixed(3) + '&longitude=' + lng.toFixed(3) + '&hourly=temperature_2m,precipitation,wind_speed_10m,wind_direction_10m,wind_gusts_10m,relative_humidity_2m,cloud_cover&forecast_hours=' + (this.FC_HORIZON_H + 6) + this.fcModelParam() + '&timezone=auto')
       .then((r) => (r.ok ? r.json() : Promise.reject())).then((j) => {
         if (this._fcQuery !== q || !j || !j.hourly) return;
-        this._fcLive = { id: q.id, h: j.hourly }; q.provider = 'Open-Meteo'; q.model = 'Melhor modelo disponível (best match)';
+        this._fcLive = { id: q.id, h: j.hourly }; q.provider = 'Open-Meteo'; q.model = (this.state.fcMain || 'om') === 'om' ? 'Melhor modelo disponível (best match)' : this.FC_SRC[this.state.fcMain].label;
         this.forceUpdate();
       }).catch(() => {});
     const wv = { temp: 'temp', wind: 'vento', prec: 'prec', gust: 'gust', rh: 'rh', cloud: 'cloud' }[s.wxLayer];
@@ -4181,18 +4366,23 @@ class Component extends DCLogic {
   // controles do Forecast nunca ficam sob o inspector: deslocam-se para a esquerda dele
   wxBarFit() {
     const row = document.querySelector('[data-wxrow]');
-    let mr = 0;
-    if (false) {
-      const pop = document.querySelector('[data-pop="ctx"]');
-      const pr = pop && pop.getBoundingClientRect(), rr = row.getBoundingClientRect();
-      // geometria estável: borda direita da linha (não muda com o próprio padding) menos a borda esquerda do inspector
-      if (pr && pr.width && pr.left < rr.right) mr = Math.max(0, Math.min(rr.width - 280, Math.round(rr.right - pr.left + 12)));
-    }
+    // a barra não reage ao inspector: o inspector se acomoda acima dela (ctxDock)
+    const mr = 0;
     // trilho lateral esquerdo: a linha começa depois dele (geometria do trilho não depende da linha)
     let ml = 0;
     const rail = document.querySelector('button[aria-label="Histórico e relatórios"]');
     if (row && rail) { const ra = rail.getBoundingClientRect(), rr = row.getBoundingClientRect(); if (ra.width && ra.right > rr.left) ml = Math.round(ra.right - rr.left + 12); }
+    // drawer aberto (Camadas, Queimadas…): a linha começa à direita dele — deslocamento estável, independente do inspector
+    if (row && this.state.drawer) {
+      const dw = document.querySelector('[aria-label="Fechar painel"]');
+      const dEl = dw && dw.closest('div[style*="left:80px"]');
+      const mapL = this.mapRef.current && this.mapRef.current.parentElement ? this.mapRef.current.parentElement.getBoundingClientRect().left : 0;
+      const dr = (dEl ? dEl.getBoundingClientRect().right : mapL + 80 + this.drawerW()) + 12, rr = row.getBoundingClientRect();
+      ml = Math.max(ml, Math.round(dr - rr.left));
+    }
     const ch = {};
+    const bar = document.querySelector('[data-wxbar]');
+    if (bar) { const bw = Math.round(bar.getBoundingClientRect().width - (ml - (this.state.wxBarMl || 0))), cp = bw < 720; if (cp !== !!this.state.wxCompact) ch.wxCompact = cp; if (Math.abs(bw - (this.state.wxBarW || 0)) > 8) ch.wxBarW = bw; }
     if (Math.abs(mr - (this.state.wxBarMr || 0)) > 1) ch.wxBarMr = mr;
     if (Math.abs(ml - (this.state.wxBarMl || 0)) > 1) ch.wxBarMl = ml;
     if (Object.keys(ch).length) this.setState(ch);
@@ -4230,7 +4420,7 @@ class Component extends DCLogic {
     let hours, src = 'live';
     try {
       const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + lats.map((v) => v.toFixed(3)).join(',') + '&longitude=' + lngs.map((v) => v.toFixed(3)).join(',') +
-        '&hourly=' + this.WX_KEYS.join(',') + '&forecast_hours=' + (Math.round((this.wxSlotTs(SL - 1) - this.wxSlotTs(0)) / this.HOUR) + 1) + '&timezone=auto';
+        '&hourly=' + this.WX_KEYS.join(',') + this.fcModelParam() + '&forecast_hours=' + (Math.round((this.wxSlotTs(SL - 1) - this.wxSlotTs(0)) / this.HOUR) + 1) + '&timezone=auto';
       const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 9000);
       const r = await fetch(url, { signal: ctl.signal }); clearTimeout(to);
       if (!r.ok) throw new Error('http ' + r.status);
@@ -4360,7 +4550,7 @@ class Component extends DCLogic {
       wxBarOn: this.fcActive(),
       wxPrim: PRI.map((id) => {
         const on = k === id || (id === 'wind' && k === 'gust'), th = this.tipHandlers(this.WX[id].t, 'top');
-        return { label: this.WX[id].b, full: this.WX[id].t, icon: this.WX[id].ic, showLabel: on, padL: on ? '10px' : '6px', padR: on ? '12px' : '6px', ...act(on), tipEnter: th.enter, tipLeave: th.leave, tipFocus: th.focus,
+        return { label: this.WX[id].b, full: this.WX[id].t, icon: this.WX[id].ic, showLabel: on && !s.wxCompact, padL: on ? '10px' : '6px', padR: on ? '12px' : '6px', ...act(on), tipEnter: th.enter, tipLeave: th.leave, tipFocus: th.focus,
           onClick: () => this.onWxPick(id === 'wind' && k === 'gust' ? 'gust' : id) };
       }),
       wxTlRef: this._wxTl || (this._wxTl = React.createRef()), wxBarMr: (s.wxBarMr || 0) + 'px', wxBarMl: (s.wxBarMl || 0) + 'px',
@@ -4371,6 +4561,12 @@ class Component extends DCLogic {
       wxMoreBg: secOn ? '#232343' : s.wxMore ? '#f2f5f7' : 'transparent', wxMoreFg: secOn ? '#ffffff' : '#5b6672',
       onWxMore: () => this.setState({ wxMore: !s.wxMore }), wxMoreOpen: !!s.wxMore,
       wxSec: SEC.map((id) => ({ label: this.WX[id].t, icon: this.WX[id].ic, bg: k === id ? '#ececf3' : '#ffffff', fg: k === id ? '#17172e' : '#1b2026', weight: k === id ? '700' : '400', onClick: () => { this.setState({ wxMore: false }); this.onWxPick(id); } })),
+      wxSrcSel: this.qsel({ key: 'fcmain', value: s.fcMain || 'om', items: Object.keys(this.FC_SRC).map((q) => ({ v: q, label: this.FC_SRC[q].label })), onPick: (v) => { this._fcLive = null; this.setState({ fcMain: v, qsel: null }, () => { this._wx = null; this.wxLoad(); const fq = this._fcQuery; if (fq && this.state.metPanel && this.state.metPanel.kind === 'fc') this.openFcAt(fq.c[0], fq.c[1]); }); } }),
+      wxSrcTip: this.tipHandlers('Fonte principal da previsão (mapa e consulta). A comparação de modelos fica no gráfico.', 'top'),
+      wxWide: !s.wxCompact, wxShowTag: (s.wxBarW || 0) >= 900, wxShowTagIcon: (s.wxBarW || 0) < 900,
+      wxScaleShow: !!W && (s.wxBarW || 999) >= 720, wxScaleTitle: (s.wxBarW || 999) >= 860, wxScaleW: (s.wxBarW || 999) >= 860 ? '150px' : '112px',
+      wxHoursMin: (s.wxBarW || 999) < 480 ? '120px' : '200px', mapScaleShow: !(this.fcActive() && s.drawer),
+      wxRowFull: !this.fcActive(), legendPadL: this.fcActive() ? '10px' : '13px',
       wxSlots: slots, wxScaleOn: !!W, wxTitle: '', wxSrcLabel: '', wxGrad: 'transparent', wxMin: '', wxMid: '', wxMax: ''
     };
     if (!W) return out;
@@ -4383,6 +4579,9 @@ class Component extends DCLogic {
     return out;
   }
   onFcToggle(isOn) {
+    if (isOn) {
+      if (this._taPrev == null) { this._taPrev = !!this.state.taCollapsed; if (!this.state.taCollapsed) this.setState({ taCollapsed: true, customOpen: false }); }
+    } else if (this._taPrev != null) { const prev = this._taPrev; this._taPrev = null; this.setState({ taCollapsed: prev }); }
     if (isOn) {
       this._wx = null; this._wxAuto = true;
       this.setState({ wxLayer: 'temp', wxSlot: 0, wxMore: false }, () => this.wxLoad());
@@ -4768,7 +4967,7 @@ class Component extends DCLogic {
     for (let tx = Math.floor(x0 / 256); tx <= Math.floor((x0 + W) / 256); tx++) for (let ty = Math.floor(y0 / 256); ty <= Math.floor((y0 + H) / 256); ty++) {
       tiles.push({ href: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/' + z + '/' + ty + '/' + (((tx % n) + n) % n), x: (tx * 256 - x0).toFixed(1), y: (ty * 256 - y0).toFixed(1) });
     }
-    const out = { tiles, polyColor: o.polyColor || this.lyColor('cicatriz'), hasPoly: false, polyD: '', hasBurn: false, burnD: '', cloudBg: 'none', label: o.label || '', date: o.date || '', cloud: o.cloudTxt || '' };
+    const out = { tiles, polyColor: o.polyColor || this.lyColor('cicatriz'), polyFillOp: o.polyFillOp != null ? o.polyFillOp : 0.35, hasPoly: false, polyD: '', hasBurn: false, burnD: '', cloudBg: 'none', label: o.label || '', date: o.date || '', cloud: o.cloudTxt || '' };
     if (o.showPoly && fr) out.polyD = 'M' + fr.map((p) => { const q = P(p[0], p[1], z); return (q[0] - x0).toFixed(1) + ' ' + (q[1] - y0).toFixed(1); }).join(' L') + ' Z', out.hasPoly = true;
     if (o.burn > 0) {
       const r = 18 + o.burn * 80, pts = [];
@@ -4785,11 +4984,42 @@ class Component extends DCLogic {
     }
     return out;
   }
+  // catálogo de cenas disponíveis no ponto (DEMO: revisita ~5 dias, mesma regra de Imagens de satélite)
+  sceneCatalog(lat, lng, a0, b0) {
+    const DAY = 24 * this.HOUR, out = [];
+    for (let d = a0 + Math.floor(this.satHash(lat, lng) * 5) * DAY; d <= b0; d += 5 * DAY) {
+      const di = Math.round(d / DAY);
+      if (this.satHash(di, lat + lng) > 0.86) continue;
+      out.push({ at: d, cloud: Math.round(Math.pow(this.satHash(lng, di), 1.7) * 92) });
+    }
+    return out;
+  }
+  // cena utilizável mais próxima ANTES e DEPOIS da data do evento (prefere nuvens ≤ 30%)
+  scarAutoPair(sc) {
+    const DAY = 24 * this.HOUR, ev = this.dayStart(sc.at);
+    const all = this.sceneCatalog(sc.c[0], sc.c[1], ev - 90 * DAY, this.dayStart(this.NOW));
+    const pick = (arr, last) => { const ok = arr.filter((x) => x.cloud <= 30); const src = ok.length ? ok : arr; return src.length ? (last ? src[src.length - 1] : src[0]) : null; };
+    let before = pick(all.filter((x) => x.at < ev), true), after = pick(all.filter((x) => x.at > ev), false);
+    // DEMO/MVP: toda cicatriz demonstrativa tem par completo. Cicatriz real (sc.user) usa somente o catálogo.
+    if (!sc.user) {
+      const h = this.satHash(sc.c[0], sc.c[1]);
+      if (!before) before = { at: ev - (3 + Math.floor(h * 4)) * DAY, cloud: Math.round(h * 14) };
+      if (!after) after = { at: Math.min(this.dayStart(this.NOW), ev + (1 + Math.floor(h * 3)) * DAY), cloud: Math.round((1 - h) * 12) };
+      if (after.at <= ev) after = { ...after, at: ev + DAY };
+    }
+    return { ev, before, after };
+  }
   openScarCmp(sc) {
-    const pair = this.scarPair(sc);
-    const ar = this.scarArea(sc), ref = this.scarRef(sc);
-    const meta = (ref ? [{ icon: 'ph-file-text', label: ref }] : []).concat([{ icon: 'ph-fire-simple', label: (Math.round(ar * 10) / 10).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' ha impactados' }]);
-    this.openCmp({ src: 'scar', title: sc.id, meta, lat: sc.c[0], lng: sc.c[1], frame: this.scarGeom(sc), list: [{ ...pair[0], f: 0 }, { ...pair[1], f: 0, poly: true }], a: 0, b: 1 });
+    const DAY = 24 * this.HOUR, pr = this.scarAutoPair(sc);
+    if (!pr.before || !pr.after) {
+      this.toast(!pr.after ? 'Imagem posterior ainda não disponível.' : 'Imagem anterior não disponível.', 0, sc.id, 'ph-image', 'warn');
+      return;
+    }
+    const ar = this.scarAreaAttr(sc), ref = sc.ref || (sc.user ? '' : this.scarRef(sc)), hr = sc.time || '';
+    const meta = [{ icon: 'ph-calendar-blank', label: 'Data do evento · ' + this.fmtDate(sc.at) + (hr ? ' · ' + hr : '') }];
+    if (ar) meta.push({ icon: 'ph-fire-simple', label: 'Área impactada · ' + (Math.round(ar * 10) / 10).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' ha' });
+    if (ref) meta.push({ icon: 'ph-file-text', label: ref.replace(/^Laudo\s+/, 'Laudo ') });
+    this.openCmp({ src: 'scar', title: sc.id, meta, lat: sc.c[0], lng: sc.c[1], frame: this.scarGeom(sc), list: [{ ...pr.before, f: 0 }, { ...pr.after, f: 0, poly: true }], a: 0, b: 1 });
   }
   // divisor do comparador: arrastar revela uma cena sobre a outra
   cmpDrag(key) {
@@ -4811,7 +5041,7 @@ class Component extends DCLogic {
     // ordem temporal fixa: mais antiga à esquerda (A), mais recente à direita (B)
     let ia = c.a, ib = c.b;
     if (c.list[ia].at > c.list[ib].at) { const x = ia; ia = ib; ib = x; }
-    const sc = (x, label) => this.cmpScene(c.lat, c.lng, { frame: c.frame, showPoly: !!x.poly, burn: x.f, cloud: x.cloud, seed: x.at / 864e5, label, date: this.fmtDate(x.at), cloudTxt: x.cloud + '%' });
+    const sc = (x, label) => this.cmpScene(c.lat, c.lng, { frame: c.frame, showPoly: !!x.poly, polyFillOp: isScar ? 0.12 : 0.35, burn: x.f, cloud: x.cloud, seed: x.at / 864e5, label, date: this.fmtDate(x.at), cloudTxt: 'Nuvens ' + x.cloud + '%' });
     const A = c.list[ia], B = c.list[ib];
     const row = (k, x, label) => {
       const on = c.slot === k;
@@ -4819,9 +5049,11 @@ class Component extends DCLogic {
         onAlter: () => this.setState({ cmp: { ...c, a: ia, b: ib, slot: on ? null : k } }) };
     };
     return {
-      cmpOpen: true, cmpTitle: isScar ? 'Evolução da cicatriz · ' + c.title : 'Comparar cenas', cmpSub: this.rawLL(c.lat, c.lng), onCmpCopy: () => this.copyLLText(this.rawLL(c.lat, c.lng)), cmpChips: isScar && c.meta ? c.meta : [],
+      cmpOpen: true, cmpTitle: isScar ? 'Cicatriz de queimada · ' + c.title : 'Comparar cenas', cmpSub: (isScar ? 'Antes × Depois · ' : '') + this.rawLL(c.lat, c.lng), onCmpCopy: () => this.copyLLText(this.rawLL(c.lat, c.lng)), cmpChips: isScar && c.meta ? c.meta : [],
       cmpA: sc(A, isScar ? 'Antes' : 'Cena A'), cmpB: sc(B, isScar ? 'Depois' : 'Cena B'),
-      onCmpClose: () => this.setState({ cmp: null, cmpTip: false }),
+      onCmpClose: () => this.setState({ cmp: null, cmpTip: false, cmpOsc: false, scarHi: null }, () => this.draw()),
+      cmpOscOn: !!s.cmpOsc, onCmpOsc: () => this.setState({ cmpOsc: !s.cmpOsc }),
+      cmpOscBg: s.cmpOsc ? '#232343' : '#ffffff', cmpOscFg: s.cmpOsc ? '#ffffff' : '#232343', cmpOscIcon: s.cmpOsc ? 'ph-pause' : 'ph-swap',
       cmpTipShow: !!this.state.cmpTip, onCmpTipOn: () => this.setState({ cmpTip: true }), onCmpTipOff: () => this.setState({ cmpTip: false }),
       cmpHasRows: !isScar && c.list.length > 2, cmpRowA: row('a', A, 'Cena A'), cmpRowB: row('b', B, 'Cena B'),
       cmpPicking: !isScar && !!c.slot,
@@ -4899,22 +5131,25 @@ class Component extends DCLogic {
   }
 
   // ---------- R7 · item 5: um único inspector contextual, em área fixa ----------
-  ctxKind() { const s = this.state; return s.metPanel ? 'met' : s.stvPanel ? 'stv' : s.satPanel ? 'sat' : s.scarPanel ? 'scar' : s.histPanel ? 'hist' : null; }
+  ctxKind() { const s = this.state; return s.metPanel ? 'met' : s.stvPanel ? 'stv' : s.satPanel ? 'sat' : s.scarPanel ? 'scar' : s.histPanel ? 'hist' : s.assetPanel ? 'asset' : s.fphPanel ? 'fph' : null; }
   ctxVals() {
     const s = this.state, k = this.ctxKind();
     const base = {
-      ctxOpen: false, ctxIsMet: false, ctxIsStv: false, ctxIsSat: false, ctxIsScar: false, ctxIsHist: false,
+      ctxHasIdCopy: false, onCtxIdCopy: () => {}, ctxOpen: false, ctxIsMet: false, ctxIsStv: false, ctxIsSat: false, ctxIsScar: false, ctxIsHist: false, ctxIsAsset: false,
       ctxX: '0px', ctxY: '0px', ctxW: '0px', ctxMaxH: '0px',
       ctxShowKind: true, ctxHideKind: false, ctxIcon: 'ph-info', ctxAccent: '#232343', ctxKindLabel: '', ctxTitle: '', ctxSub: '', ctxHasSub: false, ctxHasSub2: false, ctxSub2: '',
       ctxHasBadge: false, ctxBadge: '', ctxBadgeBg: '#f7f9fa', ctxBadgeFg: '#5b6672', ctxBadgeBorder: '#dfe3e7',
       ctxHasExpand: false, ctxExpandIcon: 'ph-arrows-out-simple', ctxExpandLabel: 'Expandir',
+      ctxHasChart: false, chartZoomIcon: 'ph-arrows-out-simple', chartZoomLabel: 'Ampliar', onChartZoom: () => {}, chHMet: '124px', chMb: '0px',
       ctxHasCenter: false, onCtxCenter: () => {}, ctxHasAi: false, ctxAiLabel: 'Analisar esta cicatriz com IA', onCtxAi: () => {}, ctxHasCopy: false, onCtxCopy: () => {},
       ...(() => { const th = this.tipHandlers('Copiar coordenadas', 'bottom'); return { tipCtxCopyEnter: th.enter, tipCtxCopyLeave: th.leave }; })(),
       onCtxExpand: () => {}, onCtxClose: () => this.closeCtxPanels({ stvPick: !!s.stvPick, satPick: !!s.satPick })
     };
     if (!k) return base;
-    const prefW = k === 'met' ? 372 : (k === 'stv' && s.stvExpanded ? 9999 : 420);
-    const g = this.ctxGeom(prefW);
+    const z = k === 'met' && !!s.chartZoom;
+    const metObs = k === 'met' && s.metPanel && s.metPanel.kind !== 'fc';
+    const prefW = k === 'met' ? (metObs ? 420 : 372) : (k === 'stv' && s.stvExpanded ? 9999 : 420);
+    const g = z ? { x: Math.round((window.innerWidth - Math.min(1080, window.innerWidth - 64)) / 2), y: 28, w: Math.min(1080, window.innerWidth - 64), maxH: window.innerHeight - 56 } : this.ctxGeom(prefW);
     const geo = { ctxX: g.x + 'px', ctxY: g.y + 'px', ctxW: g.w + 'px', ctxMaxH: g.maxH + 'px' };
     if (k === 'met') {
       const m = this.metPanelVals();
@@ -4922,11 +5157,13 @@ class Component extends DCLogic {
         ...base, ...geo, ctxOpen: true, ctxIsMet: true,
         ctxIcon: m.metIcon, ctxAccent: m.metAccent, ctxKindLabel: m.metKindLabel,
         ctxShowKind: false, ctxHideKind: true,
-        ctxTitle: m.metTitle, ctxSub: m.metId, ctxHasSub: !!m.metId,
+        ctxTitle: m.metTitle, ctxSub: m.metIsObs ? m.metId.replace(' · Sem dados','') : m.metId, ctxHasSub: !!m.metId,
         ...(m.metIsObs ? {} : { ctxHasCopy: true, onCtxCopy: m.onMetCopy }),
         ctxHasSub2: !!m.metLastLine, ctxSub2: m.metLastLine,
         ctxHasBadge: !!m.metBadge, ctxBadge: m.metBadge,
-        ctxBadgeBg: m.metBadgeBg, ctxBadgeFg: m.metBadgeFg, ctxBadgeBorder: m.metBadgeBorder
+        ctxBadgeBg: m.metBadgeBg, ctxBadgeFg: m.metBadgeFg, ctxBadgeBorder: m.metBadgeBorder,
+        ctxHasChart: true, chartZoomIcon: z ? 'ph-arrows-in-simple' : 'ph-arrows-out-simple', chartZoomLabel: z ? 'Reduzir' : 'Ampliar',
+        onChartZoom: () => this.setState({ chartZoom: !this.state.chartZoom }), chHMet: z ? '300px' : '124px', chMb: z ? '18px' : '0px'
       };
     }
     if (k === 'stv') {
@@ -4946,7 +5183,7 @@ class Component extends DCLogic {
       const p = s.satPanel;
       return {
         ...base, ...geo, ctxOpen: true, ctxIsSat: true,
-        ctxIcon: 'ph-globe-simple', ctxKindLabel: '', ctxHideKind: true, ctxShowKind: false, ctxTitle: p.occId ? 'Satélite · ' + p.occId : 'Satélite',
+        ctxIcon: 'ph-globe-simple', ctxKindLabel: '', ctxHideKind: true, ctxShowKind: false, ctxTitle: p.occId ? 'Imagens de satélite · ' + p.occId : 'Imagens de satélite',
         ctxSub: this.rawLL(p.lat, p.lng), ctxHasSub: true,
         ctxHasCopy: true, onCtxCopy: () => this.copyLLText(this.rawLL(p.lat, p.lng)),
         ctxHasCenter: true, onCtxCenter: () => this.centerSat(p),
@@ -4959,9 +5196,32 @@ class Component extends DCLogic {
       return {
         ...base, ...geo, ctxOpen: true, ctxIsHist: true,
         ctxIcon: 'ph-clock-counter-clockwise', ctxAccent: this.lyColor('hist'), ctxKindLabel: 'OCORRÊNCIA HISTÓRICA',
-        ctxTitle: hp.id, ctxSub: this.rawLL(hp.lat, hp.lng), ctxHasSub: true,
+        ctxTitle: hp.id, ctxSub: this.rawLL(hp.lat, hp.lng), ctxHasSub: true, ctxHasIdCopy: true, onCtxIdCopy: () => this.copyId(hp.id),
         ctxHasCopy: true, onCtxCopy: () => this.copyLLText(this.rawLL(hp.lat, hp.lng)),
         ctxHasBadge: true, ctxBadge: 'ENCERRADA', ctxBadgeBg: '#f7f9fa', ctxBadgeFg: '#5b6672', ctxBadgeBorder: '#dfe3e7'
+      };
+    }
+    if (k === 'fph') {
+      const f = this.fphById(s.fphPanel.id);
+      if (!f) return base;
+      return {
+        ...base, ...geo, ctxOpen: true, ctxIsAsset: true,
+        ctxIcon: 'ph-factory', ctxAccent: this.lyColor('fph'), ctxKindLabel: 'FONTE PERSISTENTE DE CALOR',
+        ctxTitle: f.n, ctxSub: this.rawLL(f.c[0], f.c[1]), ctxHasSub: true,
+        ctxHasCopy: true, onCtxCopy: () => this.copyLLText(this.rawLL(f.c[0], f.c[1])),
+        ctxHasCenter: true, onCtxCenter: () => { if (this.map) this.map.setView(f.c, Math.max(this.map.getZoom(), 15)); }
+      };
+    }
+    if (k === 'asset') {
+      const a = this.bdgdById(s.assetPanel.id);
+      if (!a) return base;
+      const T = this.BDGD_TYPES[a.type];
+      return {
+        ...base, ...geo, ctxOpen: true, ctxIsAsset: true,
+        ctxIcon: T.ic, ctxAccent: this.lyColor(T.layer), ctxKindLabel: T.label.toUpperCase(),
+        ctxTitle: a.name || a.id, ctxSub: this.rawLL(a.c[0], a.c[1]), ctxHasSub: true,
+        ctxHasCopy: true, onCtxCopy: () => this.copyLLText(this.rawLL(a.c[0], a.c[1])),
+        ctxHasCenter: true, onCtxCenter: () => { if (this.map) this.map.setView(a.c, Math.max(this.map.getZoom(), 15)); }
       };
     }
     const sp = s.scarPanel;
@@ -4969,7 +5229,7 @@ class Component extends DCLogic {
     return {
       ...base, ...geo, ctxOpen: true, ctxIsScar: true,
       ctxIcon: 'ph-fire-simple', ctxAccent: this.lyColor('cicatriz'), ctxKindLabel: '', ctxHideKind: true, ctxShowKind: false,
-      ctxTitle: 'Cicatriz · ' + sp.id,
+      ctxTitle: 'Cicatriz · ' + sp.id, ctxHasIdCopy: true, onCtxIdCopy: () => this.copyId(sp.id),
       // coordenada = ponto de referência (centro); a geometria oficial é o polígono
       ctxSub: sc0 ? this.rawLL(sc0.c[0], sc0.c[1]) : '', ctxHasSub: !!sc0,
       ctxHasCopy: !!sc0, onCtxCopy: () => { if (sc0) this.copyLLText(this.rawLL(sc0.c[0], sc0.c[1])); },
@@ -5105,19 +5365,18 @@ class Component extends DCLogic {
     const area = this.scarArea(sc);
     const fmt = (x) => (Math.round(x * 10) / 10).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     const ref = this.scarRef(sc);
-    const pair = this.scarPair(sc), A = pair[0], B = pair[1], geom = this.scarGeom(sc);
+    const pr = this.scarAutoPair(sc), pp = this.scarPair(sc), A = pr.before || pp[0], B = pr.after || pp[1], geom = this.scarGeom(sc);
     // evolução mensal: somente atualizações reais cadastradas (nenhuma série é inventada)
-    const ser = this.scarSeries(sc).filter((r) => r.first || r.user);
-    const hasM = ser.length > 1, hi = Math.max(1, Math.ceil(area / 10) * 10), w = 100 / Math.max(1, ser.length);
+    const ser = [], hasM = false, hi = 1, w = 100;
     const g = this.ctxGeom(420);
     return {
       ...out,
       scarId: sc.id,
       scarRows: [['Data do evento', this.fmtDate(sc.at)], ['Horário aproximado', this.scarTime(sc)],
-        ['Área impactada', fmt(area) + ' ha', true], ['Laudo de referência', ref || 'Não informado']].map((r) => ({ label: r[0], value: r[1], fs: r[2] ? '15px' : '12px', fw: r[2] ? '700' : '400', lh: r[2] ? '20px' : '17px' })),
+        ['Área impactada', area ? fmt(area) + ' ha' : 'Não informada', true], ['Laudo de referência', ref || 'Não informado']].map((r) => ({ label: r[0], value: r[1], fs: r[2] ? '15px' : '12px', fw: r[2] ? '700' : '400', lh: r[2] ? '20px' : '17px' })),
       scarA: this.cmpScene(sc.c[0], sc.c[1], { frame: geom, burn: 0, cloud: A.cloud, seed: 1, label: 'Antes', date: this.fmtDate(A.at), cloudTxt: A.cloud + '%' }),
       scarB: this.cmpScene(sc.c[0], sc.c[1], { frame: geom, showPoly: true, cloud: B.cloud, seed: 2, label: 'Depois', date: this.fmtDate(B.at), cloudTxt: B.cloud + '%' }),
-      scarViewH: Math.max(150, Math.min(220, g.maxH - (hasM ? 470 : 300))) + 'px',
+      scarViewH: Math.max(150, Math.min(220, g.maxH - 300)) + 'px',
       scarADate: this.fmtDate(A.at), scarBDate: this.fmtDate(B.at), scarACloud: 'nuvens ' + A.cloud + '%', scarBCloud: 'nuvens ' + B.cloud + '%',
       onScarExpand: () => this.openScarCmp(sc),
       scarHasMonthly: hasM, scarHi: fmt(hi),
@@ -5128,8 +5387,8 @@ class Component extends DCLogic {
           color: this.lyColor('cicatriz'), tipEnter: th.enter, tipLeave: th.leave, aria: tx };
       }) : [],
       scarLabels: hasM ? ser.map((r) => ({ label: r.short })) : [],
-      scarCanEdit: this.canEditScars(),
-      onScarAddUpdate: () => this.openScarForm('upd', sc.id),
+      scarCanEdit: false,
+      onScarAddUpdate: () => {},
       onScarCenter: () => this.centerScar(sc)
     };
   }
@@ -5293,14 +5552,15 @@ class Component extends DCLogic {
   metPanelVals() {
     const s = this.state, m = s.metPanel;
     const iso = (t) => { const d = new Date(t), p = (n) => (n < 10 ? '0' + n : '' + n); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); };
-    const obsFrom = s.obsFrom || iso(this.NOW - 6 * 24 * this.HOUR);
-    const obsTo = s.obsTo || iso(this.NOW);
+    const obsFrom = iso(this.NOW - 6 * 24 * this.HOUR);
+    const obsTo = iso(this.NOW);
     const base = {
+      metFcModelsOn: false, metFcModels: [], metCmpOn: false, metCmpLine: false, metCmpBar: false, metCmpLines: [], metCmpBars: [], metHovModels: [], metHovBar: true,
       metOpen: false, metX: '0px', metY: '0px', metVars: [], metBars: [], metPts: [], metLabels: [],
       metPoly: '', metObsFrom: obsFrom, metObsTo: obsTo, metRange: false, metIsBars: true, metIsLine: false,
       metFromSel: { label: '', fg: '#8a949e', border: '#E5E7EB', onOpen: () => {} },
       metToSel: { label: '', fg: '#8a949e', border: '#E5E7EB', onOpen: () => {} },
-      metNote: '', metFoot: '', metHasProv: false, metHits: [], metHov: { on: false }, metAct: { on: false }, metTlEnd: '0%', metHasTl: false, onMetHovLeave: () => {}, metIsObs: false, metLastLine: '', metRoseTip: {}, metGranTip: {}, roseVec: '', metUnit: '', metChartTitle: '', metHi: '', metLo: '', metMaxH: '520px',
+      metNote: '', metFoot: '', metHasProv: false, metHasStDet: false, metStDetOpen: false, metStDetCaret: 'ph-caret-down', metStDet: [], onMetStDetToggle: () => {}, metHits: [], metHov: { on: false }, metAct: { on: false }, metTlEnd: '0%', metHasTl: false, onMetHovLeave: () => {}, metIsObs: false, metLastLine: '', metRoseTip: {}, metGranTip: {}, roseVec: '', metUnit: '', metChartTitle: '', metHi: '', metLo: '', metMaxH: '520px',
       metIntra: false, metGrans: [], metIsWind: false, metWindDir: false, metShowSeries: true, metWindViews: [], metShowVars: false, metFcVarLabel: '', metFcVarIcon: '', metHasFcDet: false, metFcDet: [], metFcDetOpen: false, metFcDetCaret: 'ph-caret-down', onFcDetToggle: () => {}, metRoseCollapsible: false, metShowWindSeg: true, metWindOrder: 0, metRoseTitleDisp: 'flex', metRoseCaret: 'ph-caret-down', onFcRoseToggle: () => {}, onMetCopy: () => {}, metProv: [], metGranLine: '', metWindSummary: '', metLatestLine: '', metLineStroke: '#0f766e', metGrad: [], roseEmpty: false,
       roseSectors: [], roseHovOut: { when: '', val: '', bg: '#f7f9fa', whenFg: '#8a949e' }, onRoseLeave: () => {}, roseRings: [], roseAxes: [], roseDirLabels: [], roseBins: [],
       rosePredom: '', roseMean: '', roseCalm: '', roseSamples: '',
@@ -5322,7 +5582,8 @@ class Component extends DCLogic {
     const intra = !isFc && this.dayStart(ft) === this.dayStart(tt);
     const num = (r) => (vk === 'vento' ? r.v.spd : r.v);
     const nums = rows.map(num);
-    const hi = nums.length ? Math.max(5, Math.ceil(Math.max.apply(null, nums) / 5) * 5) : 5;
+    const pct = vk === 'cloud' || vk === 'rh';
+    const hi = pct ? 100 : nums.length ? Math.max(5, Math.ceil(Math.max.apply(null, nums) / 5) * 5) : 5;
     const lo = vk === 'temp' && nums.length ? Math.max(0, Math.floor(Math.min.apply(null, nums) / 5) * 5 - 5) : 0;
     const stamp = (x) => (x == null ? '' : this.fmtStamp(x));
     // R10 · itens 11–12: proveniência explícita; campos sem fonte definida são omitidos (nunca inventados)
@@ -5360,12 +5621,53 @@ class Component extends DCLogic {
     const inTl = (i) => isFc && !!rows[i] && this.wxSlotList().indexOf(rows[i].at) >= 0;
     const isBars = vk === 'prec';
     const dirs = vk === 'vento' ? rows.map((r) => r.v.dir) : [];
-    return {
-      ...base,
+    const polyStr = rows.map((r, i) => (i * w + w / 2).toFixed(2) + ',' + (100 - ((num(r) - lo) / Math.max(1, hi - lo)) * 100).toFixed(2)).join(' ');
+    let cmpOut = {};
+    if (isFc) {
+      const FCK = { temp: 'temp', vento: 'wind', gust: 'gust', prec: 'prec', rh: 'rh', cloud: 'cloud' }[vk];
+      const MCOL = { om: '#232343', ecmwf: '#0f766e', gfs: '#c2410c' }, main = s.fcMain || 'om', mods = Object.keys(this.FC_SRC);
+      const hasV = (q) => this.FC_SRC[q].vars.indexOf(FCK) >= 0;
+      const shown = s.fcShow || ['om', 'gfs'];
+      let selM = mods.filter((q) => hasV(q) && shown.indexOf(q) >= 0);
+      if (!selM.length) selM = ['om'];
+      const BI0 = { om: { t: 0, k: 1 }, ecmwf: { t: -0.7, k: 0.82 }, gfs: { t: 0.9, k: 1.22 } };
+      const BI = {}; Object.keys(BI0).forEach((q) => { BI[q] = { t: BI0[q].t - BI0[main].t, k: BI0[q].k / BI0[main].k }; });
+      const mval = (q, r) => {
+        const b = num(r); if (q === main) return b;
+        const hh = this.metHash(q + pt.id + r.at) - 0.5, B = BI[q];
+        if (vk === 'temp') return Math.round((b + B.t + hh * 1.4) * 10) / 10;
+        if (vk === 'prec') return Math.max(0, Math.round((b * B.k + (b > 0 ? hh * 1.2 : Math.max(0, hh - 0.3) * 3)) * 10) / 10);
+        if (vk === 'rh' || vk === 'cloud') return Math.max(0, Math.min(100, Math.round(b + (B.k - 1) * 12 + hh * 10)));
+        return Math.max(0, Math.round(b * (0.9 + (B.k - 1) * 0.4) + hh * 4));
+      };
+      const ser = selM.map((q) => ({ q, vals: rows.map((r) => mval(q, r)) })), useCmp = selM.length > 1;
+      cmpOut = { metFcModelsOn: true, metCmpOn: useCmp, metHovModels: [],
+        metFcModels: mods.map((q) => { const has = hasV(q), on = selM.indexOf(q) >= 0, last = on && selM.length === 1;
+          return { label: this.FC_SRC[q].label, color: MCOL[q], on, disabled: !has || last, title: !has ? 'Este modelo não fornece esta variável' : last ? 'Mantenha ao menos um modelo no gráfico' : '', fg: has ? '#1b2026' : '#8a949e', cursor: !has || last ? 'default' : 'pointer',
+            onToggle: () => { if (!has || last) return; const cur = selM.slice(), ix = cur.indexOf(q); if (ix >= 0) cur.splice(ix, 1); else cur.push(q); this.setState({ fcShow: cur }); } }; }) };
+      if (useCmp) {
+        const all = [].concat.apply([], ser.map((x) => x.vals)), mN = ser.length;
+        const chi = pct ? 100 : all.length ? Math.max(5, Math.ceil(Math.max.apply(null, all) / 5) * 5) : 5;
+        const clo = vk === 'temp' && all.length ? Math.max(0, Math.floor(Math.min.apply(null, all) / 5) * 5 - 5) : 0, csp = Math.max(1, chi - clo);
+        const yv = (v) => ((v - clo) / csp) * 100, hk = s.metHov != null && rows[s.metHov] ? s.metHov : null;
+        Object.assign(cmpOut, {
+          metIsBars: false, metIsLine: false, metCmpLine: !isBars, metCmpBar: isBars, metBars: [], metPts: [], metPoly: '',
+          metHi: fmt(chi), metLo: fmt(clo),
+          metCmpLines: isBars ? [] : ser.map((x) => ({ color: MCOL[x.q], pts: x.vals.map((v, i) => (i * w + w / 2).toFixed(2) + ',' + (100 - yv(v)).toFixed(2)).join(' ') })),
+          metCmpBars: isBars ? [].concat.apply([], rows.map((r, i) => ser.map((x, j) => ({ left: (i * w + w * 0.12 + j * (w * 0.76 / mN)).toFixed(2) + '%', width: (w * 0.76 / mN * 0.86).toFixed(2) + '%', height: Math.max(1, yv(x.vals[i])).toFixed(2) + '%', color: MCOL[x.q] })))) : [],
+          metHovBar: hk != null,
+          metHov: hk == null ? { on: false, x: '0%', y: '0%', when: 'Passe o mouse no gráfico para comparar os modelos', val: '', bg: '#f7f9fa', whenFg: '#8a949e' }
+            : { on: true, x: (hk * w + w / 2).toFixed(2) + '%', y: Math.max(1, yv(ser[0].vals[hk])).toFixed(2) + '%', when: whenOf(rows[hk]), val: '', bg: '#ececf3', whenFg: '#5b6672' },
+          metHovModels: hk == null ? [] : ser.map((x) => ({ color: MCOL[x.q], val: this.FC_SRC[x.q].label + ' ' + fmt(x.vals[hk]) + ' ' + V.unit }))
+        });
+      }
+    }
+    const res = Object.assign({
+      ...base, metHovBar: !isFc || s.metHov != null,
       metOpen: true, metX: m.x + 'px', metY: m.y + 'px', metMaxH: (m.maxH || 520) + 'px',
       metKindLabel: isFc ? 'PREVISÃO METEOROLÓGICA' : 'ESTAÇÃO METEOROLÓGICA',
       metTitle: isFc ? 'Previsão para este ponto' : pt.n,
-      metId: isFc ? (pt.c ? pt.c[0].toFixed(4).replace('.', ',') + ' · ' + pt.c[1].toFixed(4).replace('.', ',') : pt.n) : pt.id + ' · Observado',
+      metId: isFc ? (pt.c ? pt.c[0].toFixed(4).replace('.', ',') + ' · ' + pt.c[1].toFixed(4).replace('.', ',') : pt.n) : (pt.org || 'Origem não informada'),
       onMetCopy: () => this.copyLLText(pt.c ? this.rawLL(pt.c[0], pt.c[1]) : pt.n),
       metShowVars: !isFc, metFcVarLabel: isFc ? V.label : '', metFcVarIcon: V.icon,
       metHasFcDet: isFc && prov.length > 0, metFcDet: isFc ? prov : [], metFcDetOpen: !!s.fcDetOpen,
@@ -5398,10 +5700,10 @@ class Component extends DCLogic {
       onMetHovLeave: () => this.setState({ metHov: null }),
       metIcon: isFc ? 'ph-cloud-sun' : 'ph-cell-tower',
       metAccent: accent,
-      metBadge: isFc ? '' : 'OBSERVADO',
-      metBadgeBg: isFc ? '#ececf3' : '#f4fbf6',
-      metBadgeFg: isFc ? '#17172e' : '#1f6b3a',
-      metBadgeBorder: isFc ? '#d7d7e0' : '#cfe6d6',
+      metBadge: isFc ? '' : (pt.online === false ? 'INDISPONÍVEL' : ''),
+      metBadgeBg: isFc ? '#ececf3' : (pt.online === false ? '#f7f9fa' : '#f4fbf6'),
+      metBadgeFg: isFc ? '#17172e' : (pt.online === false ? '#8a949e' : '#1f6b3a'),
+      metBadgeBorder: isFc ? '#d7d7e0' : (pt.online === false ? '#dfe3e7' : '#cfe6d6'),
       // estrutura fixa Temperatura | Vento | Precipitação; variável ausente fica desabilitada, nunca some
       metVars: ['temp', 'vento', 'prec'].map((k) => {
         const on = k === vk, VV = this.MET_VARS[k], has = pt.vars.indexOf(k) >= 0;
@@ -5414,20 +5716,17 @@ class Component extends DCLogic {
           onClick: () => { if (!has) return; this.setState({ metPanel: { ...m, v: k } }); if (isFc && this.fcActive()) this.onWxPick({ temp: 'temp', vento: 'wind', prec: 'prec' }[k]); }
         };
       }),
-      metRange: !isFc,
+      metRange: false,
       metFromSel: this.dpkTrigger({ key: 'metfrom', value: obsFrom, mode: 'date', placeholder: 'Data inicial', max: lastObs, onPick: (v) => this.setState({ obsFrom: v }) }),
       metToSel: this.dpkTrigger({ key: 'metto', value: obsTo, mode: 'date', placeholder: 'Data final', max: lastObs, onPick: (v) => this.setState({ obsTo: v }) }),
-      metChartTitle: isFc ? 'Próximos dias' : vk === 'vento' ? 'Velocidade ao longo do tempo' : 'Observado — ' + V.label + (intra ? ' · ' + this.metDayLabel(ft) : ''),
-      metGranLine: rows.length && isFc ? 'Intervalo · ' + this.granLabel(rows.bucketMin)
-        : rows.length
-        ? 'Intervalo · ' + this.granLabel(rows.bucketMin) + ' · ' + rows.rawN + (rows.rawN === 1 ? ' medição' : ' medições')
-        : (isFc ? 'Sem pontos de previsão disponíveis.' : 'Sem medições disponíveis no período selecionado.'),
-      metProv: prov, metHasProv: !isFc && prov.length > 0,
+      metChartTitle: isFc ? 'Próximos dias' : vk === 'vento' ? 'Velocidade ao longo do tempo' : V.label + ' · últimos 7 dias',
+      metGranLine: isFc ? (rows.length ? 'Intervalo · ' + this.granLabel(rows.bucketMin) : 'Sem pontos de previsão disponíveis.') : '',
+      metProv: prov, metHasProv: false,
       metWindSummary: vk === 'vento' || (isFc && vk === 'gust') ? latest : '',
       metLatestLine: vk === 'vento' || (isFc && vk === 'gust') ? '' : latest,
       metLineStroke: vk === 'temp' ? 'url(#qzMetTempGrad)' : accent,
       metGrad: [0, 1, 2, 3, 4, 5, 6].map((k) => ({ off: (k / 6 * 100).toFixed(0) + '%', color: vk === 'temp' ? this.metScale(this.TEMP_SCALE, lo + span * k / 6) : accent })),
-      metIntra: intra,
+      metIntra: false,
       metGrans: [{ v: 'hora', label: 'Por hora' }, { v: '10min', label: 'A cada 10 min' }].map((g) => {
         const on = s.metGran === g.v;
         return {
@@ -5470,11 +5769,21 @@ class Component extends DCLogic {
           color: valColor(num(r)), tipEnter: th.enter, tipLeave: th.leave, aria: tip(r)
         };
       }),
-      metPoly: rows.map((r, i) => (i * w + w / 2).toFixed(2) + ',' + (100 - ((num(r) - lo) / span) * 100).toFixed(2)).join(' '),
+      metPoly: polyStr,
       metLabels: (() => { const st = Math.max(1, Math.ceil(n / 8)); return rows.map((r, i) => ({ label: n > 10 ? (i % st === 0 ? r.label : '') : r.label })); })(),
-      metNote: intra && vk === 'prec' ? 'Precipitação por intervalo, no dia selecionado.' : '',
-      metFoot: ''
-    };
+      metNote: '',
+      metFoot: '',
+      metHasStDet: !isFc, metStDetOpen: !isFc && !!s.stDetOpen, metStDetCaret: s.stDetOpen ? 'ph-caret-up' : 'ph-caret-down',
+      metStDet: isFc ? [] : [
+        { label: 'ID', value: pt.id, hasCopy: true, onCopy: () => this.copyId(pt.id) },
+        { label: 'Origem', value: pt.org || pt.src || '—', hasCopy: false, onCopy: () => {} },
+        { label: 'Status', value: pt.online === false ? 'Indisponível' : 'Operacional', hasCopy: false, onCopy: () => {} },
+        { label: 'Última atualização', value: stamp(lastObs), hasCopy: false, onCopy: () => {} },
+        { label: 'Coordenadas', value: pt.c ? this.rawLL(pt.c[0], pt.c[1]) : '—', hasCopy: !!pt.c, onCopy: () => pt.c && this.copyLLText(this.rawLL(pt.c[0], pt.c[1])) }
+      ],
+      onMetStDetToggle: () => this.setState({ stDetOpen: !this.state.stDetOpen })
+    }, cmpOut);
+    return res;
   }
 
   // símbolo da row = mesma linguagem visual usada no mapa e na legenda
@@ -5494,6 +5803,8 @@ class Component extends DCLogic {
       case 'area': return 'width:13px;height:9px;background:#4e9247;opacity:.6;border:1px solid ' + c;
       case 'wind': return 'width:13px;height:2px;background:#12122a;transform:rotate(-40deg)';
       case 'chip': return 'width:14px;height:9px;border-radius:2px;background:rgba(255,255,255,.92);border:1px solid #cfd6dc';
+      case 'trafo': return 'width:11px;height:11px;border-radius:2px;background:' + c + ';border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(20,28,36,.3)';
+      case 'poste': return 'width:7px;height:7px;border-radius:50%;background:#fff;border:2px solid ' + c;
       default: return 'width:10px;height:10px;border-radius:50%;background:' + c;
     }
   }
@@ -5503,7 +5814,7 @@ class Component extends DCLogic {
     const layers = {}; const order = [];
     this.buildScenario(true);
     this.layerDefs.forEach((d) => { layers[d.id] = { on: d.on, op: d.op, st: d.st }; order.push(d.id); });
-    this.setState({ layers, order, from: this.NOW - 72 * this.HOUR, to: this.NOW });
+    this.setState({ layers, order, from: this.NOW - 72 * this.HOUR, to: this.NOW, scarFrom: this.dpkFmt(this.NOW - 90 * 24 * this.HOUR, 'date'), scarTo: this.dpkFmt(this.NOW, 'date') });
     this._up = setInterval(() => this.setState((s) => ({ updatedAgo: s.updatedAgo + 1 })), 60000);
     window.addEventListener('mousemove', this.onWinMove);
     window.addEventListener('mouseup', this.onWinUp);
@@ -5511,11 +5822,13 @@ class Component extends DCLogic {
     window.addEventListener('mousedown', this.onDocDown);
     window.addEventListener('resize', this.onWinResize);
     document.addEventListener('fullscreenchange', this.onFsChange);
+    document.addEventListener('pointerdown', this.onFirstGesture, { once: true });
+    this._alarmT = setInterval(this.alarmTick, 4200);
     this.waitLeaflet();
     // R2 · item 2: o eixo de tempo inicia expandido (estado funcional já existente)
   }
   componentWillUnmount() {
-    clearInterval(this._up); clearInterval(this._e); clearInterval(this._u); clearTimeout(this._b); clearTimeout(this._t); clearTimeout(this._tt); clearTimeout(this._tipT);
+    clearInterval(this._up); clearInterval(this._e); clearInterval(this._u); clearInterval(this._alarmT); clearInterval(this._replayT); clearTimeout(this._b); clearTimeout(this._t); clearTimeout(this._tt); clearTimeout(this._tipT);
     window.removeEventListener('mousemove', this.onWinMove);
     window.removeEventListener('mouseup', this.onWinUp);
     window.removeEventListener('keydown', this.onKey);
@@ -5523,6 +5836,7 @@ class Component extends DCLogic {
     window.removeEventListener('resize', this.onWinResize);
     clearInterval(this._stvT);
     document.removeEventListener('fullscreenchange', this.onFsChange);
+    document.removeEventListener('pointerdown', this.onFirstGesture);
   }
   drawSig() {
     const s = this.state;
@@ -5598,8 +5912,9 @@ class Component extends DCLogic {
     this.bases.dark.on('tileerror', onTileErr);
     this.bases.sat.addTo(this.map);
     this.g = {};
-    ['scope', 'concessao', 'estados', 'munic', 'veg', 'conj', 'cicatriz', 'bdgd_bt', 'bdgd_mt', 'bdgd_at', 'subs', 'unid_saude', 'unid_bomb', 'unid_pol', 'unid_agua', 'hist', 'meteo', 'meteo_est', 'meteo_prec', 'meteo_temp', 'meteo_vento', 'forecast', 'user', 'measure', 'casing', 'focos', 'hilite'].forEach((k) => { this.g[k] = L.layerGroup().addTo(this.map); });
+    ['scope', 'concessao', 'estados', 'munic', 'veg', 'conj', 'cicatriz', 'bdgd_bt', 'bdgd_mt', 'bdgd_at', 'subs', 'bdgd_poste', 'bdgd_trafo', 'unid_saude', 'unid_bomb', 'unid_pol', 'unid_agua', 'hist', 'fph', 'meteo', 'meteo_est', 'meteo_prec', 'meteo_temp', 'meteo_vento', 'forecast', 'user', 'measure', 'casing', 'focos', 'hilite'].forEach((k) => { this.g[k] = L.layerGroup().addTo(this.map); });
     this.map.on('zoomend', () => { const z = this.map.getZoom(); if (z !== this._z) { this._z = z; this.draw(); } });
+    this.map.on('moveend', () => { if (this.map.getZoom() >= 13 && (this.state.layers.bdgd_poste || {}).on) this.draw(); });
     this.map.on('click', () => { if (this._open) { this._open = null; this.draw(); } });
     this.map.on('moveend', () => {
       const lm = this.state.layers.munic;
@@ -5724,13 +6039,87 @@ class Component extends DCLogic {
   scenesInPeriod() {
     const s = this.state, lc = s.layers.cicatriz;
     if (!(lc && lc.on && lc.st !== 'error')) return [];
-    return this.allScars().filter((x) => this.scarInScope(x) && x.at >= s.from && x.at <= s.to);
+    return this.visScars().filter((x) => x.at >= s.from && x.at <= s.to);
   }
-  // no mapa: toda cicatriz do escopo já existente até o fim do período (a área permanece após o evento)
+  // Cicatrizes: período De/Até próprio, comparado com a data do evento registrada em cada polígono
+  scarRange() {
+    const s = this.state, DAY = 24 * this.HOUR;
+    const f = this.dpkParse(s.scarFrom), g = this.dpkParse(s.scarTo);
+    let a = f ? this.dayStart(f) : -Infinity, b = g ? this.dayStart(g) + DAY - 1 : Infinity;
+    if (a > b) { const x = a; a = this.dayStart(b); b = x + DAY - 1; }
+    return [a, b];
+  }
   visScars() {
-    const s = this.state;
-    return this.allScars().filter((x) => this.scarInScope(x) && x.at <= s.to);
+    const r = this.scarRange();
+    return this.allScars().filter((x) => this.scarInScope(x) && x.at >= r[0] && x.at <= r[1]);
   }
+  // Queimadas · alertas novos: feedback visual + sonoro, silenciável.
+  // O áudio só é habilitado após a primeira interação do usuário, conforme restrições do navegador.
+  alarmTick = () => {
+    if (!this.map || this.state.alertMute || this.state.view !== 'app') return;
+    const unread = this.unreadAlerts();
+    if (!unread.length) { this._alarmN = 0; this._alarmSig = ''; return; }
+    const sig = unread.map((a) => a.id).join('|');
+    const now = Date.now();
+    if (sig !== this._alarmSig) { this._alarmSig = sig; this._lastBeep = 0; }
+    if (now - (this._lastBeep || 0) < 12000) return;
+    this._lastBeep = now;
+    this.alertBeep();
+  };
+  onFirstGesture = () => {
+    try { this._ac = this._ac || new (window.AudioContext || window.webkitAudioContext)(); if (this._ac.state === 'suspended') this._ac.resume(); } catch (err) { /* sem Web Audio */ }
+    setTimeout(this.alarmTick, 500);
+  };
+  alertBeep() {
+    try {
+      const C = this._ac || (this._ac = new (window.AudioContext || window.webkitAudioContext)());
+      if (C.state === 'suspended') C.resume();
+      const t0 = C.currentTime;
+      // Três pulsos triangulares: mais audível/marcante que o protótipo ferroviário, mas curto.
+      [[920, 0], [1180, 0.17], [920, 0.34]].forEach((q) => {
+        const o = C.createOscillator(), gn = C.createGain();
+        o.type = 'triangle'; o.frequency.value = q[0];
+        gn.gain.setValueAtTime(0.0001, t0 + q[1]);
+        gn.gain.exponentialRampToValueAtTime(0.13, t0 + q[1] + 0.018);
+        gn.gain.exponentialRampToValueAtTime(0.0001, t0 + q[1] + 0.14);
+        o.connect(gn); gn.connect(C.destination); o.start(t0 + q[1]); o.stop(t0 + q[1] + 0.15);
+      });
+    } catch (err) { /* navegador sem Web Audio */ }
+  }
+
+  // Reprodução temporal: usa a timeline existente e avança o fim da janela em passos fixos.
+  // Os focos entram conforme o horário original da detecção; nenhum dado é alterado ou interpolado.
+  replayStart(restart) {
+    const s = this.state;
+    if (!this._rp || this._rp.from !== s.from || (!s.replaySession)) this._rp = { from: s.from, end: s.to };
+    const rp = this._rp, span = Math.max(this.HOUR, rp.end - rp.from);
+    rp.step = Math.max(1, Math.ceil(span / this.HOUR / 24)) * this.HOUR;
+    const startTo = restart || s.to >= rp.end || !s.replaySession ? Math.min(rp.from + rp.step, rp.end) : s.to;
+    this.setState({ replayOn: true, replaySession: true, from: rp.from, to: startTo }, this.replayLoop);
+  }
+  replayLoop = () => {
+    clearInterval(this._replayT);
+    this._replayT = setInterval(() => {
+      const rp = this._rp;
+      if (!rp || this.state.from !== rp.from) { this.endReplay(true); return; }
+      const cur = this.state.to;
+      if (cur >= rp.end) { this.endReplay(false); return; }
+      this.setState({ to: Math.min(rp.end, cur + rp.step) });
+    }, Math.round(900 / (this.state.replaySpeed || 1)));
+  };
+  stopReplay = () => { clearInterval(this._replayT); this._replayT = null; if (this.state.replayOn) this.setState({ replayOn: false }); };
+  toggleReplay = () => { if (this.state.replayOn) this.stopReplay(); else this.replayStart(false); };
+  restartReplay = () => this.replayStart(true);
+  endReplay = (keep) => {
+    clearInterval(this._replayT); this._replayT = null;
+    const rp = this._rp; this._rp = null;
+    this.setState({ replayOn: false, replaySession: false, ...(rp && !keep ? { from: rp.from, to: rp.end } : {}) });
+  };
+  cycleReplaySpeed = () => {
+    const n = { 1: 2, 2: 4, 4: 1 }[this.state.replaySpeed || 1];
+    this.setState({ replaySpeed: n }, () => { if (this.state.replayOn) this.replayLoop(); });
+  };
+
   // R5 · item 21: Alertas seguem o escopo territorial e o período, nunca os filtros de Ocorrências
   alertList() {
     const s = this.state;
@@ -5738,6 +6127,18 @@ class Component extends DCLogic {
       .filter((o) => o.at >= s.from && o.at <= s.to && this.occInScope(o) && (o.crit === 'P0' || o.crit === 'P1') && o.status === 'ativo')
       .sort((a, b) => b.at - a.at);
   }
+  // reconhecer: encerra halo, NOVO e repetição sonora daquele foco; o foco permanece no mapa
+  ackAlert(id) { if (this.state.read.indexOf(id) >= 0) return; this.setState((s) => ({ read: s.read.concat([id]) }), () => this.draw()); }
+  alertNewIds() { return this.alertList().filter((a) => a.isNew).map((a) => a.id); }
+  // foco novo (qualquer prioridade) ainda não reconhecido
+  isNewOcc(id) { const o = this.byId(id); return !!(o && o.isNew && o.status === 'ativo' && this.state.read.indexOf(id) < 0); }
+  copyId(id) {
+    const done = () => this.toast('ID copiado', 0, id, 'ph-copy');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(id).then(done, () => { this.copyRaw(id); done(); });
+    else { this.copyRaw(id); done(); }
+  }
+  copyIdH(id) { return (e) => { if (e) { e.stopPropagation(); e.preventDefault(); } this.copyId(id); }; }
+  unreadAlerts() { const ids = this.alertNewIds(); return this.alertList().filter((a) => ids.indexOf(a.id) >= 0 && this.state.read.indexOf(a.id) < 0); }
   byId(id) { return this.occ.filter((o) => o.id === id)[0] || (this._demoOcc || {})[id]; }
   // foco de densidade DEMO: vira registro selecionável, com ativo e distância calculados
   demoOccFor(d) {
@@ -6001,7 +6402,7 @@ class Component extends DCLogic {
     };
     const P = (p, u) => this.mapPt(p, u);
     const subs = [], at = [], mt = [], bt = [], conj = [], units = [], veg = [], scars = [];
-    const stations = [], fcs = [], occ = [], dfoc = [], dfocUf = [], dhist = [], dunits = [];
+    const stations = [], fcs = [], occ = [], dfoc = [], dfocUf = [], dhist = [], dunits = [], fph = [];
     const meta = { ...B.assetsMeta };
     Object.keys(meta).forEach((k) => {
       if (!meta[k].uf) meta[k].uf = ['CJ-BJL', 'AL-MT-2210', 'LT-138-BJL-IBO', 'SE-BJL-69'].indexOf(k) >= 0 ? 'BA' : 'MG';
@@ -6020,6 +6421,7 @@ class Component extends DCLogic {
         if (su === uf) { if (scars.indexOf(sc) < 0) scars.push(sc); return; }
         if (su === 'MG' && !B.scars.some((x) => x.uf === uf)) scars.push({ id: 'CIC-' + uf + '-' + (i + 1), uf, at: sc.at, c: P(sc.c, uf), r: sc.r });
       });
+      this.fphSites.forEach((f, i) => fph.push(mg ? { ...f } : { ...f, id: f.id + '-' + uf, c: P(f.c, uf) }));
       B.metStations.forEach((st, i) => stations.push(mg ? st : { id: 'EST-' + uf + '-' + this.p2(i + 1), n: 'Estação ' + (i + 1) + ' · ' + nm, c: P(st.c, uf), vars: st.vars, src: st.src }));
       B.fcPoints.forEach((fp, i) => fcs.push(mg ? fp : { id: 'FC-' + uf + '-' + this.p2(i + 1), n: 'Ponto ' + (i + 1) + ' · ' + nm, c: P(fp.c, uf), vars: fp.vars }));
       B.demo.focos.forEach((p) => { dfoc.push(mg ? p : P(p, uf)); dfocUf.push(uf); });
@@ -6030,14 +6432,20 @@ class Component extends DCLogic {
       B.occMG.forEach((o, i) => {
         const p = P([o.lat, o.lng], uf), aid = this.scenAssetId(o.assetId, uf);
         if (!meta[aid]) meta[aid] = { name: this.scenAssetName(o.assetId, uf), kind: (this.ASSET_MAP[o.assetId] || ['AT', 'Ativo'])[1], uf };
-        occ.push({ ...o, id: 'FOC-' + (OFF + i * 7), cli: 'QMD-' + (Math.round(OFF / 10) + i * 3), lat: p[0], lng: p[1], assetId: aid, uf, mun: 'TODOS' });
+        occ.push({ ...o, isNew: false, id: 'FOC-' + (OFF + i * 7), cli: 'QMD-' + (Math.round(OFF / 10) + i * 3), lat: p[0], lng: p[1], assetId: aid, uf, mun: 'TODOS' });
       });
     });
     this.subs = subs; this.atLines = at; this.mtPaths = mt; this.btPaths = bt;
     this.conjPolys = conj; this.critUnits = units; this.vegClasses = veg; this.scars = scars;
     this.metStations = stations; this.fcPoints = fcs; this.assetsMeta = meta;
+    this.bdgdAssets = this.buildBdgd(ufs); this._prox = {};
+    this.layerDefs.forEach((d) => { if (d.id === 'bdgd_bt') d.count = bt.length + ' ramais'; if (d.id === 'bdgd_mt') d.count = mt.length + ' troncos'; if (d.assetType && d.assetType !== 'sub') { const n = this.bdgdAssets.filter((a) => a.type === d.assetType).length; d.count = n + (d.assetType === 'poste' ? ' postes' : ' transformadores'); } });
     this.demo = { ...B.demo, focos: dfoc, hist: dhist, units: dunits };
-    this.occ = occ;
+    // regra de exclusão: detecção dentro do buffer de fonte persistente conhecida não entra na operação
+    // (não aparece no mapa, na lista, na Central, não gera alerta e não conta)
+    this.fphList = fph;
+    this.fphSupp = [];
+    this.occ = occ.filter((o) => { const f = this.fphMatch(o); if (f) { this.fphSupp.push({ ...o, fph: f.id }); return false; } return true; });
     // DEMO / SYNTHETIC: focos de densidade entram na MESMA coleção operacional da Lista
     this._demoOcc = {};
     const DCR = ['P1', 'P2', 'P3', 'P2', 'P0', 'P3'];
@@ -6372,11 +6780,12 @@ class Component extends DCLogic {
     if (on('veg')) this.vegClasses.filter((v) => anyIn(v.p)).forEach((v) => L.polygon(v.p, { color: v.c, weight: 1, fillColor: v.c, fillOpacity: op('veg') * 0.55, opacity: op('veg') }).addTo(this.g.veg).bindTooltip(v.n, { sticky: true }));
     if (on('cicatriz')) {
       this.visScars().filter((sc) => inS(sc.c)).forEach((sc) => {
-        const sel = this.state.scarPanel && this.state.scarPanel.id === sc.id;
+        const sel = (this.state.scarPanel && this.state.scarPanel.id === sc.id) || this.state.scarHi === sc.id;
         // selecionada: mesma família de cor, contorno mais espesso + halo discreto + preenchimento mais evidente
         const poly = L.polygon(this.scarGeom(sc), { pane: 'qzScar', color: sel ? '#ffffff' : this.lyColor('cicatriz'), weight: sel ? 1.8 : 1.2, fillColor: this.lyColor('cicatriz'), fillOpacity: Math.min(0.9, op('cicatriz') * (sel ? 0.85 : 0.6)), opacity: sel ? 1 : op('cicatriz') });
         poly.on('contextmenu', (e) => { L.DomEvent.stop(e); this.openFocoMenu(sc.id + ' · ponto clicado', e.latlng.lat, e.latlng.lng, e.originalEvent); });
-        poly.bindTooltip('<b>' + sc.id + '</b><br/>Cicatriz · evento em ' + this.fmtDate(sc.at), { sticky: true });
+        const ha = this.scarAreaAttr(sc);
+        poly.bindTooltip('Cicatriz de queimada<br/><b>' + this.fmtDate(sc.at) + '</b>' + (ha ? '<br/>' + ha.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' ha' : ''), { sticky: true });
         poly.on('click', (e) => { L.DomEvent.stop(e); this.showScar(sc, e.latlng); });
         poly.addTo(this.g.cicatriz);
       });
@@ -6406,8 +6815,44 @@ class Component extends DCLogic {
       this.clusterDraw('subs', subsList.map((x) => x.c), '#232343', 'subestações', (p, i) => {
         L.marker(p, { icon: this.pictoIcon(this.lyColor('subs'), 'ph-lightning', 'sub') })
           .addTo(this.g.subs)
-          .bindTooltip('Subestação · ' + subsList[i].n, { direction: 'top' });
+          .bindTooltip('Subestação · ' + subsList[i].n, { direction: 'top' })
+          .on('click', (e) => { L.DomEvent.stop(e); this.openAsset(subsList[i].id); });
       }, 'ph-lightning');
+    }
+    if (on('bdgd_trafo')) {
+      const tl = (this.bdgdAssets || []).filter((a) => a.type === 'trafo' && inS(a.c)), cc = this.lyColor('bdgd_trafo');
+      const ico = L.divIcon({ className: '', iconSize: [20, 20], iconAnchor: [10, 10], html: '<div style="width:20px;height:20px;border-radius:4px;background:' + cc + ';border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center"><i class="ph ph-cube" style="font-size:11px;color:#fff;line-height:1"></i></div>' });
+      this.clusterDraw('bdgd_trafo', tl.map((a) => a.c), '#7c3f0a', 'transformadores', (p, i) => {
+        L.marker(p, { icon: ico }).addTo(this.g.bdgd_trafo)
+          .bindTooltip('Transformador · ' + tl[i].id, { direction: 'top' })
+          .on('click', (e) => { L.DomEvent.stop(e); this.openAsset(tl[i].id); });
+      }, 'ph-cube');
+    }
+    if (on('bdgd_poste') && this.map.getZoom() >= 13) {
+      const bb = this.map.getBounds().pad(0.2), cc = this.lyColor('bdgd_poste');
+      (this.bdgdAssets || []).filter((a) => a.type === 'poste' && inS(a.c) && bb.contains(a.c)).forEach((a) => {
+        L.circleMarker(a.c, { radius: 4, color: cc, weight: 2, fillColor: '#ffffff', fillOpacity: 1 }).addTo(this.g.bdgd_poste)
+          .bindTooltip('Poste · ' + a.id, { direction: 'top' })
+          .on('click', (e) => { L.DomEvent.stop(e); this.openAsset(a.id); });
+      });
+    }
+    if (s.assetPanel) {
+      const ap = this.bdgdById(s.assetPanel.id);
+      if (ap) L.circleMarker(ap.c, { radius: 15, color: '#f59e0b', weight: 3, fill: false, interactive: false }).addTo(this.g.scope);
+    }
+    if (on('fph')) {
+      const fc = this.lyColor('fph'), list = this.fphList.filter((f) => inS(f.c));
+      list.forEach((f) => {
+        L.marker(f.c, { icon: this.pictoIcon(fc, 'ph-factory') }).addTo(this.g.fph)
+          .bindTooltip('<b>' + f.n + '</b><br/>Fonte persistente de calor', { direction: 'top' })
+          .on('click', (e) => { L.DomEvent.stop(e); this.openFph(f.id); });
+      });
+    }
+    if (s.fphPanel) {
+      const f = this.fphById(s.fphPanel.id);
+      if (f) {
+        L.circle(f.c, { radius: f.buf, color: '#a16207', weight: 1.5, dashArray: '4 4', fillColor: '#a16207', fillOpacity: 0.1, interactive: false }).addTo(this.g.scope);
+      }
     }
     const UD = { unid_saude: ['Saúde', 'ph-first-aid'], unid_bomb: ['Emergência', 'ph-fire-truck'], unid_pol: ['Segurança', 'ph-shield'], unid_agua: ['Tratamento de água', 'ph-drop'] };
     Object.keys(UD).forEach((id) => {
@@ -6446,12 +6891,19 @@ class Component extends DCLogic {
     // inspector abre nas variáveis ativas da própria estação.
     const metActive = Object.keys(this.MET_VARS).filter((v) => !this.MET_VARS[v].fcOnly && on(this.MET_VARS[v].layer));
     if (on('meteo_est') || metActive.length) {
-      const color = this.lyColor('meteo_est');
+      const color = this.lyColor('meteo_est'), org = this.state.metOrg || 'all';
+      // “sem chuva” só se aplica no contexto de Precipitação; estação indisponível tem estado próprio
+      const precCtx = metActive.indexOf('prec') >= 0;
       const list = this.metStations.filter((x) => inS(x.c)
-        && (!metActive.length || x.vars.some((v) => metActive.indexOf(v) >= 0)));
-      this.clusterDraw('meteo_est', list.map((x) => x.c), '#0f766e', 'estações meteorológicas', (p, i) => {
-        const stn = list[i];
-        const mk = L.marker(p, { icon: this.pictoIcon(color, 'ph-cell-tower') }).addTo(this.g.meteo_est);
+        && (org === 'all' || x.org === org)
+        && (!metActive.length || x.vars.some((v) => metActive.indexOf(v) >= 0))
+        && !(precCtx && this.state.metShowDry === false && x.online !== false && x.vars.indexOf('prec') >= 0 && this.stationPrec(x) === 0));
+      this.clusterDraw('meteo_est', list.map((x) => x.c), '#1e40af', 'estações meteorológicas', (p, i) => {
+        const stn = list[i], pv = stn.vars.indexOf('prec') >= 0 ? this.stationPrec(stn) : null;
+        let icon;
+        if (stn.online === false) icon = this.stationOffIcon();
+        else icon = this.pictoIcon(color, 'ph-cell-tower');
+        const mk = L.marker(p, { icon }).addTo(this.g.meteo_est);
         mk.bindTooltip(this.metTip(stn), { direction: 'top' });
         const first = stn.vars.filter((v) => !metActive.length || metActive.indexOf(v) >= 0)[0] || stn.vars[0];
         mk.on('click', (e) => { L.DomEvent.stop(e); this.openMetPanel('obs', stn.id, first, e.originalEvent); });
@@ -6477,7 +6929,9 @@ class Component extends DCLogic {
     // focos + clusters: o MESMO conjunto da Lista (visible()); a densidade DEMO faz parte de this.occ
     const vis = (on('focos') ? this.visible() : []).filter((o) => inS([o.lat, o.lng]));
     if (on('focos')) {
-      this.clusterDraw('focos', vis.map((o) => [o.lat, o.lng]), '#3f4650', 'focos de calor', (p, i) => this.marker(vis[i], p), 'ph-fire');
+      const fresh = vis.filter((o) => this.isNewOcc(o.id)), rest = vis.filter((o) => !this.isNewOcc(o.id));
+      this.clusterDraw('focos', rest.map((o) => [o.lat, o.lng]), '#3f4650', 'focos de calor', (p, i) => this.marker(rest[i], p), 'ph-fire');
+      fresh.forEach((o) => this.marker(o));
     }
 
     this.applyHilite();
@@ -6497,7 +6951,7 @@ class Component extends DCLogic {
   }
   // agregação por dataset: células maiores em zoom afastado para evitar dezenas de clusters de 2-3
   // tier 1 = focos (dado principal); tier > 1 = camadas auxiliares, agregadas mais cedo
-  AUX_TIER = { hist: 2.1, unid_saude: 2.4, unid_bomb: 2.4, unid_pol: 2.4, unid_agua: 2.4, meteo_est: 2.6, forecast: 2.6, subs: 2.4 };
+  AUX_TIER = { hist: 2.1, unid_saude: 2.4, unid_bomb: 2.4, unid_pol: 2.4, unid_agua: 2.4, meteo_est: 2.6, forecast: 2.6, subs: 2.4, bdgd_trafo: 1.6 };
   clusterDraw(gk, pts, color, label, mkOne, glyph) {
     const L = window.L, z = this.map.getZoom();
     const tier = this.AUX_TIER[gk] || 1;
@@ -6682,8 +7136,25 @@ class Component extends DCLogic {
   }
 
   // foco de calor: forma = foco (Phosphor Fire), cor = prioridade
-  focoIcon(crit) {
+  focoIcon(crit, halo) {
     const c = this.critColor(crit);
+    if (halo === 'new') return window.L.divIcon({
+      className: '', iconSize: [46, 46], iconAnchor: [23, 23],
+      html: '<div style="position:relative;width:46px;height:46px;display:flex;align-items:center;justify-content:center">'
+        + '<span style="position:absolute;inset:0;border-radius:50%;border:2px solid ' + c + ';animation:qzhalo 2.2s ease-out infinite"></span>'
+        + '<div style="position:relative;width:29px;height:29px;border-radius:50%;background:' + c
+        + ';border:2px solid #fff;box-shadow:0 1px 5px rgba(10,16,22,.55);display:flex;align-items:center;justify-content:center">'
+        + '<i class="ph ph-fire" style="font-size:16px;line-height:1;color:#fff"></i></div></div>'
+    });
+    if (halo) return window.L.divIcon({
+      className: '', iconSize: [56, 56], iconAnchor: [28, 28],
+      html: '<div style="position:relative;width:56px;height:56px;display:flex;align-items:center;justify-content:center">'
+        + '<span style="position:absolute;inset:0;border-radius:50%;border:3px solid ' + c + ';background:' + c + '33;animation:qzhalo 1.4s ease-out infinite"></span>'
+        + '<span style="position:absolute;inset:0;border-radius:50%;border:3px solid ' + c + ';animation:qzhalo 1.4s ease-out .7s infinite;opacity:0"></span>'
+        + '<div style="position:relative;width:29px;height:29px;border-radius:50%;background:' + c
+        + ';border:2px solid #fff;box-shadow:0 1px 5px rgba(10,16,22,.55);display:flex;align-items:center;justify-content:center">'
+        + '<i class="ph ph-fire" style="font-size:16px;line-height:1;color:#fff"></i></div></div>'
+    });
     return window.L.divIcon({
       className: '', iconSize: [29, 29], iconAnchor: [14.5, 14.5],
       html: '<div style="width:29px;height:29px;border-radius:50%;background:' + c
@@ -6697,18 +7168,23 @@ class Component extends DCLogic {
     const h = (this.NOW - o.at) / this.HOUR, r = this.ring(h);
     const lf = this.state.layers.focos;
     const opF = lf && typeof lf.op === 'number' ? lf.op / 100 : 1;
-    const mk = L.marker(ll, { icon: this.focoIcon(o.crit), opacity: (o.status === 'encerrado' ? 0.6 : 1) * opF });
+    const isAlert = this.unreadAlerts().some((a) => a.id === o.id), isNew = isAlert || this.isNewOcc(o.id);
+    const mk = L.marker(ll, { icon: this.focoIcon(o.crit, isAlert ? 'alert' : isNew ? 'new' : null), opacity: (o.status === 'encerrado' ? 0.6 : 1) * opF, zIndexOffset: isNew ? 1000 : 0 });
     mk._qz = { id: o.id, lat: ll[0], lng: ll[1], ring: r };
     // recência = contorno externo, dimensão visual separada da prioridade
     L.circleMarker(ll, { radius: 17.5, color: '#141c24', weight: 1.6, opacity: opF * 0.5, dashArray: r.dashArray, fill: false, interactive: false }).addTo(this.g.casing);
-    mk.on('click', (e) => { L.DomEvent.stop(e); this.select(o.id); });
+    mk.on('click', (e) => { L.DomEvent.stop(e); if (this.isNewOcc(o.id)) this.ackAlert(o.id); this.select(o.id); });
     mk.on('mouseover', () => { if (this.state.hover !== o.id) this.setState({ hover: o.id }); });
     mk.on('mouseout', () => { if (this.state.hover === o.id) this.setState({ hover: null }); });
     // R4 · item 6: hover compacto (ID · prioridade · data/hora). Ativos, distâncias e
     // propagação ficam no detalhe — um foco pode se relacionar a vários ativos.
     const am = this.assetsMeta[o.assetId];
-    mk.bindTooltip('<b>' + o.id + '</b><br/>' + this.critFull(o.crit) + '<br/>' + this.fmtStamp(o.at) + ' · ' + o.source
-      + (am ? '<br/>' + am.name + (this.nv(o.distAsset) !== null ? ' · ' + this.dist(o.distAsset) : '') : ''), { direction: 'top' });
+    // hover: identificação + prioridade, tempo de detecção e a proximidade principal (rede). Ativo, fonte e datas completas ficam no inspector.
+    const fA = o.firstAt || o.at, lA = o.lastAt || o.at, enc = o.status === 'encerrado';
+    const obsMin = Math.max(0, Math.round(((enc && o.endAt ? o.endAt : lA) - fA) / 60000));
+    const tLine = enc ? 'Encerrado · durou ' + this.durMin(obsMin) : 'Detectado desde ' + (new Date(fA).toDateString() === new Date(this.NOW).toDateString() ? this.fmtTime(fA).split(' ').pop() : this.fmtTime(fA)) + ' · ' + this.durMin(obsMin) + ' observados';
+    mk.bindTooltip('<b>' + o.id + '</b> · ' + this.critFull(o.crit) + (isNew ? ' · <b style="color:#b42318">NOVO</b>' : '')
+      + '<br/>' + tLine + '<br/>' + this.proxShort(o), { direction: 'top' });
     mk.on('contextmenu', (e) => { window.L.DomEvent.stop(e); this.openFocoMenu(o.id, o.lat, o.lng, e.originalEvent); });
     mk.addTo(this.g.focos);
     this._mk[o.id] = mk;
@@ -6732,20 +7208,21 @@ class Component extends DCLogic {
   }
 
   // R7 · item 12: o polígono da cicatriz abre o inspector contextual rico (um por vez)
+  // clique na cicatriz: data do evento vem do dado → cenas mais próximas antes/depois → comparador
   showScar(sc, ll) {
     this.endMeasureCtx('Você abriu uma cicatriz de queimada.');
-    const dOff = ['camadas', 'queimadas'].indexOf(this.state.drawer) >= 0;
-    // a camada é ligada (nunca desligada) para que a cicatriz selecionada apareça no mapa
     const ly = this.state.layers.cicatriz || {};
     const lyOn = ly.on ? {} : { layers: { ...this.state.layers, cicatriz: { ...ly, on: true } } };
-    this.closeCtxPanels({ scarPanel: { id: sc.id }, scarIdx: 99, tip: null, ...lyOn, ...(dOff ? { drawer: null } : {}) });
-    setTimeout(() => this.centerScar(sc), 60);
+    this.closeCtxPanels({ scarHi: sc.id, tip: null, ...lyOn });
+    setTimeout(() => this.draw(), 0);
+    this.openScarCmp(sc);
   }
 
   // ---------- interactions ----------
   // R6 · item 3: o clique no foco NUNCA é ignorado — cancela a medição ativa,
   // limpa o preview incompleto, seleciona o foco e abre Ocorrências em Detalhe.
   select = (id) => {
+    if (id && this.isNewOcc(id)) this.ackAlert(id);
     const s0 = this.state;
     this.endMeasureCtx('Voc\u00ea abriu uma ocorr\u00eancia.');
     this.setMapCursor('');
@@ -7054,6 +7531,117 @@ class Component extends DCLogic {
       frp: Math.round((4 + h * 60) * 10) / 10, conf: 50 + Math.round(h2 * 45)
     };
   }
+  // ---------- BDGD: ativos individuais (os tipos exibidos são lidos do próprio dataset) ----------
+  BDGD_TYPES = {
+    sub: { label: 'Subestação', plural: 'Subestações', layer: 'subs', ic: 'ph-lightning' },
+    trafo: { label: 'Transformador', plural: 'Transformadores', layer: 'bdgd_trafo', ic: 'ph-cube' },
+    poste: { label: 'Poste', plural: 'Postes', layer: 'bdgd_poste', ic: 'ph-dot-outline' }
+  };
+  NET_CLS = { AT: 'Rede AT · alta tensão', MT: 'Rede MT · média tensão', BT: 'Rede BT · baixa tensão' };
+  // DEMO: no protótipo o dataset BDGD é derivado da geometria da rede; em produção vem da carga do desenvolvimento
+  buildBdgd(ufs) {
+    const out = [], seen = {}, key = (p) => p[0].toFixed(4) + ',' + p[1].toFixed(4);
+    const pre = (p) => { const u = (ufs || []).filter((x) => x !== 'MG' && this.inBounds(p[0], p[1], this.SCEN_AREA[x]))[0]; return u ? u + '-' : ''; };
+    const H = (a, b) => this.satHash(a, b);
+    this.subs.forEach((x) => { seen[key(x.c)] = 1; const kv = /(\d+[\/,\d]*\s?kV)/.exec(x.n); out.push({ id: x.id, type: 'sub', name: x.n, c: x.c, main: (kv ? [['Tensões', kv[1]]] : []).concat([['Tipo', 'Subestação']]), det: [['COD_ID', x.id]] }); });
+    let nt = 0, np = 0;
+    const mtIds = ['AL-MT-4471', 'AL-MT-4472', 'AL-MT-4475', 'AL-MT-4480', 'AL-MT-4483'];
+    (this.btPaths || []).forEach((p, i) => {
+      const o = p[0], h = H(o[0], o[1]);
+      if (!seen[key(o)]) {
+        seen[key(o)] = 1; nt++;
+        const kva = [15, 30, 45, 75, 112.5][Math.floor(h * 5)], tri = kva >= 45;
+        const id = pre(o) + 'TR-' + (200 + nt);
+        out.push({ id, type: 'trafo', name: id, c: o,
+          main: [['Potência nominal', String(kva).replace('.', ',') + ' kVA'], ['Fases', tri ? 'Trifásico' : 'Monofásico'], ['Alimentador', mtIds[i % mtIds.length]]],
+          det: [['COD_ID', 'UNTRD-' + (318400 + nt * 7)], ['Tensão primária', '13,8 kV'], ['Tensão secundária', tri ? '220/127 V' : '254/127 V'], ['Instalação', 'Em poste'], ['Ligação', tri ? 'Δ-Y' : 'Fase-neutro']] });
+      }
+      p.slice(1).forEach((q) => {
+        if (seen[key(q)]) return; seen[key(q)] = 1; np++;
+        const h2 = H(q[1], q[0]), id = pre(q) + 'PT-' + (10400 + np);
+        out.push({ id, type: 'poste', name: id, c: q,
+          main: [['Material', ['Concreto duplo T', 'Concreto circular', 'Madeira'][Math.floor(h2 * 3)]], ['Altura', [9, 10, 11, 12][Math.floor(H(q[0] * 3, q[1]) * 4)] + ' m'], ['Rede', 'BT']],
+          det: [['COD_ID', 'PONNOT-' + (552000 + np * 3)], ['Esforço', [150, 300, 600][Math.floor(H(q[1] * 2, q[0]) * 3)] + ' daN'], ['Estrutura', ['N1', 'N3', 'B1', 'T1'][Math.floor(h2 * 4)]]] });
+      });
+    });
+    (this.mtPaths || []).forEach((p) => p.forEach((q) => {
+      if (seen[key(q)]) return; seen[key(q)] = 1; np++;
+      const h2 = H(q[1], q[0]), id = pre(q) + 'PT-' + (10400 + np);
+      out.push({ id, type: 'poste', name: id, c: q,
+        main: [['Material', ['Concreto duplo T', 'Concreto circular'][Math.floor(h2 * 2)]], ['Altura', [11, 12][Math.floor(H(q[0] * 3, q[1]) * 2)] + ' m'], ['Rede', 'MT']],
+        det: [['COD_ID', 'PONNOT-' + (552000 + np * 3)], ['Esforço', [300, 600, 1000][Math.floor(H(q[1] * 2, q[0]) * 3)] + ' daN'], ['Estrutura', ['N1', 'N2', 'N3'][Math.floor(h2 * 3)]]] });
+    }));
+    return out;
+  }
+  bdgdHasType(tp) { return (this.bdgdAssets || []).some((a) => a.type === tp); }
+  bdgdById(id) { return (this.bdgdAssets || []).filter((a) => a.id === id)[0]; }
+  segDistM(p, a, b) {
+    const k = Math.cos(p[0] * Math.PI / 180), R = 111320;
+    const ax = (a[1] - p[1]) * k * R, ay = (a[0] - p[0]) * R, bx = (b[1] - p[1]) * k * R, by = (b[0] - p[0]) * R;
+    const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy;
+    const u = L2 ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L2)) : 0;
+    const x = ax + u * dx, y = ay + u * dy;
+    return Math.sqrt(x * x + y * y);
+  }
+  // Duas métricas distintas: menor distância até a GEOMETRIA da rede e até um ATIVO individual
+  proxAt(p, ck) {
+    this._prox = this._prox || {};
+    if (ck && this._prox[ck]) return this._prox[ck];
+    let net = null, asset = null;
+    [['AT', (this.atLines || []).map((x) => x[0]), (this.atLines || []).map((x) => x[1])], ['MT', this.mtPaths || [], []], ['BT', this.btPaths || [], []]].forEach((g) => {
+      g[1].forEach((path, pi) => { for (let j = 0; j < path.length - 1; j++) { const d = this.segDistM(p, path[j], path[j + 1]); if (!net || d < net.d) net = { cls: g[0], d, name: g[2][pi] || '' }; } });
+    });
+    (this.bdgdAssets || []).forEach((a) => { const d = this.hav(p, a.c); if (!asset || d < asset.d) asset = { a, d }; });
+    const r = { net, asset };
+    if (ck) this._prox[ck] = r;
+    return r;
+  }
+  prox(o) { return this.proxAt([o.lat, o.lng], o.id); }
+  proxNetLabel(r) { return r && r.net ? this.NET_CLS[r.net.cls] : 'Rede não disponível'; }
+  proxAssetLabel(r, sep) {
+    if (!r || !r.asset) return 'Ativo não disponível';
+    const a = r.asset.a, T = this.BDGD_TYPES[a.type] || { label: 'Ativo' };
+    return T.label + (a.id ? ' ' + a.id : '') + (sep || ' · ') + this.dist(r.asset.d);
+  }
+  // leitura rápida (listas): somente a rede; ativo mais próximo fica no inspector
+  proxShort(o) { const r = this.prox(o); return r.net ? 'Rede ' + r.net.cls + ' a ' + this.dist(r.net.d) : 'Rede sem dado'; }
+  proxAssetShort(o) { const r = this.prox(o); return r.asset ? this.proxAssetLabel(r, ' a ') : 'Ativo sem dado'; }
+  detAgo(o) { return 'Detectado há ' + this.ago(o.lastAt || o.at); }
+  proxText(o) {
+    const r = this.prox(o);
+    return (r.net ? 'Rede ' + r.net.cls + ' a ' + this.dist(r.net.d) : 'rede sem dado') + ' · ' + (r.asset ? this.proxAssetLabel(r, ' a ') : 'ativo sem dado');
+  }
+  openAsset(id) {
+    this.endMeasureCtx('Você abriu um ativo da rede.');
+    this.closeCtxPanels({ assetPanel: { id }, assetDetOpen: false });
+    setTimeout(() => this.draw(), 0);
+  }
+  assetVals() {
+    const s = this.state, a = s.assetPanel ? this.bdgdById(s.assetPanel.id) : null;
+    const out = { assetMainRows: [], assetDetRows: [], assetDetOpen: false, assetDetCaret: 'ph-caret-down', onAssetDetails: () => {}, assetSourceLine: '', assetHasAct: false, assetActLabel: '', onAssetAct: () => {} };
+    const fp = s.fphPanel ? this.fphById(s.fphPanel.id) : null;
+    if (fp) {
+      const ll = this.rawLL(fp.c[0], fp.c[1]);
+      return {
+        ...out,
+        assetMainRows: [['Tipo', fp.type], ['Identificação', fp.id], ['Status', 'Conhecida'], ['Buffer de exclusão', fp.buf + ' m']].map((x) => ({ label: x[0], value: x[1], hasCopy: x[0] === 'Identificação', copyLabel: 'Copiar ID', onCopy: () => this.copyId(fp.id) })),
+        assetDetRows: [], assetHasDet: false,
+        assetDetOpen: !!s.assetDetOpen, assetDetCaret: s.assetDetOpen ? 'ph-caret-up' : 'ph-caret-down',
+        onAssetDetails: () => this.setState({ assetDetOpen: !s.assetDetOpen }),
+        assetSourceLine: ''
+      };
+    }
+    if (!a) return out;
+    const ll = this.rawLL(a.c[0], a.c[1]);
+    return {
+      assetMainRows: a.main.map((x) => ({ label: x[0], value: x[1], hasCopy: false, copyLabel: '', onCopy: () => {} })),
+      assetHasDet: true,
+      assetDetRows: [['ID', a.id]].concat(a.det).map((x) => ({ label: x[0], value: x[1], hasCopy: x[0] === 'Coordenadas' || x[0] === 'ID', copyLabel: x[0] === 'ID' ? 'Copiar ID' : 'Copiar coordenadas', onCopy: () => (x[0] === 'ID' ? this.copyId(a.id) : this.copyLLText(ll)) })),
+      assetDetOpen: !!s.assetDetOpen, assetDetCaret: s.assetDetOpen ? 'ph-caret-up' : 'ph-caret-down',
+      onAssetDetails: () => this.setState({ assetDetOpen: !s.assetDetOpen }),
+      assetSourceLine: 'Fonte · BDGD. Atributos demonstrativos neste protótipo.'
+    };
+  }
   nearestAsset(p) {
     let best = null;
     Object.keys(this.assetsMeta || {}).forEach((k) => {
@@ -7076,7 +7664,7 @@ class Component extends DCLogic {
     if (!ev) return { histRows: [], histRel: [], histHasRel: false };
     const R5 = 5000;
     const all = this._histEv || [];
-    const na = this.nearestAsset([ev.lat, ev.lng]);
+    const hpx = this.proxAt([ev.lat, ev.lng], 'h:' + ev.id);
     const scar = this.allScars().filter((sc) => this.inPoly([ev.lat, ev.lng], this.scarGeom(sc)))[0];
     const rows = [
       ['Data/hora', this.fmtStamp(ev.at)],
@@ -7084,8 +7672,8 @@ class Component extends DCLogic {
       ['Fonte/sensor', ev.src],
       ['FRP/intensidade', ev.frp != null ? (ev.frp + '').replace('.', ',') + ' MW' : ''],
       ['Confiança', ev.conf != null ? ev.conf + '%' : ''],
-      ['Ativo relacionado', na && this.assetsMeta[na.k] ? this.assetsMeta[na.k].name : ''],
-      ['Distância ao ativo', na ? this.dist(na.d) : ''],
+      ['Distância da rede', hpx.net ? this.proxNetLabel(hpx) + ' · ' + this.dist(hpx.net.d) : ''],
+      ['Ativo mais próximo', hpx.asset ? this.proxAssetLabel(hpx) : ''],
       ['Status', 'Encerrada'],
       ['Cicatriz associada', scar ? scar.id : '']
     ].filter((x) => x[1]).map((x) => ({ label: x[0], value: x[1], hasCopy: x[0] === 'Coordenadas', onCopy: () => this.copyLLText(x[1]) }));
@@ -7130,7 +7718,7 @@ class Component extends DCLogic {
   }
   // R6 · item 12: somente UM inspector contextual permanece aberto por vez
   closeCtxPanels(patch) {
-    const next = { metPanel: null, stvPanel: null, satPanel: null, scarPanel: null, histPanel: null, stvPick: false, satPick: false, focoMenu: null, tip: null, ...(patch || {}) };
+    const next = { chartZoom: false, stDetOpen: false, metPanel: null, stvPanel: null, satPanel: null, scarPanel: null, histPanel: null, assetPanel: null, fphPanel: null, stvPick: false, satPick: false, focoMenu: null, tip: null, ...(patch || {}) };
     this.setState(next);
     this.setMapCursor(next.stvPick || next.satPick ? 'crosshair' : '');
   }
@@ -7374,7 +7962,7 @@ class Component extends DCLogic {
     const on = !this.state.satPick;
     this.endMeasureCtx('Você ativou a seleção de satélite.');
     this.closeCtxPanels({ satPick: on });
-    if (on) this.toast('Satélite', 0, 'Clique em pontos do mapa para ver as cenas do período. Esc encerra a ferramenta.', 'ph-globe-simple');
+    if (on) this.toast('Imagens de satélite', 0, 'Clique em pontos do mapa para ver as cenas do período. Esc encerra a ferramenta.', 'ph-globe-simple');
   };
 
   onKey = (e) => {
@@ -8007,7 +8595,11 @@ class Component extends DCLogic {
   user() { return { name: 'Rafaela Tavares', area: 'Centro de Operações · CCO', email: 'r.tavares@cemleste.com.br', phone: '+55 38 99xxx-4120', initials: 'RT', master: true, corp: 'cemleste', perms: { scarsEdit: true } }; }
   // cadastro de cicatrizes e atualizações mensais: somente perfis autorizados
   // MVP: perfil simulado via Tweaks — "Cliente" só visualiza; "Quasar / Admin" cadastra cicatrizes
-  canEditScars() { if ((this.props && this.props.perfil) === 'Cliente') return false; const u = this.user(); return !!(u.perms && u.perms.scarsEdit); }
+  // Cicatrizes são atualizadas internamente pela Quasar (≈ mensal); sem cadastro/upload pelo usuário
+  // Cicatrizes: cadastro/importação é função interna da Quasar (Super Admin). Usuário do cliente nunca vê o +.
+  // Plataforma operacional do cliente: importação de cicatrizes vive no projeto Super Admin (Quasar).
+  // Nenhum perfil desta interface (inclusive Administrador do cliente) recebe o botão +.
+  canEditScars() { return false; }
   initialsOf(n) { return (n || '').split(' ').filter(Boolean).map((w) => w[0]).slice(0, 2).join('').toUpperCase(); }
   IMG_RE = /\.(jpe?g|png|webp)$/i;
   // autor exclui a própria interação; master exclui de usuários da mesma corporação
@@ -8088,21 +8680,24 @@ class Component extends DCLogic {
     const F = (label, value, opt) => ({ label, value, weight: (opt && opt.w) || '400', color: (opt && opt.c) || '#1b2026', family: "'Questrial',sans-serif", tip: (opt && opt.tip) || '', hasCopy: !!(opt && opt.copy), onCopy: () => this.copyLLText(value) });
     const MISS = { c: '#92400e', w: '700' };
 
-    // resumo operacional: aparece uma única vez, no topo
-    const sum = [];
-    const dAsset = this.nv(o.distAsset);
-    sum.push(dAsset === null ? 'distância até o ativo não disponível' : this.dist(dAsset) + ' do ativo mais próximo');
-    sum.push(this.nv(o.eta) !== null ? this.durMin(o.eta) + ' até o ativo' : 'tempo estimado não calculado');
+    // proximidade: distância da REDE (geometria) e ATIVO individual mais próximo, separadas
+    const px = this.prox(o);
+    const nearA = px.asset ? px.asset.a : null;
 
     // contexto: apenas o que acrescenta informação ao resumo do topo
     const wdeg = this.nv(o.windDeg);
+    const enc = o.status === 'encerrado', fA = o.firstAt || o.at, lA = o.lastAt || o.at;
+    const obs = (enc && o.endAt ? o.endAt : lA) - fA;
+    const tm = [F('Status', enc ? 'Encerrado' : 'Ativo', { w: '700' }), F(enc ? 'Início' : 'Início da detecção', this.fmtStamp(fA))];
+    if (enc && o.endAt) tm.push(F('Fim', this.fmtStamp(o.endAt)));
+    else if (!enc) tm.push(F('Última detecção', this.fmtStamp(lA)));
+    tm.push(F('Duração observada', this.durMin(Math.max(0, Math.round(obs / 60000))), { tip: 'Diferença entre a primeira e a ' + (enc ? 'data de encerramento' : 'última detecção') + '. Não indica continuidade física do fogo.' }));
     const ctx = [F('Direção de propagação', o.windDir ? o.windDir + (wdeg === null ? '' : ' · ' + Math.round(wdeg) + '°') : 'Não disponível')];
-    if (o.eta == null && hi) ctx.push(F('Tempo estimado', 'Não calculado pelo motor', MISS));
 
     const tech = [
       F('ID interno', o.id),
       F('Coordenadas', this.nv(o.lat) === null || this.nv(o.lng) === null ? '—' : this.nv(o.lat).toFixed(5) + ', ' + this.nv(o.lng).toFixed(5), { copy: this.nv(o.lat) !== null && this.nv(o.lng) !== null }),
-      F('Detecção', this.fmtTime(o.at) + ' · há ' + this.ago(o.at)),
+      F('Última detecção', this.fmtTime(o.lastAt || o.at) + ' · há ' + this.ago(o.lastAt || o.at)),
       F('Fonte / sensor', o.source),
       F('Confiança', this.nv(o.conf) === null ? '—' : Math.round(this.nv(o.conf)) + '%'),
       F('FRP / intensidade', this.fxv(o.frp, 1, 'MW'), { tip: 'FRP — Potência Radiativa do Fogo' })
@@ -8119,7 +8714,8 @@ class Component extends DCLogic {
     }
 
     const techOpen = !!this.state.techOpen;
-    const blocks = [{ title: 'CONTEXTO', fields: ctx, hasFields: true, hasLines: false, lines: [], hasCaret: false, noCaret: true, caret: '', onToggle: null }];
+    const blocks = [{ title: 'DETECÇÃO', fields: tm, hasFields: true, hasLines: false, lines: [], hasCaret: false, noCaret: true, caret: '', onToggle: null },
+      { title: 'CONTEXTO', fields: ctx, hasFields: true, hasLines: false, lines: [], hasCaret: false, noCaret: true, caret: '', onToggle: null }];
     if (wx.length) blocks.push({ title: 'METEOROLOGIA', fields: [], hasFields: false, hasLines: true, lines: wx, hasCaret: false, noCaret: true, caret: '', onToggle: null });
     blocks.push({
       title: 'DADOS TÉCNICOS', fields: tech, hasFields: techOpen, hasLines: false, lines: [],
@@ -8151,8 +8747,12 @@ class Component extends DCLogic {
 
     return {
       id: o.id, critFull: this.critFull(o.crit), critColor: this.critColor(o.crit),
-      assetName: a.name, assetKind: a.kind,
-      sumLine: sum.join(' · '), sumColor: '#1b2026',
+      onCopyId: this.copyIdH(o.id), assetName: a.name, assetKind: 'Ativo relacionado · ' + a.kind,
+      netLabel: px.net && px.net.name ? px.net.name : this.proxNetLabel(px), netDist: px.net ? this.dist(px.net.d) : '—',
+      nearType: nearA ? (this.BDGD_TYPES[nearA.type] || { label: 'Ativo' }).label : 'Ativo não disponível',
+      nearIdDist: nearA ? (nearA.id ? nearA.id + ' · ' : '') + this.dist(px.asset.d) : '—',
+      nearCursor: nearA ? 'pointer' : 'default',
+      onNearAsset: () => { if (nearA) this.openAsset(nearA.id); },
       status: o.status === 'ativo' ? 'Ativo' : 'Encerrado',
       statusFg: o.status === 'ativo' ? '#1f6b3a' : '#5b6672',
       statusBg: o.status === 'ativo' ? '#f4fbf6' : '#eceff1',
@@ -8748,8 +9348,7 @@ class Component extends DCLogic {
       if (!sel) return needSel;
       const a = c.selAsset;
       return {
-        text: sel.id + ' está relacionada a ' + a.name + ' (' + a.kind + '), a ' + this.dist(sel.distAsset) + '.'
-          + (sel.eta != null ? ' Tempo estimado até o ativo: ' + this.durMin(sel.eta) + '.' : ' Tempo até o ativo não calculado.'),
+        text: sel.id + ' está relacionada a ' + a.name + ' (' + a.kind + '). Distância da rede: ' + this.proxNetLabel(this.prox(sel)) + (this.prox(sel).net ? ' a ' + this.dist(this.prox(sel).net.d) : '') + '. Ativo mais próximo: ' + this.proxAssetLabel(this.prox(sel), ' a ') + '.',
         actions: [centerA(sel)]
       };
     }
@@ -8767,9 +9366,9 @@ class Component extends DCLogic {
       const a = c.selAsset;
       const ev = c.selEvidence;
       const t = sel.id + ' é ' + this.critFull(sel.crit) + ', status ' + sel.status + ', detectada por ' + sel.source + ' há ' + this.ago(sel.at) + ' com ' + sel.conf + '% de confiança. '
-        + 'Está a ' + this.dist(sel.distAsset) + ' de ' + a.name + ' (' + a.kind + ')'
+        + 'Relacionada a ' + a.name + ' (' + a.kind + '); ' + this.proxText(sel)
         + '. Vento de ' + sel.windDir + ' a ' + sel.windSpd + ' km/h'
-        + (sel.eta != null ? ', tempo estimado de ' + this.durMin(sel.eta) + ' até o ativo.' : '; tempo até o ativo não calculado.')
+        + '.'
         + (ev.length ? ' Há ' + ev.filter((e) => !e.isFile).length + ' comentário(s) e ' + ev.filter((e) => e.isFile).length + ' anexo(s) no registro.' : ' Sem comentários ou anexos registrados.');
       return { text: t, actions: [centerA(sel)] };
     }
@@ -8777,14 +9376,14 @@ class Component extends DCLogic {
     if (has('atencao', 'exige', 'exigem', 'critico', 'prioridade')) {
       const hi = top.filter((o) => o.crit === 'P0' || o.crit === 'P1').slice(0, 3);
       if (!hi.length) return { text: 'Nenhuma ocorrência crítica ou alta no recorte atual. As demais seguem em acompanhamento.', actions: [] };
-      const t = 'Priorize ' + hi.length + ' ocorrência(s): ' + hi.map((o) => o.id + ' (' + this.critFull(o.crit) + ', ' + this.dist(o.distAsset) + ' do ativo)').join('; ') + '.';
+      const t = 'Priorize ' + hi.length + ' ocorrência(s): ' + hi.map((o) => o.id + ' (' + this.critFull(o.crit) + ', ' + this.proxText(o) + ')').join('; ') + '.';
       return { text: t, actions: hi.map(openA).concat([filterA]) };
     }
     // A — resumo do cenário
     if (has('resumir', 'cenario', 'o que estou vendo', 'o que tem')) {
       const t = 'No recorte ' + c.scope + ', entre ' + per + ', há ' + vis.length + (vis.length === 1 ? ' ocorrência' : ' ocorrências')
         + ' — ' + cnt('P0') + ' crítica(s), ' + cnt('P1') + ' alta(s), ' + cnt('P2') + ' moderada(s) e ' + cnt('P3') + ' baixa(s).'
-        + (top[0] ? ' A mais severa é ' + top[0].id + ', a ' + this.dist(top[0].distAsset) + ' de ' + this.assetsMeta[top[0].assetId].name + '.' : '');
+        + (top[0] ? ' A mais severa é ' + top[0].id + ' (' + this.proxText(top[0]) + ').' : '');
       return { text: t, actions: top[0] ? [openA(top[0]), centerA(top[0])] : [] };
     }
     // fallback seguro: nada é inventado, no máximo 3 sugestões contextuais por clique
@@ -8839,7 +9438,7 @@ class Component extends DCLogic {
       aiOccId: sel ? sel.id : '',
       aiOccPrio: sel ? 'Prioridade · ' + this.critFull(sel.crit) : '',
       aiOccPrioColor: sel ? this.critColor(sel.crit) : '#5b6672',
-      aiOccAsset: selAsset ? 'Ativo relacionado · ' + selAsset.name + (this.nv(sel.distAsset) !== null ? ' · ' + this.dist(sel.distAsset) : '') : '',
+      aiOccAsset: sel ? this.proxText(sel) : '',
       aiOccLL: sel ? this.rawLL(sel.lat, sel.lng) : '',
       aiContext: ctx,
       aiScrollRef: this.aiScrollRef,
@@ -9280,10 +9879,10 @@ class Component extends DCLogic {
         : ((nd <= 10 || i % tickStep === 0) ? this.fmtDay(d.a) : '')
     }));
 
-    const sceneCount = this.scenesInPeriod().length;
+    const sceneCount = this.visScars().length;
     const layerCounts = {
       focos: vis.length + (vis.length === 1 ? ' no período' : ' no período'),
-      cicatriz: sceneCount + (sceneCount === 1 ? ' cicatriz no período' : ' cicatrizes no período'),
+      cicatriz: '',
       munic: (() => {
         const ufs = this.map ? this.munUfsInView() : this.munScopeUfs();
         let n = 0; const got = [];
@@ -9291,7 +9890,7 @@ class Component extends DCLogic {
         return got.length ? n + ' em ' + got.join(', ') + (this.munScopeUfs().length > got.length ? ' · área visível' : '') : '';
       })()
     };
-    const emptyLayers = { focos: vis.length === 0, cicatriz: sceneCount === 0 };
+    const emptyLayers = { focos: vis.length === 0 };
     const QM_IDS = ['focos', 'cicatriz', 'hist'];
     const onLayerCount = this.layerDefs.filter((d) => QM_IDS.indexOf(d.id) < 0 && (s.layers[d.id] || {}).on).length;
     const onQmCount = QM_IDS.filter((id) => (s.layers[id] || {}).on).length + (this.SRC_ALL.length - s.sources.length ? 1 : 0);
@@ -9307,7 +9906,8 @@ class Component extends DCLogic {
     this.layerDefs.forEach((d) => { layerById[d.id] = d; });
     const GRP = ['REDE ELÉTRICA', 'UNIDADES CRÍTICAS', 'CLIMA E AMBIENTE', 'LIMITES E REFERÊNCIA'];
     const mkGroup = (g, pick) => {
-      const all = pick ? pick.map((id) => layerById[id]).filter(Boolean) : this.layerDefs.filter((d) => d.g === g);
+      // ativos BDGD: só aparecem os tipos efetivamente presentes no dataset carregado
+      const all = (pick ? pick.map((id) => layerById[id]).filter(Boolean) : this.layerDefs.filter((d) => d.g === g)).filter((d) => !d.assetType || this.bdgdHasType(d.assetType));
       // sub-linhas continuam visíveis quando o pai está aberto, ligado, ou quando uma delas está expandida
       const defs = all.filter((d) => !d.parent || s.layerExpanded === d.parent || (s.layers[d.parent] || {}).on
         || this.layerDefs.filter((x) => x.parent === d.parent && s.layerExpanded === x.id).length > 0);
@@ -9320,7 +9920,7 @@ class Component extends DCLogic {
         hasActive: act > 0, activeLabel: act === 1 ? '1 ativa' : act + ' ativas',
         ...(() => { const t = this.tipHandlers(open ? 'Recolher ' + g : 'Abrir ' + g, 'left'); return { tipEnter: t.enter, tipLeave: t.leave, tipFocus: t.focus }; })(),
         onToggle: () => this.setState((st) => ({ groupsOpen: { ...st.groupsOpen, [g]: !st.groupsOpen[g] } })),
-        layers: defs.map((d) => {
+        layers: defs.map((d, di) => {
           const st = (s.layers[d.id] || {}).st || d.st, op = (s.layers[d.id] || {}).op || d.op;
           const kids = d.master ? this.layerDefs.filter((x) => x.parent === d.id) : [];
           const on = d.master
@@ -9336,7 +9936,7 @@ class Component extends DCLogic {
           }[st];
           const canExpand = st !== 'error';
           // Municípios ligados em zoom nacional: a row avisa em vez de renderizar milhares de limites
-          const zHint = d.id === 'munic' && on && this.map && this.map.getZoom() < 8;
+          const zHint = (d.id === 'munic' && on && this.map && this.map.getZoom() < 8) || (d.id === 'bdgd_poste' && on && this.map && this.map.getZoom() < 13);
           // malha oficial ausente: avisa em vez de desenhar geometria inventada
           const geoMiss = on && ((d.id === 'estados' && this.geoErr['br-uf']) || (d.id === 'munic' && this.geoErr['ufmun-' + (this.UF_COD[s.scopeUf] || '')]));
           const mm = geoMiss ? { label: 'Malha oficial indisponível', color: '#92400e' } : zHint ? { label: 'Visível ao aproximar', color: '#5b6672' } : meta;
@@ -9344,6 +9944,8 @@ class Component extends DCLogic {
             nameCursor: canExpand && (this.hasOpacity(d) || !!d.cc || !!d.master || this.expLine(d)) ? 'pointer' : 'default',
             onName: () => { if (canExpand && (this.hasOpacity(d) || !!d.cc || !!d.master || this.expLine(d))) this.setState({ layerExpanded: exp ? null : d.id }); },
             id: d.id, label: d.label, sym: this.symStyle(d),
+            hasSubhead: !!d.sub && (di === 0 || defs[di - 1].sub !== d.sub), subhead: d.sub || '',
+            hasScarPeriod: d.id === 'cicatriz' && on,
             ic: d.ic || 'ph-square', icColor: this.lyColor(d.id), isSub: !!d.parent,
             rowPad: d.parent ? '6px 12px 6px 40px' : '6px 12px 6px 16px',
             desc: d.desc || '', hasDesc: !!d.desc,
@@ -9351,6 +9953,12 @@ class Component extends DCLogic {
             hasInfo: !!d.desc, infoOpen: false, infoBg: 'transparent', infoFg: '#8a949e', onInfo: () => {},
             ...(() => { const th = this.tipHandlers(d.desc || '', 'right'); return { tipInfoEnter: th.enter, tipInfoLeave: th.leave, tipInfoFocus: th.focus }; })(),
             hasOpacity: this.hasOpacity(d),
+            hasStationCfg: d.id === 'meteo_est' && on,
+            stationOrgSel: d.id !== 'meteo_est' ? {} : this.qsel({ key: 'metorg', value: s.metOrg || 'all', items: [{ v: 'all', label: 'Todas' }].concat(this.metStations.map((x) => x.org).filter((v, i, a) => v && a.indexOf(v) === i).map((v) => ({ v, label: v }))), onPick: (v) => this.setState({ metOrg: v, qsel: null }, () => this.draw()) }),
+            stationShowDry: s.metShowDry !== false,
+            stationDryTrack: s.metShowDry !== false ? '#232343' : '#cfd6dc',
+            stationDryKnob: s.metShowDry !== false ? '14px' : '2px',
+            onStationDry: () => this.setState({ metShowDry: s.metShowDry === false }, () => this.draw()),
             // R5 · item 12: cor personalizável só onde a cor não carrega criticidade ou status;
             // o seletor é o mesmo de “Minhas camadas” (sugeridas NL_COLORS + cor personalizada)
             hasColor: !!d.cc && !/^meteo_|^forecast$/.test(d.id),
@@ -9391,13 +9999,13 @@ class Component extends DCLogic {
             expandTitle: exp ? 'Recolher opções da camada' : 'Opções da camada',
             canAdd: d.id === 'cicatriz' && this.canEditScars(),
             onAdd: () => this.openScarForm('new'),
-            ...(() => { const t2 = this.tipHandlers('Adicionar cicatriz', 'left'); return { tipAddEnter: t2.enter, tipAddLeave: t2.leave, tipAddFocus: t2.focus }; })(),
+            ...(() => { const t2 = this.tipHandlers('Adicionar/importar cicatriz · função interna Quasar (Super Admin)', 'left'); return { tipAddEnter: t2.enter, tipAddLeave: t2.leave, tipAddFocus: t2.focus }; })(),
             opacity: op, opacityLabel: op + '%',
             hasSource: !!d.src, source: d.src || '',
             onToggle: () => {
               if (d.master) this.toggleLayerGroup(d.id); else this.toggleLayer(d.id);
               // ao ativar, recolhe o drawer e deixa o mapa com a camada selecionada
-              if (!on) this.setState({ drawer: null, layerExpanded: null, tip: null });
+              if (!on && d.id !== 'meteo_est') this.setState({ drawer: null, layerExpanded: null, tip: null });
             },
             onRetry: () => this.retryLayer(d.id),
             onOpacity: (e) => this.setOpacity(d.id, e.target.value),
@@ -9408,7 +10016,7 @@ class Component extends DCLogic {
     };
     const groups = GRP.map((g) => mkGroup(g));
     // R4: Focos / Cicatrizes / Ocorrências históricas passam a viver no drawer Queimadas
-    const qmGroups = [mkGroup('DETECÇÕES', ['focos']), mkGroup('RESULTADOS', ['cicatriz'])];
+    const qmGroups = [mkGroup('DETECÇÕES', ['focos']), mkGroup('RESULTADOS', ['cicatriz']), mkGroup('FONTES CONHECIDAS', ['fph'])];
     qmGroups[0].hasSources = true;
 
     // Legenda dinâmica: só decodifica a simbologia das layers VISÍVEIS
@@ -9432,6 +10040,8 @@ class Component extends DCLogic {
         box: (c) => 'display:flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:4px;transform:rotate(45deg);background:' + c + ';border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(20,28,36,.22)',
         ico: 'font-size:9px;line-height:1;color:#fff;transform:rotate(-45deg)'
       },
+      bdgd_trafo: { icon: 'ph-cube', box: (c) => 'display:flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:3px;background:' + c + ';border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(20,28,36,.22)', ico: 'font-size:9px;line-height:1;color:#fff' },
+      bdgd_poste: { icon: 'ph-circle', box: (c) => 'display:flex;align-items:center;justify-content:center;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid ' + c, ico: 'display:none' },
       unid_saude: mkCircle('ph-first-aid'), unid_bomb: mkCircle('ph-fire-truck'),
       unid_pol: mkCircle('ph-shield'), unid_agua: mkCircle('ph-drop'),
       meteo_prec: mkCircle('ph-drop'), meteo_temp: mkCircle('ph-thermometer-simple'),
@@ -9467,8 +10077,8 @@ class Component extends DCLogic {
       });
       if (items.length) legendSections.push({ title, items });
     };
-    decode('QUEIMADAS', ['cicatriz']);
-    decode('REDE ELÉTRICA', ['bdgd_at', 'bdgd_mt', 'bdgd_bt', 'subs', 'conj']);
+    decode('QUEIMADAS', ['cicatriz', 'fph']);
+    decode('REDE ELÉTRICA', ['bdgd_at', 'bdgd_mt', 'bdgd_bt', 'subs', 'bdgd_trafo', 'bdgd_poste', 'conj']);
     decode('UNIDADES CRÍTICAS', ['unid_saude', 'unid_bomb', 'unid_pol', 'unid_agua']);
     const METEO_IDS = ['meteo_prec', 'meteo_temp', 'meteo_vento', 'forecast'];
     if (lyOn('veg')) {
@@ -9802,8 +10412,8 @@ class Component extends DCLogic {
           const a = this.assetsMeta[o.assetId] || {};
           const mine = ev.filter((e) => e.author === me).length > 0;
           return {
-            id: o.id, at: this.fmtTime(o.at), place: this.munLabel(o), asset: a.name || o.assetId,
-            distLabel: this.dist(o.distAsset) + ' do ativo',
+            id: o.id, onCopyId: this.copyIdH(o.id), at: this.fmtTime(o.at), place: this.munLabel(o), asset: a.name || o.assetId,
+            distLabel: this.proxText(o),
             critLabel: this.CRIT[o.crit].label, critColor: this.critColor(o.crit),
             last: this.fmtTime(this.lastActivityAt(o)),
             comments: ev.filter((e) => !e.isFile).length + '', files: ev.filter((e) => e.isFile).length + '',
@@ -10222,23 +10832,29 @@ class Component extends DCLogic {
       freshAnim: s.refreshing ? 'qzpulse .8s ease-in-out infinite' : 'none',
       onRefresh: () => { this.setState({ refreshing: true }); this.busy(800); setTimeout(() => this.setState({ refreshing: false, updatedAgo: 0 }), 820); },
 
-      alertBadge: this.alertList().filter((a) => s.read.indexOf(a.id) < 0).length || '0',
-      badgeBg: this.alertList().filter((a) => s.read.indexOf(a.id) < 0).length ? '#dc2626' : '#8a949e',
+      alertBadge: this.unreadAlerts().length || '0',
+      badgeBg: this.unreadAlerts().length ? '#dc2626' : '#8a949e',
+      bellAnim: this.unreadAlerts().length ? 'qzbell 1.6s ease-out infinite' : 'none',
       bellBg: s.alertsOpen ? '#ececf3' : '#fff', bellBorder: s.alertsOpen ? '#232343' : '#dfe3e7', bellFg: s.alertsOpen ? '#17172e' : '#1b2026',
       alertsOpen: s.alertsOpen, onToggleAlerts: () => this.openPanel('alertas'),
+      alertMuted: !!s.alertMute,
+      alertMuteIcon: s.alertMute ? 'ph-speaker-slash' : 'ph-speaker-high',
+      alertMuteLabel: s.alertMute ? 'Reativar aviso sonoro de novos alertas' : 'Silenciar aviso sonoro de novos alertas',
+      onAlertMute: () => this.setState({ alertMute: !s.alertMute }),
       noAlerts: this.alertList().length === 0,
-      alertSummary: this.alertList().length + ' alertas no período · ' + this.alertList().filter((a) => s.read.indexOf(a.id) < 0).length + ' não lidos',
+      alertSummary: this.alertList().length + ' alertas ativos · ' + this.unreadAlerts().length + ' novos',
       alerts: this.alertList().map((o) => {
-        const unread = s.read.indexOf(o.id) < 0;
+        const unread = this.alertNewIds().indexOf(o.id) >= 0 && s.read.indexOf(o.id) < 0;
         return {
           id: o.id, asset: this.assetsMeta[o.assetId].name,
-          crit: o.crit, critColor: L[o.crit].color, critFull: this.critFull(o.crit),
-          body: this.dist(o.distAsset) + ' do ativo'
-            + ' · ' + (o.eta != null ? 'tempo estimado ' + this.durMin(o.eta) : 'tempo estimado não calculado'),
-          at: this.fmtTime(o.at) + ' · há ' + this.ago(o.at),
+          crit: o.crit, critColor: L[o.crit].color, critBorder: L[o.crit].color, critFull: this.critFull(o.crit),
+          body: this.proxAssetShort(o), netLine: this.proxShort(o), onCopyId: this.copyIdH(o.id),
+          at: this.detAgo(o), unread,
           dot: unread ? L[o.crit].color : '#dfe3e7', weight: unread ? '700' : '400',
+          anim: unread ? 'qzpulse .85s ease-in-out infinite' : 'none',
+          shadow: unread ? 'inset 3px 0 0 ' + L[o.crit].color : 'none',
           bg: unread ? '#fff' : '#f7f9fa',
-          onClick: () => { this.setState({ read: s.read.indexOf(o.id) < 0 ? s.read.concat([o.id]) : s.read, alertsOpen: false }); if (this.map) this.map.setView([o.lat, o.lng], 12); this.select(o.id); }
+          onClick: () => { this.setState({ read: s.read.indexOf(o.id) < 0 ? s.read.concat([o.id]) : s.read, alertsOpen: false }, () => this.draw()); if (this.map) this.map.setView([o.lat, o.lng], 12); this.select(o.id); }
         };
       }),
       deniedOpen: s.deniedOpen, onCloseDenied: () => this.setState({ deniedOpen: false }),
@@ -10284,7 +10900,7 @@ class Component extends DCLogic {
       critOptions: ['P0', 'P1', 'P2', 'P3'].map((c) => {
         const on = s.crit.indexOf(c) >= 0;
         return {
-          label: this.critFull(c), dot: L[c].color,
+          label: this.critFull(c), code: c, name: (this.CRIT[c] || {}).label || '', dot: L[c].color,
           border: on ? L[c].color : '#dfe3e7', bg: on ? '#f7f9fa' : '#fff', fg: on ? '#1b2026' : '#5b6672',
           onClick: () => { this.setState({ crit: on ? s.crit.filter((x) => x !== c) : s.crit.concat([c]) }); this.busy(); }
         };
@@ -10332,6 +10948,7 @@ class Component extends DCLogic {
       ...this.scarVals(),
       ...this.scarFormVals(),
       ...this.histVals(),
+      ...this.assetVals(),
       ...this.tpkVals(),
       ...this.critPickVals(),
       ...this.ctxVals(),
@@ -10352,6 +10969,8 @@ class Component extends DCLogic {
       // R10 · item 2: a ação recolhe apenas o painel; selected e o destaque do marcador permanecem
       onDetailStv: () => this.openFromDetail((o) => this.openStv(o.lat, o.lng, '', o.id)),
       onDetailSat: () => this.openFromDetail((o) => this.openSat(o.lat, o.lng, o.id)),
+      onDetailStvMenu: () => { this.setState({ detMore: false }); this.openFromDetail((o) => this.openStv(o.lat, o.lng, '', o.id)); },
+      onDetailSatMenu: () => { this.setState({ detMore: false }); this.openFromDetail((o) => this.openSat(o.lat, o.lng, o.id)); },
       stvPickOn: s.stvPick,
       stvBtnBg: s.stvPick ? '#232343' : '#fff',
       stvBtnFg: s.stvPick ? '#ffffff' : '#1b2026',
@@ -10363,7 +10982,7 @@ class Component extends DCLogic {
       satBtnBg: s.satPick ? '#232343' : '#fff',
       satBtnFg: s.satPick ? '#ffffff' : '#1b2026',
       satBtnBorder: s.satPick ? '#232343' : '#E5E7EB',
-      tipSat: this.tipHandlers('Satélite · escolha o período e clique em um ponto do mapa', 'left'),
+      tipSat: this.tipHandlers('Imagens de satélite · escolha o período e clique em um ponto do mapa', 'left'),
       qmGroups,
       sourceOptions: (() => {
         const tips = {
@@ -10833,15 +11452,13 @@ class Component extends DCLogic {
       rows: s.listLoading ? [] : rowsData.map((o) => {
         const isSel = s.selected === o.id, isHov = s.hover === o.id;
         // a lista prioriza e seleciona: três linhas, sem sensor, FRP, coordenadas ou ID de cliente
-        const meta = [];
-        meta.push(this.dist(o.distAsset) + ' do ativo');
-        if (o.eta != null) meta.push(this.durMin(o.eta) + ' até o ativo');
-        meta.push('há ' + this.ago(o.at));
+        const meta = [this.proxAssetShort(o)];
         if (o.status === 'encerrado') meta.push('encerrado');
         return {
           id: o.id, critFull: this.critFull(o.crit), critColor: L[o.crit].color, critBorder: L[o.crit].color,
           asset: this.assetsMeta[o.assetId].name,
-          meta: meta.join(' · '),
+          meta: meta.join(' · '), ago: this.detAgo(o), netLine: this.proxShort(o),
+          isNew: this.isNewOcc(o.id), onCopyId: this.copyIdH(o.id),
           accent: isSel ? '#232343' : 'transparent',
           bg: isSel ? '#edf4ef' : isHov ? '#f7f9fa' : '#fff',
           onClick: () => { this.select(o.id); if (this.map) { const b = this.map.getBounds(); if (!b.contains([o.lat, o.lng])) this.map.panTo([o.lat, o.lng]); } },
@@ -10849,6 +11466,7 @@ class Component extends DCLogic {
         };
       }),
       det, noEvidence: det.evidence.length === 0,
+      detMoreOpen: !!s.detMore, detMoreBg: s.detMore ? '#f2f5f7' : '#fff', onDetMore: () => this.setState({ detMore: !s.detMore }),
       commentText: s.commentText, onCommentText: (e) => this.setState({ commentText: e.target.value }),
       commentDisabled: !s.commentText.trim(),
       commentBg: s.commentText.trim() ? '#232343' : '#f2f5f7',
@@ -10872,6 +11490,21 @@ class Component extends DCLogic {
       taSelWidth: (pct(s.to) - pct(s.from)) + '%',
       taLeftMask: pct(s.from) + '%', taRightMask: (100 - pct(s.to)) + '%',
       trackRef: this.trackRef, onTrackDown: this.onTrackDown, onHandleFrom: this.onHandleFrom, onHandleTo: this.onHandleTo,
+      replayLabel: '', replayOn: !!s.replayOn, replayShowLabel: !s.replayOn, replayPad: s.replayOn ? '0' : '12px',
+      tipReplay: this.tipHandlers(s.replayOn ? 'Pausar reprodução' : 'Reproduzir evolução no período', 'top'),
+      tipReplaySpeed: this.tipHandlers('Velocidade da reprodução', 'top'),
+      replayTitle: s.replayOn ? 'Pausar reprodução temporal' : 'Reproduzir as detecções do período na ordem do horário original',
+      replayHasSession: !!s.replaySession,
+      replayStatus: s.replaySession ? this.fmtStamp(s.to) + ' · ' + vis.length + (vis.length === 1 ? ' foco' : ' focos') : '',
+      onReplayRestart: this.restartReplay, onReplayEnd: () => this.endReplay(false),
+      replaySpeedLabel: (s.replaySpeed || 1) + '×', replaySpeedTitle: 'Velocidade da reprodução · ' + (s.replaySpeed || 1) + '×',
+      onReplaySpeed: this.cycleReplaySpeed,
+      scarFromSel: this.dpkTrigger({ key: 'scarfrom', value: s.scarFrom, mode: 'date', placeholder: 'Início', onPick: (v) => this.setState({ scarFrom: v, dpk: null }, () => this.draw()) }),
+      scarToSel: this.dpkTrigger({ key: 'scarto', value: s.scarTo, mode: 'date', placeholder: 'Fim', max: this.NOW, onPick: (v) => this.setState({ scarTo: v, dpk: null }, () => this.draw()) }),
+      scarEmpty: this.visScars().length === 0,
+      replayIcon: s.replayOn ? 'ph-pause' : 'ph-play',
+      replayBg: s.replayOn ? '#ececf3' : '#fff', replayBorder: s.replayOn ? '#232343' : '#dfe3e7', replayFg: '#232343',
+      onReplay: this.toggleReplay,
       taPresets: (() => {
         const defs = [{ m: '24h', h: 24, label: '24 h', t: 'Últimas 24 horas' }, { m: '72h', h: 72, label: '3 dias', t: 'Últimos 3 dias' }, { m: '168h', h: 168, label: '7 dias', t: 'Últimos 7 dias' }];
         const sk = (a) => ({ border: a ? '#232343' : '#dfe3e7', bg: a ? '#ececf3' : '#fff', fg: a ? '#17172e' : '#5b6672' });

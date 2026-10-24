@@ -16,7 +16,7 @@
       <path d="{{ scene.burnD }}" fill="rgba(38,27,20,0.66)"></path>
     </sc-if>
     <sc-if value="{{ scene.hasPoly }}" hint-placeholder-val="{{ false }}">
-      <path d="{{ scene.polyD }}" fill="{{ scene.polyColor }}" fill-opacity="0.35" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+      <path d="{{ scene.polyD }}" fill="{{ scene.polyColor }}" fill-opacity="{{ scene.polyFillOp }}" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
     </sc-if>
   </svg>
   <span style="position:absolute;inset:0;background-image:{{ scene.cloudBg }}"></span>

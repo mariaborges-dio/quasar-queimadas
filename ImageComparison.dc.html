@@ -12,8 +12,8 @@
   <div style="position:absolute;inset:0;clip-path:{{ clip }}">
     <dc-import name="SceneImage" scene="{{ a }}" style="position:absolute;inset:0" hint-size="100%,100%"></dc-import>
   </div>
-  <span style="position:absolute;top:0;bottom:0;left:{{ left }};width:2px;margin-left:-1px;background:#ffffff;box-shadow:0 0 0 1px rgba(20,28,36,.25)"></span>
-  <span style="position:absolute;top:50%;left:{{ left }};width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:999px;background:#ffffff;box-shadow:0 1px 4px rgba(20,28,36,.35);display:flex;align-items:center;justify-content:center;color:#232343"><i class="ph ph-arrows-horizontal" style="font-size:15px"></i></span>
+  <span style="position:absolute;top:0;bottom:0;left:{{ left }};opacity:{{ divOp }};width:2px;margin-left:-1px;background:#ffffff;box-shadow:0 0 0 1px rgba(20,28,36,.25)"></span>
+  <span style="position:absolute;top:50%;left:{{ left }};opacity:{{ divOp }};width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:999px;background:#ffffff;box-shadow:0 1px 4px rgba(20,28,36,.35);display:flex;align-items:center;justify-content:center;color:#232343"><i class="ph ph-arrows-horizontal" style="font-size:15px"></i></span>
   <sc-if value="{{ detail }}" hint-placeholder-val="{{ false }}">
     <span style="position:absolute;top:10px;left:10px;display:flex;flex-direction:column;align-items:flex-start;gap:1px;max-width:calc(50% - 20px);background:rgba(20,28,36,.72);border-radius:10px;padding:5px 10px;color:#fff;font-size:12px;line-height:16px;font-variant-numeric:tabular-nums;pointer-events:none;opacity:{{ aOp }};transition:opacity .15s ease"><b style="font-size:13px;line-height:17px">{{ a.label }}</b><span style="display:flex;align-items:center;gap:4px;white-space:nowrap;opacity:.9">{{ a.date }}<span style="opacity:.6">·</span><i class="ph ph-cloud" style="font-size:13px"></i>{{ a.cloud }}</span></span>
     <span style="position:absolute;top:10px;right:10px;display:flex;flex-direction:column;align-items:flex-end;gap:1px;max-width:calc(50% - 20px);background:rgba(20,28,36,.72);border-radius:10px;padding:5px 10px;color:#fff;font-size:12px;line-height:16px;font-variant-numeric:tabular-nums;pointer-events:none;opacity:{{ bOp }};transition:opacity .15s ease"><b style="font-size:13px;line-height:17px">{{ b.label }}</b><span style="display:flex;align-items:center;gap:4px;white-space:nowrap;opacity:.9">{{ b.date }}<span style="opacity:.6">·</span><i class="ph ph-cloud" style="font-size:13px"></i>{{ b.cloud }}</span></span>
@@ -24,10 +24,20 @@
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:640,&quot;height&quot;:360},&quot;a&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;Scene &amp; { label: string; date: string; cloud: string }&quot;},&quot;b&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;Scene &amp; { label: string; date: string; cloud: string }&quot;},&quot;detail&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:640,&quot;height&quot;:360},&quot;a&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;Scene &amp; { label: string; date: string; cloud: string }&quot;},&quot;b&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;Scene &amp; { label: string; date: string; cloud: string }&quot;},&quot;detail&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;osc&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
-  state = { pos: 50 };
+  state = { pos: 50, flip: false };
+  // Oscilar: alterna Antes ↔ Depois em tela cheia, sem arrastar o divisor
+  componentDidMount() { this.syncOsc(); }
+  componentDidUpdate() { this.syncOsc(); }
+  componentWillUnmount() { clearInterval(this._osc); }
+  syncOsc() {
+    const on = !!this.props.osc;
+    if (on && !this._osc) { this.setState({ flip: false }); this._osc = setInterval(() => this.setState((s) => ({ flip: !s.flip })), 900); }
+    if (!on && this._osc) { clearInterval(this._osc); this._osc = null; }
+  }
   onDown = (e) => {
+    if (this.props.osc) return;
     const rc = e.currentTarget.getBoundingClientRect();
     const set = (cx) => this.setState({ pos: Math.max(0, Math.min(100, Math.round((cx - rc.left) / rc.width * 1000) / 10)) });
     if (e.preventDefault) e.preventDefault();
@@ -37,9 +47,9 @@ class Component extends DCLogic {
     window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up);
   };
   renderVals() {
-    const p = this.state.pos, detail = !!this.props.detail;
+    const osc = !!this.props.osc, p = osc ? (this.state.flip ? 0 : 100) : this.state.pos, detail = !!this.props.detail;
     const lim = detail ? 18 : 30;
-    return { aOp: p > lim ? 1 : 0, bOp: p < 100 - lim ? 1 : 0, a: this.props.a || {}, b: this.props.b || {}, detail, compact: !detail, clip: 'inset(0 ' + (100 - p) + '% 0 0)', left: p + '%', onDown: this.onDown };
+    return { aOp: p > lim ? 1 : 0, bOp: p < 100 - lim ? 1 : 0, a: this.props.a || {}, b: this.props.b || {}, detail, compact: !detail, clip: 'inset(0 ' + (100 - p) + '% 0 0)', left: p + '%', onDown: this.onDown, divOp: osc ? 0 : 1 };
   }
 }
 </script>
