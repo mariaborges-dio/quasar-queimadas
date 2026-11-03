@@ -787,6 +787,21 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
     </div>
   </div>
 
+  <sc-if value="{{ updOpen }}" hint-placeholder-val="{{ false }}">
+    <div data-pop="upd" role="dialog" aria-label="Atualização dos dados" style="position:fixed;right:{{ updRight }};bottom:{{ updBottom }};z-index:1200;width:272px;max-width:calc(100vw - 16px);box-sizing:border-box;padding:10px 12px 4px 14px;background:#ffffff;border:1px solid #cfd6dc;border-radius:14px;box-shadow:0 4px 14px rgba(20,28,36,.18);font-family:Questrial,sans-serif;text-align:left">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+        <span style="flex:1 1 auto;font-size:11px;line-height:15px;font-weight:700;letter-spacing:.07em;color:#8a949e">ATUALIZAÇÃO DOS DADOS</span>
+        <button onClick="{{ onUpdClose }}" aria-label="Fechar" style="width:26px;height:26px;flex:0 0 26px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#5b6672;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7"><i class="ph ph-x" style="font-size:14px"></i></button>
+      </div>
+      <sc-for list="{{ updRows }}" as="u" hint-placeholder-count="3">
+        <div style="display:grid;grid-template-columns:18px minmax(0,1fr);align-items:center;gap:3px 8px;padding:8px 0;border-top:1px solid #f2f5f7">
+          <i class="ph {{ u.icon }}" style="font-size:15px;color:#5b6672"></i>
+          <span style="font-size:13px;line-height:18px;font-weight:700;color:#1b2026">{{ u.name }}</span>
+          <span style="grid-column:2 / -1;display:flex;flex-wrap:wrap;gap:2px 14px;font-size:12px;line-height:16px;color:#5b6672;font-variant-numeric:tabular-nums"><span>Última atualização · <b style="color:#1b2026">{{ u.last }}</b></span><span>Próxima atualização · <b style="color:#1b2026">{{ u.next }}</b></span></span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
   <div style="flex:1 1 auto;display:flex;min-height:0;position:relative">
 
     <div style="position:absolute;top:16px;left:12px;z-index:500;display:flex;flex-direction:column;gap:10px;align-items:center;pointer-events:none">
@@ -795,7 +810,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
           <sc-if value="{{ r.divider }}" hint-placeholder-val="{{ false }}">
             <span style="width:22px;height:1px;background:#cfd6dc;margin:2px 0"></span>
           </sc-if>
-          <button onClick="{{ r.onClick }}" onMouseEnter="{{ r.tipEnter }}" onMouseLeave="{{ r.tipLeave }}" onFocus="{{ r.tipFocus }}" onBlur="{{ r.tipLeave }}" aria-label="{{ r.title }}" style="position:relative;width:44px;height:44px;flex:0 0 44px;border-radius:999px;border:1px solid {{ r.border }};background:{{ r.bg }};color:{{ r.fg }};cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(20,28,36,.16);pointer-events:auto" style-hover="border-color:#232343;background:{{ r.hoverBg }}">
+          <button onClick="{{ r.onClick }}" onMouseEnter="{{ r.tipEnter }}" onMouseLeave="{{ r.tipLeave }}" onFocus="{{ r.tipFocus }}" onBlur="{{ r.tipLeave }}" aria-label="{{ r.title }}" aria-disabled="{{ r.disabled }}" aria-pressed="{{ r.pressed }}" style="position:relative;width:44px;height:44px;flex:0 0 44px;border-radius:999px;border:1px solid {{ r.border }};background:{{ r.bg }};color:{{ r.fg }};cursor:{{ r.cursor }};display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(20,28,36,.16);pointer-events:auto" style-hover="border-color:#232343;background:{{ r.hoverBg }}">
             <i class="ph {{ r.icon }}" style="font-size:20px;line-height:1"></i>
             <sc-if value="{{ r.hasBadge }}" hint-placeholder-val="{{ false }}">
               <span style="position:absolute;top:-3px;right:-3px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:{{ r.badgeBg }};color:{{ r.badgeFg }};font-size:12px;font-weight:700;line-height:17px;text-align:center;border:1px solid {{ r.badgeBorder }}">{{ r.badge }}</span>
@@ -1235,6 +1250,17 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
 
     <div style="flex:1 1 auto;position:relative;min-width:0;overflow:hidden;background:#dfe3e7;z-index:0">
       <div ref="{{ mapRef }}" style="position:absolute;inset:0"></div>
+      <sc-if value="{{ swipeOn }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:440;pointer-events:none">
+          <span style="position:absolute;top:14px;left:calc({{ swipeLeft }} - 12px);transform:translateX(-100%);font-size:12px;line-height:16px;color:#1b2026;background:rgba(255,255,255,.94);border:1px solid #E5E7EB;border-radius:999px;padding:4px 10px;white-space:nowrap;box-shadow:0 1px 3px rgba(20,28,36,.14)">{{ swipeLayerLabel }}</span>
+          <span style="position:absolute;top:14px;left:calc({{ swipeLeft }} + 12px);font-size:12px;line-height:16px;color:#1b2026;background:rgba(255,255,255,.94);border:1px solid #E5E7EB;border-radius:999px;padding:4px 10px;white-space:nowrap;box-shadow:0 1px 3px rgba(20,28,36,.14)">Mapa-base</span>
+          <div onPointerDown="{{ onSwipeDown }}" role="separator" aria-orientation="vertical" aria-label="Divisor de oscilação · arraste para revelar o mapa-base" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ swipePctNum }}" tabindex="0" onKeyDown="{{ onSwipeKey }}" style="position:absolute;top:0;bottom:0;left:{{ swipeLeft }};width:24px;margin-left:-12px;cursor:ew-resize;pointer-events:auto;touch-action:none;display:flex;justify-content:center">
+            <span style="width:3px;height:100%;background:#ffffff;box-shadow:0 0 0 1px rgba(20,28,36,.35)"></span>
+            <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:999px;background:#fff;border:1px solid #232343;box-shadow:0 2px 8px rgba(20,28,36,.24);display:flex;align-items:center;justify-content:center;color:#232343"><i class="ph ph-arrows-horizontal" style="font-size:17px"></i></span>
+          </div>
+          <button onClick="{{ onSwipeEnd }}" aria-label="Encerrar oscilação" style="position:absolute;top:14px;right:14px;height:30px;display:flex;align-items:center;gap:6px;padding:0 12px;border:1px solid #D8DEE5;border-radius:999px;background:#fff;color:#1b2026;font-family:Questrial,sans-serif;font-size:12px;cursor:pointer;pointer-events:auto;box-shadow:0 1px 3px rgba(20,28,36,.14)" style-hover="border-color:#232343"><i class="ph ph-x" style="font-size:13px"></i>Encerrar oscilação</button>
+        </div>
+      </sc-if>
 
 
 
@@ -1332,7 +1358,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
         <button onClick="{{ onStvTool }}" onMouseEnter="{{ tipStv.enter }}" onMouseLeave="{{ tipStv.leave }}" onFocus="{{ tipStv.focus }}" onBlur="{{ tipStv.leave }}" aria-label="Street View 360°" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid {{ stvBtnBorder }};border-radius:999px;background:{{ stvBtnBg }};color:{{ stvBtnFg }};box-shadow:0 1px 3px rgba(20,28,36,.16);cursor:pointer" style-hover="background:#ececf3;border-color:#232343">
           <i class="ph ph-person" style="font-size:20px"></i>
         </button>
-        <button onClick="{{ onSatTool }}" onMouseEnter="{{ tipSat.enter }}" onMouseLeave="{{ tipSat.leave }}" onFocus="{{ tipSat.focus }}" onBlur="{{ tipSat.leave }}" aria-label="Imagens de satélite" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid {{ satBtnBorder }};border-radius:999px;background:{{ satBtnBg }};color:{{ satBtnFg }};box-shadow:0 1px 3px rgba(20,28,36,.16);cursor:pointer" style-hover="background:#ececf3;border-color:#232343">
+        <button onClick="{{ onSatTool }}" onMouseEnter="{{ tipSat.enter }}" onMouseLeave="{{ tipSat.leave }}" onFocus="{{ tipSat.focus }}" onBlur="{{ tipSat.leave }}" aria-label="Imagens históricas de satélite" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid {{ satBtnBorder }};border-radius:999px;background:{{ satBtnBg }};color:{{ satBtnFg }};box-shadow:0 1px 3px rgba(20,28,36,.16);cursor:pointer" style-hover="background:#ececf3;border-color:#232343">
           <i class="ph ph-globe-simple" style="font-size:20px"></i>
         </button>
         </div>
@@ -1367,7 +1393,51 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
         </button>
       </div>
       </sc-if>
-      <div data-wxrow="1" style="display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:nowrap;box-sizing:border-box;width:100%;max-width:100%;align-self:stretch;min-width:0;padding-right:{{ wxBarMr }};padding-left:{{ wxBarMl }}">
+      <div data-wxrow="1" style="display:flex;flex-direction:row;align-items:flex-end;justify-content:flex-end;gap:8px;flex-wrap:wrap-reverse;box-sizing:border-box;width:100%;max-width:100%;align-self:stretch;min-width:0;padding-right:{{ wxBarMr }};padding-left:{{ wxBarMl }}">
+      <sc-if value="{{ descOn }}" hint-placeholder-val="{{ false }}">
+        <div role="group" aria-label="Descargas elétricas" style="pointer-events:auto;flex:0 0 auto;max-width:100%;display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <sc-if value="{{ descCustomOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="max-width:100%;min-height:36px;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:3px 4px 3px 12px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14);border-radius:18px;font-size:12px;line-height:16px;color:#5b6672">
+              <label style="display:flex;align-items:center;gap:6px">De<input type="datetime-local" value="{{ descFromIn }}" min="{{ descMinIn }}" max="{{ descMaxIn }}" onChange="{{ onDescFrom }}" aria-label="Início do período" style="height:28px;box-sizing:border-box;border:1px solid #dfe3e7;border-radius:999px;padding:0 8px;font-family:Questrial,sans-serif;font-size:12px;color:#1b2026;background:#fff" /></label>
+              <label style="display:flex;align-items:center;gap:6px">Até<input type="datetime-local" value="{{ descToIn }}" min="{{ descMinIn }}" max="{{ descMaxIn }}" onChange="{{ onDescTo }}" aria-label="Fim do período" style="height:28px;box-sizing:border-box;border:1px solid #dfe3e7;border-radius:999px;padding:0 8px;font-family:Questrial,sans-serif;font-size:12px;color:#1b2026;background:#fff" /></label>
+              <button onClick="{{ onDescApply }}" style="height:28px;padding:0 12px;border:0;border-radius:999px;background:#232343;color:#fff;font-family:Questrial,sans-serif;font-size:12px;cursor:pointer" style-hover="background:#17172e">Aplicar</button>
+              <button onClick="{{ onDescCustomClose }}" aria-label="Fechar período personalizado" style="width:28px;height:28px;flex:0 0 28px;border:0;border-radius:999px;background:transparent;color:#5b6672;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7"><i class="ph ph-x" style="font-size:13px"></i></button>
+              <sc-if value="{{ descCustomErr }}" hint-placeholder-val="{{ false }}"><span style="flex:1 0 100%;font-size:12px;line-height:16px;color:#b3261e;padding:0 0 3px">{{ descCustomErr }}</span></sc-if>
+            </div>
+          </sc-if>
+          <div style="max-width:100%;min-width:0;height:38px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 12px 0 3px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14)">
+            <div role="tablist" aria-label="Período das descargas" style="flex:0 0 auto;display:flex;gap:2px;height:30px;padding:2px;background:#f2f5f7;border-radius:999px;box-sizing:border-box"><sc-for list="{{ descPeriods }}" as="dp" hint-placeholder-count="3"><button role="tab" aria-selected="{{ dp.on }}" onClick="{{ dp.onClick }}" title="{{ dp.title }}" style="height:26px;padding:0 9px;border:0;border-radius:999px;background:{{ dp.bg }};color:{{ dp.fg }};font-family:Questrial,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ dp.label }}</button></sc-for></div>
+            <button onClick="{{ onDescPlay }}" aria-label="{{ descPlayLabel }}" style="width:30px;height:30px;flex:0 0 30px;border-radius:999px;border:0;background:#232343;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#17172e"><i class="ph {{ descIcon }}" style="font-size:14px"></i></button>
+            <input type="range" min="0" max="{{ descMax }}" step="1" value="{{ descF }}" onChange="{{ onDescF }}" aria-label="Acompanhar descargas no período" style="width:120px;flex:0 1 120px;min-width:56px;margin:0;accent-color:#232343;cursor:pointer" />
+            <span style="font-size:12px;line-height:16px;font-weight:700;color:#1b2026;font-variant-numeric:tabular-nums;white-space:nowrap;flex:0 0 auto">{{ descTime }}</span>
+            <span aria-hidden="true" style="width:1px;height:18px;background:#e3e7eb;flex:0 0 1px"></span>
+            <span style="display:flex;align-items:center;gap:5px;font-size:12px;line-height:16px;color:#5b6672;white-space:nowrap;flex:0 0 auto;font-variant-numeric:tabular-nums"><i class="ph ph-lightning" style="font-size:14px;color:#a16207"></i>{{ descCount }}</span>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ radarOn }}" hint-placeholder-val="{{ false }}">
+        <div role="group" aria-label="Radar de chuva" style="pointer-events:auto;flex:0 0 auto;max-width:100%;height:38px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 12px 0 3px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14)">
+          <div role="tablist" aria-label="Tipo de radar" style="flex:0 0 auto;display:flex;gap:2px;height:30px;padding:2px;background:#f2f5f7;border-radius:999px;box-sizing:border-box"><sc-for list="{{ radarModes }}" as="rm" hint-placeholder-count="3"><button role="tab" aria-selected="{{ rm.on }}" onClick="{{ rm.onClick }}" title="{{ rm.title }}" style="height:26px;padding:0 9px;border:0;border-radius:999px;background:{{ rm.bg }};color:{{ rm.fg }};font-family:Questrial,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ rm.label }}</button></sc-for></div>
+          <button onClick="{{ onRadarPlay }}" aria-label="{{ radarPlayLabel }}" style="width:30px;height:30px;flex:0 0 30px;border-radius:999px;border:0;background:#232343;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#17172e"><i class="ph {{ radarIcon }}" style="font-size:14px"></i></button>
+          <input type="range" min="0" max="{{ radarMax }}" step="1" value="{{ radarF }}" onChange="{{ onRadarF }}" aria-label="Quadro do radar" style="width:110px;flex:0 1 110px;min-width:56px;margin:0;accent-color:#232343;cursor:pointer" />
+          <span style="font-size:12px;line-height:16px;font-weight:700;color:#1b2026;font-variant-numeric:tabular-nums;white-space:nowrap;flex:0 0 auto">{{ radarTime }}</span>
+          <span aria-hidden="true" style="width:1px;height:18px;background:#e3e7eb;flex:0 0 1px"></span>
+          <div aria-label="Intensidade em mm/h" style="display:flex;flex-direction:column;gap:1px;flex:0 0 auto">
+            <div style="display:flex"><sc-for list="{{ radarBins }}" as="rb" hint-placeholder-count="6"><span style="width:13px;height:5px;background:{{ rb.color }}"></span></sc-for></div>
+            <div style="display:flex"><sc-for list="{{ radarBins }}" as="rb" hint-placeholder-count="6"><span style="width:13px;font-size:8px;line-height:9px;color:#5b6672;font-variant-numeric:tabular-nums">{{ rb.label }}</span></sc-for></div>
+          </div>
+          <span style="font-size:9px;line-height:10px;color:#8a949e;flex:0 0 auto">mm/h</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{ satOn }}" hint-placeholder-val="{{ false }}">
+        <div role="group" aria-label="Satélite meteorológico" style="pointer-events:auto;flex:0 0 auto;max-width:100%;height:38px;box-sizing:border-box;display:flex;align-items:center;gap:8px;padding:0 12px 0 3px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14)">
+          <div role="tablist" aria-label="Visualização do satélite meteorológico" style="flex:0 0 auto;display:flex;gap:2px;height:30px;padding:2px;background:#f2f5f7;border-radius:999px;box-sizing:border-box"><sc-for list="{{ smModes }}" as="sm" hint-placeholder-count="3"><button role="tab" aria-selected="{{ sm.on }}" onClick="{{ sm.onClick }}" title="{{ sm.title }}" style="height:26px;padding:0 9px;border:0;border-radius:999px;background:{{ sm.bg }};color:{{ sm.fg }};font-family:Questrial,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ sm.label }}</button></sc-for></div>
+          <select value="{{ smSrc }}" onChange="{{ onSmSrc }}" aria-label="Fonte das imagens do satélite meteorológico" title="Fonte das imagens do satélite meteorológico" style="height:26px;max-width:118px;flex:0 1 auto;min-width:64px;border:0;border-radius:999px;background:#f2f5f7;padding:0 6px;font-family:Questrial,sans-serif;font-size:12px;font-weight:700;color:#1b2026;cursor:pointer"><sc-for list="{{ smSrcs }}" as="o" hint-placeholder-count="3"><option value="{{ o.v }}">{{ o.label }}</option></sc-for></select>
+          <button onClick="{{ onSmPlay }}" aria-label="{{ smPlayLabel }}" style="width:30px;height:30px;flex:0 0 30px;border-radius:999px;border:0;background:#232343;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#17172e"><i class="ph {{ smIcon }}" style="font-size:14px"></i></button>
+          <input type="range" min="0" max="{{ smMax }}" step="1" value="{{ smF }}" onChange="{{ onSmF }}" aria-label="Horário da imagem do satélite meteorológico" style="width:110px;flex:0 1 110px;min-width:56px;margin:0;accent-color:#232343;cursor:pointer" />
+          <span style="font-size:12px;line-height:16px;font-weight:700;color:#1b2026;font-variant-numeric:tabular-nums;white-space:nowrap;flex:0 0 auto">{{ smTime }}</span>
+        </div>
+      </sc-if>
       <sc-if value="{{ wxBarOn }}" hint-placeholder-val="{{ false }}">
         <div data-wxbar="1" style="position:relative;flex:1 1 auto;min-width:0;max-width:100%;display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:6px;pointer-events:auto">
           <div style="flex:1 1 260px;min-width:{{ wxHoursMin }};max-width:560px;margin-left:auto;overflow:hidden;height:36px;box-sizing:border-box;display:flex;align-items:center;gap:2px;padding:0 3px 0 10px;background:rgba(255,255,255,.97);border:1px solid #D8DEE5;border-radius:999px;box-shadow:0 1px 3px rgba(20,28,36,.14)">
@@ -1675,7 +1745,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
               <sc-if value="{{ detMoreOpen }}" hint-placeholder-val="{{ false }}">
                 <div role="menu" style="position:absolute;top:36px;right:0;z-index:30;min-width:200px;padding:4px;background:#fff;border:1px solid #dfe3e7;border-radius:10px;box-shadow:0 8px 24px rgba(20,28,36,.16);display:flex;flex-direction:column">
                   <button role="menuitem" onClick="{{ onDetailStvMenu }}" style="height:34px;padding:0 10px;display:flex;align-items:center;gap:8px;border:0;background:transparent;border-radius:6px;font-family:Questrial,sans-serif;font-size:13px;color:#1b2026;cursor:pointer;white-space:nowrap;text-align:left" style-hover="background:#f2f5f7"><i class="ph ph-person" style="font-size:15px;color:#5b6672"></i>Street View</button>
-                  <button role="menuitem" onClick="{{ onDetailSatMenu }}" style="height:34px;padding:0 10px;display:flex;align-items:center;gap:8px;border:0;background:transparent;border-radius:6px;font-family:Questrial,sans-serif;font-size:13px;color:#1b2026;cursor:pointer;white-space:nowrap;text-align:left" style-hover="background:#f2f5f7"><i class="ph ph-globe-simple" style="font-size:15px;color:#5b6672"></i>Imagens de satélite</button>
+                  <button role="menuitem" onClick="{{ onDetailSatMenu }}" style="height:34px;padding:0 10px;display:flex;align-items:center;gap:8px;border:0;background:transparent;border-radius:6px;font-family:Questrial,sans-serif;font-size:13px;color:#1b2026;cursor:pointer;white-space:nowrap;text-align:left" style-hover="background:#f2f5f7"><i class="ph ph-globe-simple" style="font-size:15px;color:#5b6672"></i>Imagens históricas de satélite</button>
                 </div>
               </sc-if>
             </div>
@@ -2533,7 +2603,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
           </sc-for>
         </div>
         <span style="font-size:12px;color:#8a949e;white-space:nowrap;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis">{{ taCountLabel }}</span>
-        <span aria-label="{{ updatedTitle }}" style="display:flex;align-items:center;gap:5px;flex:0 0 auto;font:400 11px/15px Questrial,sans-serif;color:#8a949e;white-space:nowrap"><span style="width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:{{ freshDot }}"></span>{{ updatedLabel }}</span>
+        <button data-pop="upd" onClick="{{ onUpdToggle }}" aria-expanded="{{ updOpen }}" aria-label="{{ updatedTitle }}" title="{{ updatedTitle }}" style="display:flex;align-items:center;gap:5px;flex:0 0 auto;height:24px;padding:0 6px;border:0;border-radius:999px;background:{{ updBtnBg }};cursor:pointer;font:400 11px/15px Questrial,sans-serif;color:#8a949e;white-space:nowrap" style-hover="background:#f2f5f7;color:#1b2026"><span style="width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:{{ freshDot }}"></span>{{ updatedLabel }}<i class="ph {{ updCaret }}" style="font-size:11px"></i></button>
         <div style="display:flex;gap:4px;flex:0 0 auto">
           <sc-for list="{{ taPresets }}" as="p" hint-placeholder-count="4">
             <button onClick="{{ p.onClick }}" aria-label="{{ p.title }}" style="height:30px;padding:0 11px;border:1px solid {{ p.border }};background:{{ p.bg }};color:{{ p.fg }};font:700 12px/1 Questrial,sans-serif;cursor:pointer;border-radius:999px" style-hover="border-color:#232343">{{ p.label }}</button>
@@ -2602,7 +2672,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
         </sc-if>
         <span style="font-size:12px;color:#8a949e">{{ taCountLabel }}</span>
         <span style="flex:1 1 auto"></span>
-        <span aria-label="{{ updatedTitle }}" style="display:flex;align-items:center;gap:5px;flex:0 0 auto;font:400 11px/15px Questrial,sans-serif;color:#8a949e;white-space:nowrap"><span style="width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:{{ freshDot }}"></span>{{ updatedLabel }}</span>
+        <button data-pop="upd" onClick="{{ onUpdToggle }}" aria-expanded="{{ updOpen }}" aria-label="{{ updatedTitle }}" title="{{ updatedTitle }}" style="display:flex;align-items:center;gap:5px;flex:0 0 auto;height:24px;padding:0 6px;border:0;border-radius:999px;background:{{ updBtnBg }};cursor:pointer;font:400 11px/15px Questrial,sans-serif;color:#8a949e;white-space:nowrap" style-hover="background:#f2f5f7;color:#1b2026"><span style="width:6px;height:6px;flex:0 0 6px;border-radius:50%;background:{{ freshDot }}"></span>{{ updatedLabel }}<i class="ph {{ updCaret }}" style="font-size:11px"></i></button>
         <div style="display:flex;gap:5px">
           <sc-for list="{{ taPresets }}" as="p" hint-placeholder-count="4">
             <button onClick="{{ p.onClick }}" aria-label="{{ p.title }}" style="height:32px;padding:0 12px;border:1px solid {{ p.border }};background:{{ p.bg }};color:{{ p.fg }};font:700 12px/1 Questrial,sans-serif;cursor:pointer;border-radius:999px" style-hover="border-color:#232343">{{ p.label }}</button>
@@ -2768,6 +2838,107 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
                   <button onClick="{{ g.onClick }}" style="height:28px;padding:0 12px;border:1px solid {{ g.border }};border-radius:999px;background:{{ g.bg }};color:{{ g.fg }};font-family:Questrial,sans-serif;font-size:12px;font-weight:{{ g.weight }};cursor:pointer;white-space:nowrap" style-hover="border-color:#232343">{{ g.label }}</button>
                 </sc-for>
               </div>
+            </sc-if>
+            <sc-if value="{{ fcGridOn }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:11px;line-height:15px;font-weight:700;letter-spacing:.07em;color:#8a949e">FONTES</span>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <sc-for list="{{ fcSrcChips }}" as="sc" hint-placeholder-count="3">
+                    <button onClick="{{ sc.onClick }}" aria-pressed="{{ sc.on }}" title="{{ sc.tip }}" style="display:flex;align-items:center;gap:6px;height:28px;max-width:100%;padding:0 10px 0 7px;border:1px solid {{ sc.border }};border-radius:999px;background:#fff;color:{{ sc.fg }};font-family:Questrial,sans-serif;font-size:12px;cursor:{{ sc.cursor }};white-space:nowrap" style-hover="background:#f7f9fa"><i class="ph {{ sc.icon }}" style="font-size:15px;color:{{ sc.iconFg }}"></i><span aria-hidden="true" style="width:12px;height:0;flex:0 0 12px;border-top:2px {{ sc.dash }} {{ sc.color }}"></span><span style="font-weight:700">{{ sc.label }}</span><span style="color:#8a949e;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis">{{ sc.run }}</span></button>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px 8px;flex-wrap:wrap;border-top:1px solid #eceff1;padding-top:10px">
+                <span style="flex:1 1 auto;font-size:11px;line-height:15px;font-weight:700;letter-spacing:.07em;color:#8a949e">VISUALIZAÇÃO METEOROLÓGICA</span>
+                <sc-if value="{{ fcIsZoom }}" hint-placeholder-val="{{ false }}"><button onClick="{{ onFcUnzoom }}" style="display:flex;align-items:center;gap:6px;height:28px;padding:0 11px;border:1px solid #cfd6dc;border-radius:999px;background:#fff;color:#1b2026;font-family:Questrial,sans-serif;font-size:12px;cursor:pointer;white-space:nowrap" style-hover="border-color:#232343"><i class="ph ph-arrow-left" style="font-size:13px;color:#5b6672"></i>Todos os gráficos</button></sc-if>
+                <div role="tablist" aria-label="Período da previsão" style="flex:0 0 auto;display:flex;gap:2px;height:28px;padding:2px;background:#f2f5f7;border-radius:999px;box-sizing:border-box">
+                  <sc-for list="{{ fcPeriods }}" as="fp" hint-placeholder-count="3"><button role="tab" aria-selected="{{ fp.on }}" onClick="{{ fp.onClick }}" style="height:24px;padding:0 10px;border:0;border-radius:999px;background:{{ fp.bg }};color:{{ fp.fg }};box-shadow:{{ fp.shadow }};font-family:Questrial,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">{{ fp.label }}</button></sc-for>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:{{ fcGridCols }};gap:8px">
+                <sc-for list="{{ fcCharts }}" as="ch" hint-placeholder-count="4">
+                <div style="display:flex;flex-direction:column;gap:4px;min-width:0;padding:8px 10px 6px;border:1px solid #eceff1;border-radius:12px;background:#fff">
+                  <div style="display:flex;align-items:center;gap:6px;min-height:24px">
+                    <span style="flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px"><b style="font-size:12px;line-height:16px;color:#1b2026;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ch.title }}</b><span style="font-size:11px;line-height:14px;color:#8a949e">{{ ch.unit }}</span></span>
+                    <sc-if value="{{ ch.canZoom }}" hint-placeholder-val="{{ true }}"><button onClick="{{ ch.onZoom }}" aria-label="Ampliar gráfico de {{ ch.title }}" title="Ampliar gráfico" style="width:24px;height:24px;flex:0 0 24px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#5b6672;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7;color:#1b2026"><i class="ph ph-arrows-out-simple" style="font-size:13px"></i></button></sc-if>
+                  </div>
+                  <sc-if value="{{ ch.noData }}" hint-placeholder-val="{{ false }}"><div style="height:{{ ch.h }};display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8px;font-size:12px;line-height:16px;color:#8a949e;border:1px dashed #dfe3e7;border-radius:10px">Dado indisponível nas fontes selecionadas</div></sc-if>
+                  <sc-if value="{{ ch.hasData }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:grid;grid-template-columns:30px minmax(0,1fr);column-gap:5px;row-gap:2px">
+                      <div style="position:relative;height:{{ ch.h }}"><sc-for list="{{ ch.yTicks }}" as="yt" hint-placeholder-count="3"><span style="position:absolute;right:0;top:{{ yt.top }};transform:translateY(-50%);font-size:10px;line-height:12px;color:#8a949e;font-variant-numeric:tabular-nums;white-space:nowrap">{{ yt.label }}</span></sc-for></div>
+                      <div onMouseMove="{{ ch.onMove }}" onMouseLeave="{{ ch.onLeave }}" style="position:relative;height:{{ ch.h }};cursor:crosshair">
+                        <svg viewBox="0 0 700 100" preserveAspectRatio="none" aria-label="{{ ch.title }} por fonte" style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible">
+                          <sc-for list="{{ ch.grid }}" as="gl" hint-placeholder-count="3"><line x1="0" x2="700" y1="{{ gl.y }}" y2="{{ gl.y }}" stroke="#eceff1" stroke-width="1" vector-effect="non-scaling-stroke"></line></sc-for>
+                          <sc-for list="{{ ch.days }}" as="dl" hint-placeholder-count="2"><line x1="{{ dl.x }}" x2="{{ dl.x }}" y1="0" y2="100" stroke="#dfe3e7" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></line></sc-for>
+                          <sc-for list="{{ ch.lines }}" as="ln" hint-placeholder-count="2"><path d="{{ ln.d }}" fill="none" stroke="{{ ln.color }}" stroke-width="{{ ln.w }}" stroke-dasharray="{{ ln.dash }}" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></sc-for>
+                        </svg>
+                        <sc-if value="{{ ch.hasHov }}" hint-placeholder-val="{{ false }}">
+                          <span style="position:absolute;top:0;bottom:0;left:{{ ch.hovLeft }};width:1px;background:#232343;opacity:.45;pointer-events:none"></span>
+                          <div style="position:absolute;top:4px;left:{{ ch.tipLeft }};transform:translateX({{ ch.tipShift }});z-index:3;min-width:164px;box-sizing:border-box;padding:6px 9px;background:#ffffff;border:1px solid #cfd6dc;border-radius:10px;box-shadow:0 2px 8px rgba(20,28,36,.16);pointer-events:none;display:flex;flex-direction:column;gap:2px">
+                            <span style="font-size:12px;line-height:16px;font-weight:700;color:#1b2026;font-variant-numeric:tabular-nums">{{ ch.tipTime }}</span>
+                            <span style="font-size:11px;line-height:14px;color:#8a949e">{{ ch.tipVar }}</span>
+                            <sc-for list="{{ ch.tipRows }}" as="tr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:6px;font-size:12px;line-height:16px"><span style="width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:{{ tr.color }}"></span><span style="flex:1 1 auto;color:#5b6672;white-space:nowrap">{{ tr.label }}</span><b style="color:{{ tr.fg }};font-weight:{{ tr.weight }};font-variant-numeric:tabular-nums;white-space:nowrap">{{ tr.val }}</b></span></sc-for>
+                          </div>
+                        </sc-if>
+                      </div>
+                      <span></span>
+                      <div style="position:relative;height:13px"><sc-for list="{{ ch.xTicks }}" as="xt" hint-placeholder-count="2"><span style="position:absolute;left:{{ xt.left }};top:0;transform:translateX(-50%);font-size:10px;line-height:12px;color:#8a949e;font-variant-numeric:tabular-nums;white-space:nowrap">{{ xt.label }}</span></sc-for></div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ ch.hasNa }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;line-height:14px;color:#8a949e;text-wrap:pretty">{{ ch.naTxt }}</span></sc-if>
+                </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ fcHasOther }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:11px;line-height:15px;font-weight:700;letter-spacing:.07em;color:#8a949e">OUTRAS VARIÁVEIS</span>
+                <div style="display:grid;grid-template-columns:{{ fcGridCols }};gap:8px">
+                  <sc-for list="{{ fcOther }}" as="oc" hint-placeholder-count="2">
+                  <div style="display:flex;flex-direction:column;gap:4px;min-width:0;padding:8px 10px 6px;border:1px solid #eceff1;border-radius:12px;background:#fff">
+                  <div style="display:flex;align-items:center;gap:6px;min-height:24px">
+                    <span style="flex:1 1 auto;min-width:0;display:flex;align-items:baseline;gap:6px"><b style="font-size:12px;line-height:16px;color:#1b2026;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ oc.title }}</b><span style="font-size:11px;line-height:14px;color:#8a949e">{{ oc.unit }}</span></span>
+                    <sc-if value="{{ oc.canZoom }}" hint-placeholder-val="{{ true }}"><button onClick="{{ oc.onZoom }}" aria-label="Ampliar gráfico de {{ oc.title }}" title="Ampliar gráfico" style="width:24px;height:24px;flex:0 0 24px;border:0;border-radius:999px;background:transparent;cursor:pointer;color:#5b6672;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:#f2f5f7;color:#1b2026"><i class="ph ph-arrows-out-simple" style="font-size:13px"></i></button></sc-if>
+                  </div>
+                  <sc-if value="{{ oc.noData }}" hint-placeholder-val="{{ false }}"><div style="height:{{ oc.h }};display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8px;font-size:12px;line-height:16px;color:#8a949e;border:1px dashed #dfe3e7;border-radius:10px">Dado indisponível nas fontes selecionadas</div></sc-if>
+                  <sc-if value="{{ oc.hasData }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:grid;grid-template-columns:30px minmax(0,1fr);column-gap:5px;row-gap:2px">
+                      <div style="position:relative;height:{{ oc.h }}"><sc-for list="{{ oc.yTicks }}" as="yt" hint-placeholder-count="3"><span style="position:absolute;right:0;top:{{ yt.top }};transform:translateY(-50%);font-size:10px;line-height:12px;color:#8a949e;font-variant-numeric:tabular-nums;white-space:nowrap">{{ yt.label }}</span></sc-for></div>
+                      <div onMouseMove="{{ oc.onMove }}" onMouseLeave="{{ oc.onLeave }}" style="position:relative;height:{{ oc.h }};cursor:crosshair">
+                        <svg viewBox="0 0 700 100" preserveAspectRatio="none" aria-label="{{ oc.title }} por fonte" style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible">
+                          <sc-for list="{{ oc.grid }}" as="gl" hint-placeholder-count="3"><line x1="0" x2="700" y1="{{ gl.y }}" y2="{{ gl.y }}" stroke="#eceff1" stroke-width="1" vector-effect="non-scaling-stroke"></line></sc-for>
+                          <sc-for list="{{ oc.days }}" as="dl" hint-placeholder-count="2"><line x1="{{ dl.x }}" x2="{{ dl.x }}" y1="0" y2="100" stroke="#dfe3e7" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"></line></sc-for>
+                          <sc-for list="{{ oc.lines }}" as="ln" hint-placeholder-count="2"><path d="{{ ln.d }}" fill="none" stroke="{{ ln.color }}" stroke-width="{{ ln.w }}" stroke-dasharray="{{ ln.dash }}" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></path></sc-for>
+                        </svg>
+                        <sc-if value="{{ oc.hasHov }}" hint-placeholder-val="{{ false }}">
+                          <span style="position:absolute;top:0;bottom:0;left:{{ oc.hovLeft }};width:1px;background:#232343;opacity:.45;pointer-events:none"></span>
+                          <div style="position:absolute;top:4px;left:{{ oc.tipLeft }};transform:translateX({{ oc.tipShift }});z-index:3;min-width:164px;box-sizing:border-box;padding:6px 9px;background:#ffffff;border:1px solid #cfd6dc;border-radius:10px;box-shadow:0 2px 8px rgba(20,28,36,.16);pointer-events:none;display:flex;flex-direction:column;gap:2px">
+                            <span style="font-size:12px;line-height:16px;font-weight:700;color:#1b2026;font-variant-numeric:tabular-nums">{{ oc.tipTime }}</span>
+                            <span style="font-size:11px;line-height:14px;color:#8a949e">{{ oc.tipVar }}</span>
+                            <sc-for list="{{ oc.tipRows }}" as="tr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:6px;font-size:12px;line-height:16px"><span style="width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:{{ tr.color }}"></span><span style="flex:1 1 auto;color:#5b6672;white-space:nowrap">{{ tr.label }}</span><b style="color:{{ tr.fg }};font-weight:{{ tr.weight }};font-variant-numeric:tabular-nums;white-space:nowrap">{{ tr.val }}</b></span></sc-for>
+                          </div>
+                        </sc-if>
+                      </div>
+                      <span></span>
+                      <div style="position:relative;height:13px"><sc-for list="{{ oc.xTicks }}" as="xt" hint-placeholder-count="2"><span style="position:absolute;left:{{ xt.left }};top:0;transform:translateX(-50%);font-size:10px;line-height:12px;color:#8a949e;font-variant-numeric:tabular-nums;white-space:nowrap">{{ xt.label }}</span></sc-for></div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ oc.hasNa }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;line-height:14px;color:#8a949e;text-wrap:pretty">{{ oc.naTxt }}</span></sc-if>
+                </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ fcIsZoom }}" hint-placeholder-val="{{ false }}">
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:6px">
+                  <sc-for list="{{ fcThumbs }}" as="th" hint-placeholder-count="5">
+                    <button onClick="{{ th.onPick }}" title="{{ th.tip }}" aria-label="{{ th.tip }}" style="min-width:0;display:flex;flex-direction:column;gap:4px;padding:7px 9px;border:1px solid #eceff1;border-radius:12px;background:#fff;cursor:pointer;text-align:left;font-family:Questrial,sans-serif" style-hover="border-color:#232343">
+                      <span style="display:flex;align-items:baseline;gap:5px;min-width:0"><b style="font-size:12px;line-height:16px;color:#1b2026;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ th.title }}</b><span style="font-size:10px;line-height:13px;color:#8a949e">{{ th.unit }}</span></span>
+                      <sc-if value="{{ th.hasData }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 700 100" preserveAspectRatio="none" aria-hidden="true" style="display:block;width:100%;height:34px;overflow:visible"><sc-for list="{{ th.lines }}" as="ln" hint-placeholder-count="2"><path d="{{ ln.d }}" fill="none" stroke="{{ ln.color }}" stroke-width="1.4" stroke-dasharray="{{ ln.dash }}" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path></sc-for></svg></sc-if>
+                      <sc-if value="{{ th.noData }}" hint-placeholder-val="{{ false }}"><span style="height:34px;display:flex;align-items:center;font-size:11px;color:#8a949e">Dado indisponível</span></sc-if>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
             </sc-if>
             <sc-if value="{{ metIsWind }}" hint-placeholder-val="{{ false }}">
               <div style="display:flex;flex-direction:column;gap:8px;order:{{ metWindOrder }}">
@@ -3242,7 +3413,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
                   </div>
                 </div>
               </sc-if>
-              <div style="display:flex;flex-direction:column;gap:5px;font-size:12px;line-height:16px;color:#5b6672;min-width:0;position:relative">Imagens de satélite
+              <div style="display:flex;flex-direction:column;gap:5px;font-size:12px;line-height:16px;color:#5b6672;min-width:0;position:relative">Imagens históricas de satélite
                 <sc-if value="{{ sfHasImgs }}" hint-placeholder-val="{{ false }}">
                   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px">
                     <sc-for list="{{ sfImgs }}" as="im" hint-placeholder-count="2">
@@ -3439,6 +3610,9 @@ class Component extends DCLogic {
 
   state = {
     view: 'login',
+    radarF: 17, radarMode: 'obs', radarPlay: false, smF: 12, smMode: 'ir', smSrc: 'goes', smPlay: false,
+    descPer: '24h', descF: null, descPlay: false, descCustom: null, descCustomOpen: false, swipe: false, swipePct: 50,
+    fcShow: null, fcPer: 72, fcZoom: null, fcHov: null, updOpen: null,
     acctOpen: false, profileOpen: false, cur: null,
     photo: null, photoZoom: 1, photoX: 0, photoY: 0, photoEdit: false, photoDraft: null,
     loginEmail: 'r.tavares@cemleste.com.br',
@@ -3822,13 +3996,18 @@ class Component extends DCLogic {
     { id: 'unid_bomb', g: 'UNIDADES CRÍTICAS', label: 'Bombeiros', count: '8 unidades', st: 'ok', on: false, op: 100, color: '#c2410c', sym: 'chip', ic: 'ph-fire-truck', t: 'Emergência', cc: true, desc: 'Quartéis e bases de combate a incêndio no recorte ativo.' },
     { id: 'unid_pol', g: 'UNIDADES CRÍTICAS', label: 'Polícia', count: '8 unidades', st: 'ok', on: false, op: 100, color: '#1e40af', sym: 'chip', ic: 'ph-shield', t: 'Segurança', cc: true, desc: 'Unidades de segurança pública no recorte ativo.' },
     { id: 'unid_agua', g: 'UNIDADES CRÍTICAS', label: 'Tratamento de água', count: '8 unidades', st: 'ok', on: false, op: 100, color: '#0e7490', sym: 'chip', ic: 'ph-drop', t: 'Tratamento de água', cc: true, desc: 'Estações de tratamento e reservatórios no recorte ativo.' },
-    { id: 'veg', g: 'CLIMA E AMBIENTE', label: 'Vegetação / uso do solo', count: '4 classes', st: 'ok', on: false, op: 55, color: '#3f7d3a', sym: 'area', ic: 'ph-tree', src: 'MapBiomas 2025', dyn: 'est', desc: 'Uso do solo em classes categóricas: vegetação densa, média, rasteira e sem vegetação.' },
     // R5: estações meteorológicas = dado OBSERVADO; cada estação reporta apenas as variáveis que possui
     { id: 'meteo_est', g: 'CLIMA E AMBIENTE', label: 'Estações meteorológicas', count: '6 estações', st: 'ok', on: false, op: 100, color: '#2563EB', sym: 'chip', ic: 'ph-cell-tower', master: true, obs: 'Observado', src: '', upd: '14:20', desc: 'Estações com séries medidas. Ative as variáveis disponíveis para exibir no mapa as estações que as reportam.' },
     { id: 'meteo_prec', parent: 'meteo_est', g: 'CLIMA E AMBIENTE', label: 'Precipitação', count: '4 estações', st: 'ok', on: false, op: 100, color: '#2563EB', sym: 'chip', ic: 'ph-drop', obs: 'Observado', src: '', upd: '14:20', cc: true, desc: 'Precipitação medida, em mm, nas estações que reportam esta variável.' },
     { id: 'meteo_temp', parent: 'meteo_est', g: 'CLIMA E AMBIENTE', label: 'Temperatura', count: '4 estações', st: 'ok', on: false, op: 100, color: '#DC2626', sym: 'chip', ic: 'ph-thermometer-simple', obs: 'Observado', src: '', upd: '14:20', cc: true, desc: 'Temperatura medida, em °C, nas estações que reportam esta variável.' },
     { id: 'meteo_vento', parent: 'meteo_est', g: 'CLIMA E AMBIENTE', label: 'Vento', count: '4 estações', st: 'ok', on: false, op: 100, color: '#0e7490', sym: 'chip', ic: 'ph-wind', obs: 'Observado', src: '', upd: '14:20', cc: true, desc: 'Velocidade do vento medida, em km/h, nas estações que reportam esta variável. A direção aparece como informação complementar.' },
     { id: 'forecast', g: 'CLIMA E AMBIENTE', label: 'Forecast', count: 'Consulta por ponto', st: 'ok', on: false, op: 100, color: '#0369A1', sym: 'chip', ic: 'ph-cloud-sun', obs: 'Previsto', src: '', upd: '13:00', cc: true, desc: 'Previsão meteorológica consultada por ponto: com a camada ativa, clique em qualquer local do mapa para abrir a previsão. Dado demonstrativo: a integração definitiva ainda não está contratada.' },
+    // Clima · capacidade compartilhada com Deslizamento (mesmos componentes). DEMO / SYNTHETIC até a integração; nomes de provedor = source provisional.
+    { id: 'radar', g: 'CLIMA E AMBIENTE', label: 'Radar de chuva', count: 'Últimas 3 h · quadros de 10 min', st: 'ok', on: false, op: 75, color: '#2563eb', sym: 'area', ic: 'ph-radar', obs: 'Observado', src: '', desc: 'Intensidade de precipitação (mm/h) estimada pela refletividade do radar meteorológico, em quadros recentes. Compatível com Oscilar camadas.' },
+    { id: 'satmet', g: 'CLIMA E AMBIENTE', label: 'Satélite meteorológico', count: 'Últimas 3 h · quadros de 15 min', st: 'ok', on: false, op: 80, color: '#475569', sym: 'area', ic: 'ph-cloud', obs: 'Observado', src: '', desc: 'Imagem meteorológica recente para contexto atmosférico (nuvens e sistemas). Diferente das imagens históricas de satélite usadas em Cicatrizes e Antes × Depois.' },
+    // fonte do dado confirmada no guia da API de Descargas (GOES-19 · GLM); provider de distribuição = Quasar
+    { id: 'desc', g: 'CLIMA E AMBIENTE', label: 'Descargas elétricas', count: '24 h · 3 dias · 7 dias', st: 'ok', on: false, op: 100, color: '#ca8a04', sym: 'chip', ic: 'ph-lightning', obs: 'Observado', src: 'GOES-19 · GLM', desc: 'Descargas atmosféricas detectadas por satélite. Cada ponto traz data, hora e coordenada; o dado não informa corrente nem polaridade.' },
+    { id: 'veg', g: 'CLIMA E AMBIENTE', label: 'Vegetação / uso do solo', count: '4 classes', st: 'ok', on: false, op: 55, color: '#3f7d3a', sym: 'area', ic: 'ph-tree', src: 'MapBiomas 2025', dyn: 'est', desc: 'Uso do solo em classes categóricas: vegetação densa, média, rasteira e sem vegetação.' },
     // território — geometria DEMO / SYNTHETIC simplificada
     { id: 'concessao', g: 'LIMITES E REFERÊNCIA', label: 'Área de atendimento — referência', count: 'UFs atendidas', st: 'ok', on: true, op: 70, color: '#232343', sym: 'line-solid', ic: 'ph-polygon', dyn: 'est', cc: true, desc: 'Referência territorial baseada nas UFs atendidas. A geometria contratual da concessão depende da base oficial da distribuidora.' },
     { id: 'estados', g: 'LIMITES E REFERÊNCIA', label: 'Estados', count: '27 UFs', st: 'ok', on: false, op: 70, color: '#141c24', sym: 'line-solid', ic: 'ph-globe-hemisphere-west', dyn: 'est', cc: true, desc: 'Limites estaduais da malha oficial do IBGE, simplificados para leitura em zoom regional e nacional.' },
@@ -3988,12 +4167,13 @@ class Component extends DCLogic {
 
   // metadata compacta da row: uma linha em vez de Tipo / Fonte verticalizados
   expLine(d) {
+    const u = this.updOf(d.parent || d.id), upd = u ? u.last : d.upd, nxt = u ? u.next : d.nxt;
     // estações e forecast identificam explicitamente se o dado é medido ou projetado
-    if (d.obs) return d.obs + (d.src ? ' · Fonte: ' + d.src : '') + (d.upd ? ' · Atualização · ' + d.upd : '');
+    if (d.obs) return d.obs + (d.src ? ' · Fonte: ' + d.src : '') + (upd ? ' · Atualização · ' + upd : '');
     if (d.dyn === 'din') {
       const p = [];
-      if (d.upd) p.push('Atualização · ' + d.upd);
-      if (d.nxt) p.push('Próxima · ' + d.nxt);
+      if (upd) p.push('Atualização · ' + upd);
+      if (nxt) p.push('Próxima · ' + nxt);
       return p.join(' · ');
     }
     return d.src ? 'Base de referência · ' + d.src : '';
@@ -4296,7 +4476,8 @@ class Component extends DCLogic {
   FC_SRC = {
     om: { label: 'Open-Meteo', model: '', vars: ['temp', 'wind', 'gust', 'prec', 'rh', 'cloud'] },
     ecmwf: { label: 'ECMWF', model: 'ecmwf_ifs025', vars: ['temp', 'wind', 'gust', 'prec', 'rh', 'cloud'] },
-    gfs: { label: 'GFS', model: 'gfs_seamless', vars: ['temp', 'wind', 'gust', 'prec', 'rh', 'cloud'] }
+    // DEMO: disponibilidade por variável ilustrativa (rajada ausente) até o documento oficial de fontes
+    gfs: { label: 'GFS', model: 'gfs_seamless', vars: ['temp', 'wind', 'prec', 'rh', 'cloud'] }
   };
   // fonte principal conduz o mapa e a consulta por ponto (via Open-Meteo, parâmetro models); comparação do gráfico é independente
   fcModelParam() { const m = (this.FC_SRC[this.state.fcMain || 'om'] || {}).model; return m ? '&models=' + m : ''; }
@@ -4984,7 +5165,7 @@ class Component extends DCLogic {
     }
     return out;
   }
-  // catálogo de cenas disponíveis no ponto (DEMO: revisita ~5 dias, mesma regra de Imagens de satélite)
+  // catálogo de cenas disponíveis no ponto (DEMO: revisita ~5 dias, mesma regra de Imagens históricas de satélite)
   sceneCatalog(lat, lng, a0, b0) {
     const DAY = 24 * this.HOUR, out = [];
     for (let d = a0 + Math.floor(this.satHash(lat, lng) * 5) * DAY; d <= b0; d += 5 * DAY) {
@@ -5148,7 +5329,7 @@ class Component extends DCLogic {
     if (!k) return base;
     const z = k === 'met' && !!s.chartZoom;
     const metObs = k === 'met' && s.metPanel && s.metPanel.kind !== 'fc';
-    const prefW = k === 'met' ? (metObs ? 420 : 372) : (k === 'stv' && s.stvExpanded ? 9999 : 420);
+    const prefW = k === 'met' ? (metObs ? 420 : 560) : (k === 'stv' && s.stvExpanded ? 9999 : 420);
     const g = z ? { x: Math.round((window.innerWidth - Math.min(1080, window.innerWidth - 64)) / 2), y: 28, w: Math.min(1080, window.innerWidth - 64), maxH: window.innerHeight - 56 } : this.ctxGeom(prefW);
     const geo = { ctxX: g.x + 'px', ctxY: g.y + 'px', ctxW: g.w + 'px', ctxMaxH: g.maxH + 'px' };
     if (k === 'met') {
@@ -5183,7 +5364,7 @@ class Component extends DCLogic {
       const p = s.satPanel;
       return {
         ...base, ...geo, ctxOpen: true, ctxIsSat: true,
-        ctxIcon: 'ph-globe-simple', ctxKindLabel: '', ctxHideKind: true, ctxShowKind: false, ctxTitle: p.occId ? 'Imagens de satélite · ' + p.occId : 'Imagens de satélite',
+        ctxIcon: 'ph-globe-simple', ctxKindLabel: '', ctxHideKind: true, ctxShowKind: false, ctxTitle: p.occId ? 'Imagens históricas de satélite · ' + p.occId : 'Imagens históricas de satélite',
         ctxSub: this.rawLL(p.lat, p.lng), ctxHasSub: true,
         ctxHasCopy: true, onCtxCopy: () => this.copyLLText(this.rawLL(p.lat, p.lng)),
         ctxHasCenter: true, onCtxCenter: () => this.centerSat(p),
@@ -5549,6 +5730,420 @@ class Component extends DCLogic {
     this.keepOccVisible({ lat: p.lat, lng: p.lng });
   }
 
+
+  // ======================= CLIMA · capacidade compartilhada (alinhada a Deslizamento) =======================
+  // Radar, Satélite meteorológico, Descargas, Forecast, Oscilar e Atualização dos dados seguem os componentes do MVP
+  // de Deslizamento. Dados DEMO / SYNTHETIC até a integração; nomes de provedor marcados como source provisional.
+  p2s(n) { return n < 10 ? '0' + n : '' + n; }
+  hmOf(t) { const d = new Date(t); return this.p2s(d.getHours()) + ':' + this.p2s(d.getMinutes()); }
+  dmOf(t) { const d = new Date(t); return this.p2s(d.getDate()) + '/' + this.p2s(d.getMonth() + 1); }
+  // ---------- Atualização por dataset (cadências DEMO · a API de cada fonte deve informar/validar) ----------
+  UPD_SRC = [['focos', 'Focos de calor', 20, 'ph-fire'], ['radar', 'Radar de chuva', 10, 'ph-radar'], ['satmet', 'Satélite meteorológico', 15, 'ph-cloud'],
+    ['desc', 'Descargas elétricas', 60, 'ph-lightning'], ['meteo_est', 'Estações meteorológicas', 60, 'ph-cell-tower'], ['forecast', 'Forecast', 360, 'ph-cloud-sun']];
+  updOf(id) {
+    const q = this.UPD_SRC.filter((x) => x[0] === id)[0]; if (!q) return null;
+    const MIN = 60000, now = this.NOW, a = Math.floor(now / (q[2] * MIN)) * q[2] * MIN, today = this.dayStart(now);
+    const hm = (ts) => (this.dayStart(ts) === today ? '' : this.dmOf(ts) + ' ') + this.hmOf(ts);
+    return { name: q[1], icon: q[3], last: hm(a), next: hm(a + q[2] * MIN) };
+  }
+  updVals() {
+    const s = this.state, p = s.updOpen || null;
+    return { updRows: p ? this.UPD_SRC.map((q) => this.updOf(q[0])) : [], updOpen: !!p, updRight: p ? p.r + 'px' : '0px', updBottom: p ? p.b + 'px' : '0px',
+      updCaret: p ? 'ph-caret-down' : 'ph-caret-up', updBtnBg: p ? '#ececf3' : 'transparent',
+      onUpdToggle: (e) => { if (p) return this.setState({ updOpen: null }); const r = e.currentTarget.getBoundingClientRect(); this.setState({ updOpen: { r: Math.max(8, Math.round(window.innerWidth - r.right - 6)), b: Math.round(window.innerHeight - r.top + 8) } }); },
+      onUpdClose: () => this.setState({ updOpen: null }) };
+  }
+  // ---------- Oscilar camadas: divisor que revela o mapa-base sob camadas contínuas ----------
+  // camadas contínuas ficam nos panes recortáveis 'qzCont' (radar, satélite meteorológico, vegetação) e 'qzWx' (forecast)
+  SWIPE_LAYERS = ['radar', 'satmet', 'forecast', 'veg'];
+  swipeLayers() { const ly = this.state.layers || {}; return this.SWIPE_LAYERS.filter((id) => ly[id] && ly[id].on && ly[id].st !== 'error' && (id !== 'forecast' || !!this.state.wxLayer)); }
+  toggleSwipe = () => {
+    if (this.state.swipe) { this.endSwipe(); return; }
+    if (!this.swipeLayers().length) { this.toast('Ative uma camada contínua para oscilar', 0, 'Radar de chuva, Satélite meteorológico, Forecast ou Vegetação.', 'ph-split-horizontal'); return; }
+    this.setState({ swipe: true, swipePct: 50, drawer: null, tip: null }, () => this.swipeClip());
+  };
+  endSwipe = () => { this.setState({ swipe: false }, () => this.swipeClip()); };
+  swipeClip() {
+    const m = this.map; if (!m) return;
+    ['qzCont', 'qzWx'].forEach((k) => {
+      const pane = m.getPane(k); if (!pane) return;
+      if (!this.state.swipe) { pane.style.clip = ''; return; }
+      const sz = m.getSize(), nw = m.containerPointToLayerPoint([0, 0]), se = m.containerPointToLayerPoint(sz);
+      const x = m.containerPointToLayerPoint([sz.x * this.state.swipePct / 100, 0]).x;
+      pane.style.clip = 'rect(' + nw.y + 'px, ' + x + 'px, ' + se.y + 'px, ' + nw.x + 'px)';
+    });
+  }
+  setSwipePct(v) { const p = Math.max(0, Math.min(100, v)); this.setState({ swipePct: p }, () => this.swipeClip()); }
+  onSwipeDown = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const host = this.mapRef.current; if (!host) return;
+    const move = (ev) => { const r = host.getBoundingClientRect(); this.setSwipePct(((ev.clientX - r.left) / r.width) * 100); };
+    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+    window.addEventListener('pointermove', move); window.addEventListener('pointerup', up);
+  };
+  swipeVals() {
+    const s = this.state, act = this.swipeLayers();
+    if (s.swipe && !act.length && !this._swEnd) { this._swEnd = true; setTimeout(() => { this._swEnd = false; this.endSwipe(); }, 0); }
+    else if (s.swipe && this._swSig !== act.join()) { this._swSig = act.join(); setTimeout(() => this.swipeClip(), 0); }
+    const lbl = act.map((id) => (this.layerDefs.filter((d) => d.id === id)[0] || { label: id }).label).join(' · ');
+    return {
+      swipeOn: !!s.swipe && act.length > 0, swipeLeft: s.swipePct + '%', swipePctNum: Math.round(s.swipePct), swipeLayerLabel: lbl,
+      onSwipeDown: this.onSwipeDown, onSwipeEnd: this.endSwipe,
+      onSwipeKey: (e) => { if (e.key === 'ArrowLeft') { e.preventDefault(); this.setSwipePct(s.swipePct - 5); } if (e.key === 'ArrowRight') { e.preventDefault(); this.setSwipePct(s.swipePct + 5); } if (e.key === 'Escape') this.endSwipe(); }
+    };
+  }
+  segOpt(on) { return { bg: on ? '#232343' : 'transparent', fg: on ? '#ffffff' : '#1b2026' }; }
+  // ---------- Radar de chuva (DEMO / SYNTHETIC) · quadros a cada 10 min, últimas 3 h ----------
+  RADAR_N = 18;
+  RADAR_BINS = [[0.5, '#a5f3fc', '0,5'], [2, '#38bdf8', '2'], [5, '#2563eb', '5'], [10, '#facc15', '10'], [25, '#f97316', '25'], [50, '#dc2626', '50']];
+  radarT(i) { const last = Math.floor(this.NOW / 600000) * 600000; return last - (this.RADAR_N - 1 - i) * 600000; }
+  radarBounds() { return [[-18.9, -46.6], [-14.3, -41.2]]; }
+  // Radar sintético: estimativa em grade regular, visualmente distinta do eco observado (arquitetura de Deslizamento)
+  radarSynFrame(i) {
+    this._rdS = this._rdS || {}; if (this._rdS[i]) return this._rdS[i];
+    const W = 320, H = 240, CELL = 8, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d'); let seed = 9091;
+    const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+    const cells = []; for (let k = 0; k < 9; k++) cells.push({ x: 0.1 + rnd() * 0.7, y: 0.15 + rnd() * 0.65, r: 0.07 + rnd() * 0.12, pk: 3 + Math.pow(rnd(), 1.4) * 45, vx: 0.005 + rnd() * 0.007, vy: -0.002 + rnd() * 0.005 });
+    for (let gy = 0; gy < H / CELL; gy++) for (let gx = 0; gx < W / CELL; gx++) {
+      const u = (gx + 0.5) * CELL / W, v = (gy + 0.5) * CELL / H; let I = 0;
+      cells.forEach((c) => { const dx = u - (c.x + c.vx * i * 0.66), dy = v - (c.y + c.vy * i * 0.66), d2 = (dx * dx + dy * dy) / (c.r * c.r); if (d2 < 9) I += c.pk * Math.exp(-d2); });
+      const e = Math.min(u, 1 - u, v, 1 - v) / 0.15, fall = e >= 1 ? 1 : e <= 0 ? 0 : e * e * (3 - 2 * e); I *= fall;
+      let bi = -1; for (let q = 0; q < this.RADAR_BINS.length; q++) if (I >= this.RADAR_BINS[q][0]) bi = q;
+      if (bi < 0) continue;
+      ctx.fillStyle = this.RADAR_BINS[bi][1]; ctx.globalAlpha = 0.62; ctx.fillRect(gx * CELL, gy * CELL, CELL - 1, CELL - 1);
+    }
+    return (this._rdS[i] = cv.toDataURL());
+  }
+  radarFrame(i) {
+    if (this.state.radarMode === 'syn') return this.radarSynFrame(i);
+    this._rdF = this._rdF || {}; if (this._rdF[i]) return this._rdF[i];
+    const W = 320, H = 240, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d'), img = ctx.createImageData(W, H);
+    let seed = 515;
+    const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+    const cells = [];
+    for (let k = 0; k < 11; k++) cells.push({ x: 0.12 + rnd() * 0.62, y: 0.18 + rnd() * 0.6, r: 0.04 + rnd() * 0.09, pk: 4 + Math.pow(rnd(), 1.5) * 60, vx: 0.006 + rnd() * 0.008, vy: -0.002 + rnd() * 0.006, gr: (rnd() - 0.4) * 0.08, el: 0.6 + rnd() * 0.8 });
+    const col = this.RADAR_BINS.map((b) => [parseInt(b[1].substr(1, 2), 16), parseInt(b[1].substr(3, 2), 16), parseInt(b[1].substr(5, 2), 16)]);
+    for (let py = 0; py < H; py++) for (let px = 0; px < W; px++) {
+      const u = px / W, v = py / H; let I = 0;
+      cells.forEach((c) => {
+        const cx = c.x + c.vx * i * 0.66, cy = c.y + c.vy * i * 0.66, pk = Math.max(0, c.pk * (1 + c.gr * (i - 5)));
+        const dx = (u - cx) / c.el, dy = (v - cy) * c.el, d2 = (dx * dx + dy * dy) / (c.r * c.r);
+        if (d2 < 9) I += pk * Math.exp(-d2) * (0.75 + 0.25 * Math.sin(u * 61 + v * 37 + i * 0.4) * Math.sin(v * 53 - u * 19));
+      });
+      const e = Math.min(u, 1 - u, v, 1 - v) / 0.18, fall = e >= 1 ? 1 : e <= 0 ? 0 : e * e * (3 - 2 * e);
+      I *= fall;
+      let bi = -1; for (let q = 0; q < this.RADAR_BINS.length; q++) if (I >= this.RADAR_BINS[q][0]) bi = q;
+      if (bi < 0) continue;
+      const o = (py * W + px) * 4; img.data[o] = col[bi][0]; img.data[o + 1] = col[bi][1]; img.data[o + 2] = col[bi][2]; img.data[o + 3] = 175;
+    }
+    ctx.putImageData(img, 0, 0);
+    return (this._rdF[i] = cv.toDataURL());
+  }
+  drawRadar(on, op) {
+    this._radarOv = null;
+    if (!on('radar') || !this.map || !window.L) return;
+    this._radarOv = window.L.imageOverlay(this.radarFrame(this.state.radarF), this.radarBounds(), { pane: 'qzCont', opacity: op('radar'), interactive: false }).addTo(this.g.radar);
+  }
+  setRadarF(i) { this.setState({ radarF: i }, () => { if (this._radarOv) this._radarOv.setUrl(this.radarFrame(i)); }); }
+  radarToggle = () => {
+    if (this.state.radarPlay) { clearInterval(this._rdT); this._rdT = null; this.setState({ radarPlay: false }); return; }
+    this.setState({ radarPlay: true, radarF: this.state.radarF >= this.RADAR_N - 1 ? 0 : this.state.radarF }, () => { if (this._radarOv) this._radarOv.setUrl(this.radarFrame(this.state.radarF)); });
+    clearInterval(this._rdT);
+    this._rdT = setInterval(() => {
+      if (!(this.state.layers.radar || {}).on) { clearInterval(this._rdT); this._rdT = null; this.setState({ radarPlay: false }); return; }
+      this.setRadarF((this.state.radarF + 1) % this.RADAR_N);
+    }, 750);
+  };
+  radarVals() {
+    const s = this.state, on = !!((s.layers || {}).radar || {}).on, i = s.radarF;
+    const stop = () => { if (s.radarPlay) { clearInterval(this._rdT); this._rdT = null; this.setState({ radarPlay: false }); } };
+    return {
+      radarOn: on, radarIcon: s.radarPlay ? 'ph-pause' : 'ph-play', radarPlayLabel: s.radarPlay ? 'Pausar radar' : 'Reproduzir radar', onRadarPlay: this.radarToggle,
+      radarF: i, radarMax: this.RADAR_N - 1, onRadarF: (e) => { stop(); this.setRadarF(+e.target.value); },
+      radarTime: this.hmOf(this.radarT(i)),
+      radarBins: this.RADAR_BINS.map((b) => ({ color: b[1], label: b[2] })),
+      radarModes: [['obs', 'Radar', 'Refletividade observada do radar meteorológico'], ['syn', 'Radar sintético', 'Estimativa sintética de precipitação em grade']].map((q) => ({ label: q[1], title: q[2], on: s.radarMode === q[0], ...this.segOpt(s.radarMode === q[0]),
+        onClick: () => this.setState({ radarMode: q[0] }, () => { if (this._radarOv) this._radarOv.setUrl(this.radarFrame(this.state.radarF)); }) }))
+    };
+  }
+  // ---------- Satélite meteorológico (DEMO / SYNTHETIC) · o mapa assume a aparência da imagem (Azul | Visível | Infra) ----------
+  // Diferente de “Imagens históricas de satélite” (Cicatrizes / Antes × Depois): controles e estado independentes.
+  SM_N = 13;
+  SM_FILTER = {
+    blue: 'grayscale(1) brightness(.55) sepia(1) hue-rotate(180deg) saturate(2.6) brightness(.62) contrast(1.1)',
+    vis: 'grayscale(1) brightness(.6) contrast(1.15)',
+    ir: 'grayscale(1) brightness(.38) contrast(1.25)'
+  };
+  // source provisional: lista de provedores ainda depende do documento oficial de fontes
+  SM_SRCS = [['goes', 'NOAA GOES-19'], ['cptec', 'INPE/CPTEC'], ['eumetsat', 'EUMETSAT']];
+  smT(i) { const last = Math.floor(this.NOW / 900000) * 900000; return last - (this.SM_N - 1 - i) * 900000; }
+  smBounds() { return [[-27, -56], [-4, -36]]; }
+  smFrame(mode, i) {
+    this._smF = this._smF || {};
+    const key = mode + i; if (this._smF[key]) return this._smF[key];
+    const W = 360, H = 300, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d'), img = ctx.createImageData(W, H);
+    const hs = (x, y) => { const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453; return s - Math.floor(s); };
+    const vn = (x, y) => { const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+      const a = hs(xi, yi), b = hs(xi + 1, yi), c = hs(xi, yi + 1), d = hs(xi + 1, yi + 1); return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v; };
+    const IR = [[0.5, [120, 120, 120]], [0.58, [175, 175, 175]], [0.64, [96, 165, 250]], [0.71, [34, 197, 94]], [0.78, [250, 204, 21]], [0.85, [249, 115, 22]], [0.9, [220, 38, 38]]];
+    const ox = i * 0.07, oy = i * 0.02;
+    for (let py = 0; py < H; py++) for (let px = 0; px < W; px++) {
+      const x = px / 34 + ox, y = py / 34 + oy;
+      let n = 0, amp = 0.5, f = 1; for (let o = 0; o < 5; o++) { n += vn(x * f + 3.1 + o * 0.013 * i, y * f + 7.7) * amp; amp *= 0.5; f *= 2; }
+      n = n / 0.97 + 0.1 * Math.sin(px / 47 + py / 71 + i * 0.05);
+      const o = (py * W + px) * 4; let r = 0, g = 0, b = 0, a = 0;
+      if (mode === 'ir') { let c = null; IR.forEach((q) => { if (n >= q[0]) c = q[1]; }); if (c) { r = c[0]; g = c[1]; b = c[2]; a = 225; } }
+      else {
+        const t = Math.max(0, Math.min(1, (n - 0.46) / 0.3));
+        if (mode === 'blue') { r = Math.round(200 + 55 * t); g = Math.round(220 + 35 * t); b = 255; } else { r = g = b = Math.round(200 + 55 * t); }
+        a = Math.round(248 * Math.pow(t, 0.8));
+      }
+      img.data[o] = r; img.data[o + 1] = g; img.data[o + 2] = b; img.data[o + 3] = a;
+    }
+    ctx.putImageData(img, 0, 0);
+    return (this._smF[key] = cv.toDataURL());
+  }
+  drawSat(on, op) {
+    const onS = on('satmet') && this.map && window.L;
+    const pane = this.map && this.map.getPane('tilePane');
+    if (pane) pane.style.filter = onS ? this.SM_FILTER[this.state.smMode] || '' : '';
+    this._smOv = null;
+    if (!onS) return;
+    this._smOv = window.L.imageOverlay(this.smFrame(this.state.smMode, this.state.smF), this.smBounds(), { pane: 'qzCont', opacity: op('satmet'), interactive: false }).addTo(this.g.satmet);
+  }
+  setSmF(i) { this.setState({ smF: i }, () => { if (this._smOv) this._smOv.setUrl(this.smFrame(this.state.smMode, i)); }); }
+  setSmMode(m) { this.setState({ smMode: m }, () => this.draw()); }
+  smToggle = () => {
+    if (this.state.smPlay) { clearInterval(this._stT); this._stT = null; this.setState({ smPlay: false }); return; }
+    this.setState({ smPlay: true, smF: this.state.smF >= this.SM_N - 1 ? 0 : this.state.smF }, () => { if (this._smOv) this._smOv.setUrl(this.smFrame(this.state.smMode, this.state.smF)); });
+    clearInterval(this._stT);
+    this._stT = setInterval(() => {
+      if (!(this.state.layers.satmet || {}).on) { clearInterval(this._stT); this._stT = null; this.setState({ smPlay: false }); return; }
+      this.setSmF((this.state.smF + 1) % this.SM_N);
+    }, 800);
+  };
+  smVals() {
+    const s = this.state, t = this.smT(s.smF);
+    const stop = () => { if (s.smPlay) { clearInterval(this._stT); this._stT = null; this.setState({ smPlay: false }); } };
+    return {
+      satOn: !!((s.layers || {}).satmet || {}).on, smIcon: s.smPlay ? 'ph-pause' : 'ph-play', smPlayLabel: s.smPlay ? 'Pausar' : 'Reproduzir',
+      onSmPlay: this.smToggle, smF: s.smF, smMax: this.SM_N - 1, smTime: this.dmOf(t) + ' · ' + this.hmOf(t),
+      onSmF: (e) => { stop(); this.setSmF(+e.target.value); },
+      smSrcs: this.SM_SRCS.map((x) => ({ v: x[0], label: x[1] })), smSrc: s.smSrc, onSmSrc: (e) => this.setState({ smSrc: e.target.value }),
+      smModes: [['blue', 'Azul', 'Realce em azul'], ['vis', 'Visível', 'Canal visível'], ['ir', 'Infra', 'Infravermelho · topos de nuvem']].map((q) => ({ label: q[1], title: q[2], on: s.smMode === q[0], ...this.segOpt(s.smMode === q[0]), onClick: () => this.setSmMode(q[0]) }))
+    };
+  }
+  // ---------- Descargas elétricas · contrato da API Quasar (guia de integração v1.0.0) ----------
+  // GET /v1/descargas → GeoJSON FeatureCollection · geometry.coordinates [lon, lat] · properties.hora (UTC, 1 s) · periodo.dados_ate
+  // A chave X-Api-Key é de SERVIDOR: o front nunca a recebe. Em produção, DESC_PROXY aponta para o endpoint do backend
+  // que repassa a chamada à API. Sem proxy (MVP estático), descMock devolve o MESMO formato do contrato.
+  // O dado não traz corrente, polaridade nem tipo (nuvem-solo × intranuvem): nada disso é exibido.
+  DESC_PROXY = '';
+  DESC_FONTE = 'GOES-19 GLM (NOAA)';
+  DESC_STEPS = 48;
+  DESC_HIST0 = Date.parse('2026-07-27T00:00:00Z');
+  descDataAte() { return Math.floor(this.NOW / this.HOUR) * this.HOUR - 1000; }
+  descRange() {
+    const s = this.state, end = this.descDataAte() + 1000;
+    if (s.descPer === 'custom' && s.descCustom) return s.descCustom;
+    const h = { '24h': 24, '3d': 72, '7d': 168 }[s.descPer] || 24;
+    return { a: end - h * this.HOUR, b: end };
+  }
+  descCursor() { const r = this.descRange(), f = this.state.descF == null ? this.DESC_STEPS : this.state.descF; return r.a + (r.b - r.a) * f / this.DESC_STEPS; }
+  // DEMO / SYNTHETIC: núcleos de tempestade determinísticos, com ciclo diurno (tarde/noite)
+  descHour(hi) {
+    const H = this.HOUR, t0 = hi * H, lh = new Date(t0).getHours(), day = Math.floor(t0 / (24 * H));
+    const act = this.metHash('dday' + day); if (act < 0.22) return [];
+    const diu = lh >= 13 && lh <= 21 ? 1 : lh >= 22 || lh <= 2 ? 0.35 : 0.06;
+    const n = Math.round(diu * act * 20 * this.metHash('dh' + hi)), out = [];
+    for (let j = 0; j < n; j++) {
+      const c = Math.floor(this.metHash('dc' + hi + ':' + j) * 3);
+      const cy = -16.6 + (this.metHash('dcy' + day + c) - 0.5) * 2.2 + (lh - 16) * 0.03, cx = -43.9 + (this.metHash('dcx' + day + c) - 0.5) * 2.6 + (lh - 16) * 0.05;
+      const r = 0.03 + this.metHash('dr' + hi + ':' + j) * 0.2, a = this.metHash('da' + hi + ':' + j) * Math.PI * 2;
+      const at = t0 + Math.floor(this.metHash('dt' + hi + ':' + j) * 3600) * 1000;
+      out.push([Math.round((cx + Math.cos(a) * r * 1.1) * 1e5) / 1e5, Math.round((cy + Math.sin(a) * r) * 1e5) / 1e5, new Date(at).toISOString().replace('.000Z', 'Z')]);
+    }
+    return out;
+  }
+  descMock(a, b) {
+    const H = this.HOUR, ate = this.descDataAte(), fim = Math.min(b, ate + 1000), feats = [];
+    const iso = (t) => new Date(t).toISOString().replace('.000Z', 'Z');
+    for (let hi = Math.floor(a / H); hi * H < fim; hi++) this.descHour(hi).forEach((p) => { const t = Date.parse(p[2]); if (t >= a && t < fim && t >= this.DESC_HIST0) feats.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [p[0], p[1]] }, properties: { hora: p[2] } }); });
+    feats.sort((x, y) => (x.properties.hora < y.properties.hora ? -1 : 1));
+    return { type: 'FeatureCollection', periodo: { inicio: iso(a), fim: iso(b), dados_ate: iso(ate) }, quantidade: feats.length, proximo_cursor: null, fonte: this.DESC_FONTE, features: feats };
+  }
+  descFetch(a, b) {
+    const iso = (t) => new Date(t).toISOString().replace('.000Z', 'Z');
+    const norm = (j) => (j.features || []).map((f) => ({ lng: f.geometry.coordinates[0], lat: f.geometry.coordinates[1], at: Date.parse(f.properties.hora) }));
+    if (!this.DESC_PROXY) { const j = this.descMock(a, b); return Promise.resolve({ list: norm(j), dadosAte: Date.parse(j.periodo.dados_ate) }); }
+    // paginação por cursor com inicio/fim fixos (nunca "horas", que desloca a janela a cada página)
+    const out = [];
+    const page = (cur) => fetch(this.DESC_PROXY + '/v1/descargas?inicio=' + iso(a) + '&fim=' + iso(b) + '&formato=geojson&limite=10000' + (cur ? '&cursor=' + encodeURIComponent(cur) : ''))
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then((j) => { out.push.apply(out, norm(j)); return j.proximo_cursor ? page(j.proximo_cursor) : { list: out, dadosAte: Date.parse(j.periodo.dados_ate) }; });
+    return page(null);
+  }
+  descLoad() {
+    const r = this.descRange(), key = r.a + '|' + r.b;
+    if (this._descKey === key) return;
+    this._descKey = key; this._descData = null;
+    this.descFetch(r.a, r.b).then((res) => { if (this._descKey !== key) return; this._descData = res; this.forceUpdate(); this.draw(); })
+      .catch(() => { if (this._descKey !== key) return; this._descData = { list: [], err: true }; this.forceUpdate(); });
+  }
+  descHms(t) { const d = new Date(t); return this.hmOf(t) + ':' + this.p2s(d.getSeconds()); }
+  descIcon(recent) {
+    const k = recent ? '_dsIcR' : '_dsIcO'; if (this[k]) return this[k];
+    const c = this.lyColor('desc');
+    return (this[k] = window.L.divIcon({ className: '', iconSize: [18, 18], iconAnchor: [9, 9], html: '<div style="width:18px;height:18px;box-sizing:border-box;border-radius:50%;background:' + (recent ? c : '#fde68a') + ';border:1.5px solid #1b2026;display:flex;align-items:center;justify-content:center"><i class="ph ph-lightning" style="font-size:11px;line-height:1;color:#1b2026"></i></div>' }));
+  }
+  drawDesc(on) {
+    if (!on('desc') || !this.map || !window.L || !this.g.desc) return;
+    this.descLoad();
+    const d = this._descData; if (!d || !d.list) return;
+    const L = window.L, r = this.descRange(), T = this.descCursor(), H = this.HOUR;
+    d.list.forEach((x) => {
+      if (x.at > T || x.at < r.a) return;
+      const age = (T - x.at) / H;
+      L.marker([x.lat, x.lng], { keyboard: false, opacity: age < 6 ? 1 : 0.7, icon: this.descIcon(age < 1) })
+        .bindTooltip('<b>Descarga elétrica</b><br/>' + this.fmtDate(x.at) + ' · ' + this.descHms(x.at), { direction: 'top', offset: [0, -10] })
+        .on('click', (e) => { L.DomEvent.stop(e); this.openDescPop(x); }).addTo(this.g.desc);
+    });
+  }
+  openDescPop(x) {
+    const L = window.L; if (!this.map || !L) return;
+    const ll = this.rawLL(x.lat, x.lng), el = document.createElement('div');
+    const row = (k, v) => '<span style="display:flex;justify-content:space-between;gap:14px;font-size:12px;line-height:17px"><span style="color:#8a949e">' + k + '</span><b style="color:#1b2026;font-variant-numeric:tabular-nums">' + v + '</b></span>';
+    el.style.cssText = 'font-family:Questrial,sans-serif;min-width:188px;display:flex;flex-direction:column;gap:2px';
+    el.innerHTML = '<span style="display:flex;align-items:center;gap:6px;font-size:13px;line-height:18px;font-weight:700;color:#1b2026;margin-bottom:2px"><i class="ph ph-lightning" style="font-size:14px;color:#a16207"></i>Descarga elétrica</span>'
+      + row('Data', this.fmtDate(x.at)) + row('Horário', this.descHms(x.at)) + row('Coordenada', ll);
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = 'Copiar coordenada';
+    b.style.cssText = 'margin-top:6px;height:26px;border:1px solid #cfd6dc;border-radius:999px;background:#fff;color:#1b2026;font-family:Questrial,sans-serif;font-size:12px;cursor:pointer';
+    b.onclick = () => this.copyLLText(ll);
+    el.appendChild(b);
+    L.popup({ closeButton: true, offset: [0, -6], maxWidth: 260, autoPan: true }).setLatLng([x.lat, x.lng]).setContent(el).openOn(this.map);
+  }
+  setDescF(f) { this.setState({ descF: f }, () => this.draw()); }
+  stopDescPlay() { if (this._dsT) { clearInterval(this._dsT); this._dsT = null; } if (this.state.descPlay) this.setState({ descPlay: false }); }
+  descToggle = () => {
+    if (this.state.descPlay) { this.stopDescPlay(); return; }
+    const N = this.DESC_STEPS, f0 = this.state.descF == null || this.state.descF >= N ? 0 : this.state.descF;
+    this.setState({ descPlay: true, descF: f0 }, () => this.draw());
+    clearInterval(this._dsT);
+    this._dsT = setInterval(() => {
+      const f = (this.state.descF == null ? N : this.state.descF) + 1;
+      if (!(this.state.layers.desc || {}).on || f > N) { this.stopDescPlay(); return; }
+      this.setDescF(f);
+    }, 650);
+  };
+  dtIn(t) { const d = new Date(t); return d.getFullYear() + '-' + this.p2s(d.getMonth() + 1) + '-' + this.p2s(d.getDate()) + 'T' + this.hmOf(t); }
+  descVals() {
+    const s = this.state, on = !!((s.layers || {}).desc || {}).on;
+    if (!on) return { descOn: false, descPeriods: [], descCustomOpen: false };
+    const r = this.descRange(), T = this.descCursor(), d = this._descData, N = this.DESC_STEPS;
+    const n = d && d.list ? d.list.filter((x) => x.at >= r.a && x.at <= T).length : 0;
+    const setPer = (k) => { this.stopDescPlay(); if (k === 'custom') { const rr = this.descRange(); this.setState({ descCustomOpen: true, descCustomErr: '', descFromIn: s.descFromIn || this.dtIn(rr.a), descToIn: s.descToIn || this.dtIn(rr.b) }); return; } this.setState({ descPer: k, descF: null, descCustomOpen: false }, () => this.draw()); };
+    return {
+      descOn: true,
+      descPeriods: [['24h', '24 h'], ['3d', '3 dias'], ['7d', '7 dias'], ['custom', 'Personalizado']].map((q) => { const o = q[0] === 'custom' ? (s.descPer === 'custom' || !!s.descCustomOpen) : (s.descPer === q[0] && !s.descCustomOpen);
+        return { label: q[1], title: q[0] === 'custom' ? 'Período personalizado · até 7 dias' : 'Últimos ' + q[1], on: o, ...this.segOpt(o), onClick: () => setPer(q[0]) }; }),
+      descIcon: s.descPlay ? 'ph-pause' : 'ph-play', descPlayLabel: s.descPlay ? 'Pausar' : 'Reproduzir descargas no período', onDescPlay: this.descToggle,
+      descF: s.descF == null ? N : s.descF, descMax: N, onDescF: (e) => { this.stopDescPlay(); const v = +e.target.value; this.setDescF(v >= N ? null : v); },
+      descTime: (s.descF == null || s.descF >= N ? 'Até ' : '') + this.dmOf(T) + ' · ' + this.hmOf(T),
+      descCount: !d ? 'Carregando…' : d.err ? 'Dado indisponível' : n === 1 ? '1 descarga' : n.toLocaleString('pt-BR') + ' descargas',
+      descCustomOpen: !!s.descCustomOpen, descFromIn: s.descFromIn || '', descToIn: s.descToIn || '', descMinIn: this.dtIn(this.DESC_HIST0), descMaxIn: this.dtIn(this.NOW),
+      descCustomErr: s.descCustomErr || '',
+      onDescFrom: (e) => this.setState({ descFromIn: e.target.value, descCustomErr: '' }),
+      onDescTo: (e) => this.setState({ descToIn: e.target.value, descCustomErr: '' }),
+      onDescCustomClose: () => this.setState({ descCustomOpen: false, descCustomErr: '' }),
+      onDescApply: () => {
+        const a = new Date(this.state.descFromIn).getTime(), b = new Date(this.state.descToIn).getTime();
+        if (isNaN(a) || isNaN(b)) return this.setState({ descCustomErr: 'Informe início e fim.' });
+        if (b <= a) return this.setState({ descCustomErr: 'O fim precisa ser depois do início.' });
+        if (b - a > 7 * 24 * this.HOUR) return this.setState({ descCustomErr: 'Período máximo de 7 dias.' });
+        this.setState({ descPer: 'custom', descCustom: { a: Math.max(a, this.DESC_HIST0), b: Math.min(b, this.NOW) }, descF: null, descCustomOpen: false, descCustomErr: '' }, () => this.draw());
+      }
+    };
+  }
+  // ---------- Forecast · Fontes + Visualização meteorológica (padrão de Deslizamento) ----------
+  // Estrutura por source/provider: nomes atuais são placeholders (source provisional) até o documento oficial de fontes.
+  FC_MAIN_VARS = ['prec', 'temp', 'vento', 'gust'];
+  FC_OTHER_VARS = ['rh', 'cloud'];
+  FC_VK2SRC = { temp: 'temp', vento: 'wind', gust: 'gust', prec: 'prec', rh: 'rh', cloud: 'cloud' };
+  FC_COL = { om: ['#232343', ''], ecmwf: ['#0284c7', ''], gfs: ['#c2410c', '5 4'] };
+  // DEMO: rodada de cada fonte (00/06/12/18 UTC; ECMWF a cada 12 h)
+  fcRunAt(q) { const H = this.HOUR; return q === 'ecmwf' ? Math.floor((this.NOW - 7 * H) / (12 * H)) * 12 * H : Math.floor((this.NOW - 4 * H) / (6 * H)) * 6 * H; }
+  // DEMO / SYNTHETIC: viés estável por fonte em torno da série-base (mesma lógica da comparação anterior)
+  fcSrcVal(q, main, vk, key, at, b) {
+    if (q === main) return b;
+    const BI0 = { om: { t: 0, k: 1 }, ecmwf: { t: -0.7, k: 0.82 }, gfs: { t: 0.9, k: 1.22 } }, B = { t: BI0[q].t - BI0[main].t, k: BI0[q].k / BI0[main].k };
+    const hh = this.metHash(q + key + at) - 0.5;
+    if (vk === 'temp') return Math.round((b + B.t + hh * 1.4) * 10) / 10;
+    if (vk === 'prec') return Math.max(0, Math.round((b * B.k + (b > 0 ? hh * 1.2 : Math.max(0, hh - 0.3) * 3)) * 10) / 10);
+    if (vk === 'rh' || vk === 'cloud') return Math.max(0, Math.min(100, Math.round(b + (B.k - 1) * 12 + hh * 10)));
+    return Math.max(0, Math.round(b * (0.9 + (B.k - 1) * 0.4) + hh * 4));
+  }
+  fcGridVals(pt) {
+    const s = this.state, H = this.HOUR, mods = Object.keys(this.FC_SRC), main = s.fcMain || 'om';
+    const sh0 = (s.fcShow || mods).filter((q) => mods.indexOf(q) >= 0), shown = sh0.length ? sh0 : [main];
+    const per = s.fcPer || 72, step = per > 72 ? 180 : 60, t0 = this.wxSlotTs(0), t1 = t0 + per * H;
+    const zoom = s.fcZoom || null, hov = s.fcHov || null;
+    const fmt = (x, dec) => (dec ? (Math.round(x * 10) / 10).toFixed(1) : String(Math.round(x))).replace('.', ',');
+    const build = (vk, big) => {
+      const V = this.MET_VARS[vk], FK = this.FC_VK2SRC[vk], dec = vk === 'temp' || vk === 'prec';
+      const raw = this.metRaw('fc', pt.id, vk, t0, t1, step), n = raw.length;
+      const num = (r) => (r && r.v != null ? (vk === 'vento' ? (r.v.spd != null ? r.v.spd : null) : r.v) : null);
+      // fonte sem a variável = Dado indisponível (nunca zero)
+      const ser = shown.map((q) => { const has = this.FC_SRC[q].vars.indexOf(FK) >= 0; return { q, has, vals: raw.map((r) => { const b = num(r); return !has || b == null ? null : this.fcSrcVal(q, main, vk, pt.id, r.at, b); }) }; });
+      const avail = ser.filter((x) => x.has), all = [].concat.apply([], avail.map((x) => x.vals)).filter((v) => v != null);
+      let lo = 0, hi = 10;
+      if (all.length) {
+        const mn = Math.min.apply(null, all), mx = Math.max.apply(null, all);
+        if (vk === 'rh' || vk === 'cloud') { lo = 0; hi = 100; }
+        else if (vk === 'temp') { lo = Math.floor(mn / 5) * 5; hi = Math.max(lo + 5, Math.ceil(mx / 5) * 5); }
+        else if (vk === 'prec') { lo = 0; hi = Math.max(2, Math.ceil(mx)); }
+        else { lo = 0; hi = Math.max(10, Math.ceil(mx / 10) * 10); }
+      }
+      const X = (i) => (n > 1 ? (i / (n - 1)) * 700 : 350), Y = (v) => 100 - ((v - lo) / Math.max(1e-6, hi - lo)) * 100;
+      const path = (vals) => { let d = '', pen = false; vals.forEach((v, i) => { if (v == null) { pen = false; return; } d += (pen ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1) + ' '; pen = true; }); return d.trim(); };
+      const days = []; raw.forEach((r, i) => { if (i > 0 && this.dayStart(r.at) !== this.dayStart(raw[i - 1].at)) days.push({ x: X(i).toFixed(1), left: (X(i) / 7).toFixed(2) + '%', label: this.dmOf(r.at) }); });
+      const lines = avail.map((x) => ({ d: path(x.vals), color: this.FC_COL[x.q][0], dash: this.FC_COL[x.q][1] || 'none', w: x.q === main ? 2.2 : 1.6 }));
+      const hk = hov && hov.v === vk && raw[hov.i] ? hov.i : null, hx = hk != null ? X(hk) / 7 : 0;
+      const na = ser.filter((x) => !x.has).map((x) => this.FC_SRC[x.q].label), ok = avail.length > 0 && all.length > 0;
+      return {
+        k: vk, title: V.label, unit: V.unit, h: (big ? 210 : 92) + 'px', hasData: ok, noData: !ok, canZoom: !big,
+        onZoom: () => this.setState({ fcZoom: vk, fcHov: null }), onPick: () => this.setState({ fcZoom: vk, fcHov: null }), tip: 'Ampliar ' + V.label,
+        yTicks: [hi, (hi + lo) / 2, lo].map((v, i) => ({ top: (i * 50) + '%', label: fmt(v, vk === 'prec' && hi < 5) })),
+        grid: [{ y: 0 }, { y: 50 }, { y: 100 }], days, xTicks: days.map((x) => ({ left: x.left, label: x.label })), lines,
+        hasHov: hk != null, hovLeft: hx.toFixed(2) + '%', tipLeft: hx.toFixed(2) + '%', tipShift: hx > 60 ? 'calc(-100% - 8px)' : '8px',
+        tipTime: hk != null ? this.dmOf(raw[hk].at) + ' · ' + this.hmOf(raw[hk].at) : '', tipVar: V.label + ' · ' + V.unit,
+        tipRows: hk != null ? ser.map((x) => { const v = x.vals[hk], miss = !x.has || v == null; return { color: this.FC_COL[x.q][0], label: this.FC_SRC[x.q].label, val: miss ? 'Dado indisponível' : fmt(v, dec) + ' ' + V.unit, fg: miss ? '#8a949e' : '#1b2026', weight: miss ? '400' : '700' }; }) : [],
+        onMove: (e) => { const b = e.currentTarget.getBoundingClientRect(), i = Math.max(0, Math.min(n - 1, Math.round(((e.clientX - b.left) / Math.max(1, b.width)) * (n - 1)))), c = this.state.fcHov; if (!c || c.v !== vk || c.i !== i) this.setState({ fcHov: { v: vk, i } }); },
+        onLeave: () => this.setState({ fcHov: null }),
+        hasNa: na.length > 0 && ok, naTxt: 'Dado indisponível em ' + na.join(', ')
+      };
+    };
+    const allV = this.FC_MAIN_VARS.concat(this.FC_OTHER_VARS);
+    return {
+      fcGridOn: true, fcIsZoom: !!zoom, onFcUnzoom: () => this.setState({ fcZoom: null, fcHov: null }),
+      fcGridCols: zoom ? 'minmax(0,1fr)' : 'repeat(auto-fill,minmax(200px,1fr))',
+      fcSrcChips: mods.map((q) => {
+        const on = shown.indexOf(q) >= 0, last = on && shown.length === 1, label = this.FC_SRC[q].label, run = this.fcRunAt(q);
+        return { label, on, color: this.FC_COL[q][0], dash: this.FC_COL[q][1] ? 'dashed' : 'solid', icon: on ? 'ph-check-square' : 'ph-square', iconFg: on ? this.FC_COL[q][0] : '#8a949e',
+          border: on ? this.FC_COL[q][0] : '#dfe3e7', fg: on ? '#1b2026' : '#5b6672', cursor: last ? 'default' : 'pointer', run: 'Rodada ' + this.dmOf(run) + ' ' + this.hmOf(run),
+          tip: last ? 'Mantenha ao menos uma fonte selecionada' : (on ? 'Ocultar ' : 'Mostrar ') + label + ' nos gráficos',
+          onClick: () => { if (last) return; this.setState({ fcShow: on ? shown.filter((x) => x !== q) : mods.filter((x) => x === q || shown.indexOf(x) >= 0), fcHov: null }); } };
+      }),
+      fcPeriods: [[24, '24 h'], [72, '72 h'], [120, '5 dias']].map((p) => { const o = per === p[0]; return { label: p[1], on: o, bg: o ? '#ffffff' : 'transparent', fg: o ? '#1b2026' : '#5b6672', shadow: o ? '0 1px 2px rgba(20,28,36,.14)' : 'none', onClick: () => this.setState({ fcPer: p[0], fcHov: null }) }; }),
+      fcCharts: zoom ? [build(zoom, true)] : this.FC_MAIN_VARS.map((v) => build(v, false)),
+      fcHasOther: !zoom, fcOther: zoom ? [] : this.FC_OTHER_VARS.map((v) => build(v, false)),
+      fcThumbs: zoom ? allV.filter((v) => v !== zoom).map((v) => build(v, false)) : []
+    };
+  }
+
   metPanelVals() {
     const s = this.state, m = s.metPanel;
     const iso = (t) => { const d = new Date(t), p = (n) => (n < 10 ? '0' + n : '' + n); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); };
@@ -5662,6 +6257,10 @@ class Component extends DCLogic {
         });
       }
     }
+    if (isFc) Object.assign(cmpOut, this.fcGridVals(pt), this.windRoseVals('fc', pt.id, this.NOW, this.NOW + 5 * 24 * this.HOUR), {
+      metShowSeries: false, metFcModelsOn: false, metCmpOn: false, metFcVarLabel: '', metLatestLine: '', metGranLine: '', metHasFcDet: false,
+      metIsWind: true, metRoseCollapsible: true, metShowWindSeg: false, metWindDir: !!s.fcRoseOpen, metWindSummary: '', metRoseTitleDisp: 'none'
+    });
     const res = Object.assign({
       ...base, metHovBar: !isFc || s.metHov != null,
       metOpen: true, metX: m.x + 'px', metY: m.y + 'px', metMaxH: (m.maxH || 520) + 'px',
@@ -5776,9 +6375,10 @@ class Component extends DCLogic {
       metHasStDet: !isFc, metStDetOpen: !isFc && !!s.stDetOpen, metStDetCaret: s.stDetOpen ? 'ph-caret-up' : 'ph-caret-down',
       metStDet: isFc ? [] : [
         { label: 'ID', value: pt.id, hasCopy: true, onCopy: () => this.copyId(pt.id) },
-        { label: 'Origem', value: pt.org || pt.src || '—', hasCopy: false, onCopy: () => {} },
+        { label: 'Fonte', value: pt.org || pt.src || '—', hasCopy: false, onCopy: () => {} },
         { label: 'Status', value: pt.online === false ? 'Indisponível' : 'Operacional', hasCopy: false, onCopy: () => {} },
-        { label: 'Última atualização', value: stamp(lastObs), hasCopy: false, onCopy: () => {} },
+        { label: 'Última atualização', value: pt.online === false ? 'Dado indisponível' : stamp(lastObs), hasCopy: false, onCopy: () => {} },
+        { label: 'Próxima atualização', value: stamp(lastObs + this.MET_STEP_MIN.obs * 60000), hasCopy: false, onCopy: () => {} },
         { label: 'Coordenadas', value: pt.c ? this.rawLL(pt.c[0], pt.c[1]) : '—', hasCopy: !!pt.c, onCopy: () => pt.c && this.copyLLText(this.rawLL(pt.c[0], pt.c[1])) }
       ],
       onMetStDetToggle: () => this.setState({ stDetOpen: !this.state.stDetOpen })
@@ -5828,7 +6428,7 @@ class Component extends DCLogic {
     // R2 · item 2: o eixo de tempo inicia expandido (estado funcional já existente)
   }
   componentWillUnmount() {
-    clearInterval(this._up); clearInterval(this._e); clearInterval(this._u); clearInterval(this._alarmT); clearInterval(this._replayT); clearTimeout(this._b); clearTimeout(this._t); clearTimeout(this._tt); clearTimeout(this._tipT);
+    clearInterval(this._up); clearInterval(this._rdT); clearInterval(this._stT); clearInterval(this._dsT); clearInterval(this._e); clearInterval(this._u); clearInterval(this._alarmT); clearInterval(this._replayT); clearTimeout(this._b); clearTimeout(this._t); clearTimeout(this._tt); clearTimeout(this._tipT);
     window.removeEventListener('mousemove', this.onWinMove);
     window.removeEventListener('mouseup', this.onWinUp);
     window.removeEventListener('keydown', this.onKey);
@@ -5912,7 +6512,7 @@ class Component extends DCLogic {
     this.bases.dark.on('tileerror', onTileErr);
     this.bases.sat.addTo(this.map);
     this.g = {};
-    ['scope', 'concessao', 'estados', 'munic', 'veg', 'conj', 'cicatriz', 'bdgd_bt', 'bdgd_mt', 'bdgd_at', 'subs', 'bdgd_poste', 'bdgd_trafo', 'unid_saude', 'unid_bomb', 'unid_pol', 'unid_agua', 'hist', 'fph', 'meteo', 'meteo_est', 'meteo_prec', 'meteo_temp', 'meteo_vento', 'forecast', 'user', 'measure', 'casing', 'focos', 'hilite'].forEach((k) => { this.g[k] = L.layerGroup().addTo(this.map); });
+    ['scope', 'concessao', 'estados', 'munic', 'veg', 'satmet', 'radar', 'desc', 'conj', 'cicatriz', 'bdgd_bt', 'bdgd_mt', 'bdgd_at', 'subs', 'bdgd_poste', 'bdgd_trafo', 'unid_saude', 'unid_bomb', 'unid_pol', 'unid_agua', 'hist', 'fph', 'meteo', 'meteo_est', 'meteo_prec', 'meteo_temp', 'meteo_vento', 'forecast', 'user', 'measure', 'casing', 'focos', 'hilite'].forEach((k) => { this.g[k] = L.layerGroup().addTo(this.map); });
     this.map.on('zoomend', () => { const z = this.map.getZoom(); if (z !== this._z) { this._z = z; this.draw(); } });
     this.map.on('moveend', () => { if (this.map.getZoom() >= 13 && (this.state.layers.bdgd_poste || {}).on) this.draw(); });
     this.map.on('click', () => { if (this._open) { this._open = null; this.draw(); } });
@@ -5924,6 +6524,9 @@ class Component extends DCLogic {
     });
     // cicatrizes acima das áreas de referência (conjuntos/vegetação) para o clique chegar ao polígono
     this.map.createPane('qzScar').style.zIndex = 405;
+    // camadas contínuas (compatíveis com Oscilar camadas) em pane próprio, recortável
+    this.map.createPane('qzCont').style.zIndex = 395;
+    this.map.on('move zoom zoomend resize viewreset', () => this.swipeClip());
     this.patchBearingHitTest();
     this.applyBearing(this.state.mapBearing || 0);
     this.map.on('click', this.onMapClick);
@@ -6595,6 +7198,7 @@ class Component extends DCLogic {
     const patch = {};
     if (s.tip) patch.tip = null;
     if (s.focoMenu && key !== 'focomenu') patch.focoMenu = null;
+    if (s.updOpen && key !== 'upd') patch.updOpen = null;
     if ((s.bmOpen || s.acctOpen || s.scopeOpen) && !el) { patch.bmOpen = false; patch.acctOpen = false; patch.scopeOpen = false; patch.scopeDraft = null; }
     if (s.aiPanelOpen && key !== 'ai') patch.aiPanelOpen = false;
     if (s.scopeSel && key !== 'scope') { patch.scopeSel = null; patch.scopeQuery = ''; }
@@ -6777,7 +7381,10 @@ class Component extends DCLogic {
         L.geoJSON(gm, { style: { color: this.lyColor('munic'), weight: 1.4, fill: false, opacity: op('munic') }, interactive: false }).addTo(this.g.munic);
       });
     }
-    if (on('veg')) this.vegClasses.filter((v) => anyIn(v.p)).forEach((v) => L.polygon(v.p, { color: v.c, weight: 1, fillColor: v.c, fillOpacity: op('veg') * 0.55, opacity: op('veg') }).addTo(this.g.veg).bindTooltip(v.n, { sticky: true }));
+    if (on('veg')) this.vegClasses.filter((v) => anyIn(v.p)).forEach((v) => L.polygon(v.p, { pane: 'qzCont', color: v.c, weight: 1, fillColor: v.c, fillOpacity: op('veg') * 0.55, opacity: op('veg') }).addTo(this.g.veg).bindTooltip(v.n, { sticky: true }));
+    this.drawSat(on, op);
+    this.drawRadar(on, op);
+    this.drawDesc(on);
     if (on('cicatriz')) {
       this.visScars().filter((sc) => inS(sc.c)).forEach((sc) => {
         const sel = (this.state.scarPanel && this.state.scarPanel.id === sc.id) || this.state.scarHi === sc.id;
@@ -7639,7 +8246,7 @@ class Component extends DCLogic {
       assetDetRows: [['ID', a.id]].concat(a.det).map((x) => ({ label: x[0], value: x[1], hasCopy: x[0] === 'Coordenadas' || x[0] === 'ID', copyLabel: x[0] === 'ID' ? 'Copiar ID' : 'Copiar coordenadas', onCopy: () => (x[0] === 'ID' ? this.copyId(a.id) : this.copyLLText(ll)) })),
       assetDetOpen: !!s.assetDetOpen, assetDetCaret: s.assetDetOpen ? 'ph-caret-up' : 'ph-caret-down',
       onAssetDetails: () => this.setState({ assetDetOpen: !s.assetDetOpen }),
-      assetSourceLine: 'Fonte · BDGD. Atributos demonstrativos neste protótipo.'
+      assetSourceLine: 'Atributos demonstrativos neste protótipo.'
     };
   }
   nearestAsset(p) {
@@ -7669,7 +8276,6 @@ class Component extends DCLogic {
     const rows = [
       ['Data/hora', this.fmtStamp(ev.at)],
       ['Coordenadas', this.rawLL(ev.lat, ev.lng)],
-      ['Fonte/sensor', ev.src],
       ['FRP/intensidade', ev.frp != null ? (ev.frp + '').replace('.', ',') + ' MW' : ''],
       ['Confiança', ev.conf != null ? ev.conf + '%' : ''],
       ['Distância da rede', hpx.net ? this.proxNetLabel(hpx) + ' · ' + this.dist(hpx.net.d) : ''],
@@ -7962,7 +8568,7 @@ class Component extends DCLogic {
     const on = !this.state.satPick;
     this.endMeasureCtx('Você ativou a seleção de satélite.');
     this.closeCtxPanels({ satPick: on });
-    if (on) this.toast('Imagens de satélite', 0, 'Clique em pontos do mapa para ver as cenas do período. Esc encerra a ferramenta.', 'ph-globe-simple');
+    if (on) this.toast('Imagens históricas de satélite', 0, 'Clique em pontos do mapa para ver as cenas do período. Esc encerra a ferramenta.', 'ph-globe-simple');
   };
 
   onKey = (e) => {
@@ -8698,7 +9304,6 @@ class Component extends DCLogic {
       F('ID interno', o.id),
       F('Coordenadas', this.nv(o.lat) === null || this.nv(o.lng) === null ? '—' : this.nv(o.lat).toFixed(5) + ', ' + this.nv(o.lng).toFixed(5), { copy: this.nv(o.lat) !== null && this.nv(o.lng) !== null }),
       F('Última detecção', this.fmtTime(o.lastAt || o.at) + ' · há ' + this.ago(o.lastAt || o.at)),
-      F('Fonte / sensor', o.source),
       F('Confiança', this.nv(o.conf) === null ? '—' : Math.round(this.nv(o.conf)) + '%'),
       F('FRP / intensidade', this.fxv(o.frp, 1, 'MW'), { tip: 'FRP — Potência Radiativa do Fogo' })
     ];
@@ -10017,7 +10622,8 @@ class Component extends DCLogic {
     const groups = GRP.map((g) => mkGroup(g));
     // R4: Focos / Cicatrizes / Ocorrências históricas passam a viver no drawer Queimadas
     const qmGroups = [mkGroup('DETECÇÕES', ['focos']), mkGroup('RESULTADOS', ['cicatriz']), mkGroup('FONTES CONHECIDAS', ['fph'])];
-    qmGroups[0].hasSources = true;
+    // Fonte da detecção deixa a interface principal (permanece no dado, exportações e auditoria)
+    qmGroups[0].hasSources = false;
 
     // Legenda dinâmica: só decodifica a simbologia das layers VISÍVEIS
     const LEGEND_SYMS = ['cicatriz', 'bdgd_at', 'bdgd_mt', 'veg', 'subs'];
@@ -10825,7 +11431,7 @@ class Component extends DCLogic {
       onSearchKey: (e) => { if (e.key === 'Enter') this.doSearch(); if (e.key === 'Escape') this.setState({ searchOpen: false }); },
       onSearchGo: this.doSearch,
       updatedLabel: s.refreshing ? 'Atualizando…' : s.updatedAgo > 45 ? 'Atraso na coleta · há ' + s.updatedAgo + ' min' : 'Atualizado há ' + s.updatedAgo + ' min',
-      updatedTitle: 'Última coleta dos dados dinâmicos · a plataforma atualiza automaticamente',
+      updatedTitle: 'Ver última e próxima atualização por conjunto de dados',
       freshDot: s.refreshing ? '#232343' : s.updatedAgo > 45 ? '#92400e' : '#1f6b3a',
       freshGlyph: s.refreshing ? '⟳' : s.updatedAgo > 45 ? '!' : '●',
       freshFg: s.updatedAgo > 45 && !s.refreshing ? '#92400e' : '#1b2026',
@@ -10862,21 +11468,24 @@ class Component extends DCLogic {
       railItems: [
         { key: 'camadas', label: 'Camadas', icon: 'ph-stack', title: 'Camadas' },
         { key: 'queimadas', label: 'Queimadas', icon: 'ph-fire', title: 'Queimadas' },
+        { key: 'oscilar', label: 'Oscilar camadas', icon: 'ph-split-horizontal', title: 'Oscilar camadas', tool: true, divider: true },
         { key: 'medicao', label: 'Medição', icon: 'ph-ruler', title: 'Medições' },
         { key: 'exportar', label: 'Exportar', icon: 'ph-export', title: 'Exportar dados' },
         { key: 'analises', label: 'Análises', icon: 'ph-chart-line-up', title: 'Histórico e relatórios', divider: true }
       ].map((r) => {
-        const act = r.key === 'analises' ? s.analisesOpen : s.drawer === r.key;
-        const th = this.tipHandlers(r.title, 'right');
+        const off = r.key === 'oscilar' && !s.swipe && !this.swipeLayers().length;
+        const act = r.key === 'analises' ? s.analisesOpen : r.key === 'oscilar' ? !!s.swipe : s.drawer === r.key;
+        const th = this.tipHandlers(off ? 'Oscilar camadas · ative Radar de chuva, Satélite meteorológico, Forecast ou Vegetação para comparar com o mapa-base.' : r.title, 'right');
         return {
           label: r.label, icon: r.icon, title: r.title, divider: !!r.divider,
           tipEnter: th.enter, tipLeave: th.leave, tipFocus: th.focus,
           hasBadge: !!railBadge[r.key], badge: railBadge[r.key] || '',
           badgeBg: act ? '#ffffff' : '#232343', badgeFg: act ? '#17172e' : '#ffffff',
           badgeBorder: act ? '#232343' : '#ffffff',
-          bg: act ? '#232343' : '#fff', fg: act ? '#ffffff' : '#1b2026',
-          border: act ? '#232343' : '#E5E7EB', hoverBg: act ? '#17172e' : '#ececf3',
-          onClick: () => (r.key === 'analises' ? this.openAnalises() : this.openPanel(r.key))
+          bg: act ? '#232343' : off ? '#f7f9fa' : '#fff', fg: act ? '#ffffff' : off ? '#b9c2cb' : '#1b2026',
+          border: act ? '#232343' : '#E5E7EB', hoverBg: act ? '#17172e' : off ? '#f7f9fa' : '#ececf3',
+          disabled: off, pressed: r.tool ? act : undefined, cursor: off ? 'not-allowed' : 'pointer',
+          onClick: () => (r.key === 'analises' ? this.openAnalises() : r.key === 'oscilar' ? this.toggleSwipe() : this.openPanel(r.key))
         };
       }),
       drawerOpen: !!s.drawer,
@@ -10936,7 +11545,7 @@ class Component extends DCLogic {
       proxMode: s.proxMode, proxCustom: s.proxMode === 'dist', proxKm: s.proxKm,
       onProxMode: (e) => { this.setState({ proxMode: e.target.value }); this.busy(320); },
       onProxKm: (e) => { this.setState({ proxKm: e.target.value }); this.busy(320); },
-      onClearFilters: () => { this.setState({ crit: [], assets: [], assetKinds: [], sources: this.SRC_ALL.slice(), proxMode: 'all', proxKm: 2, assetQuery: '', assetBoxOpen: false }); this.busy(); this.toast('Filtros removidos', 0, 'Prioridade, ativo, proximidade e fonte.', 'ph-funnel'); },
+      onClearFilters: () => { this.setState({ crit: [], assets: [], assetKinds: [], sources: this.SRC_ALL.slice(), proxMode: 'all', proxKm: 2, assetQuery: '', assetBoxOpen: false }); this.busy(); this.toast('Filtros removidos', 0, 'Prioridade, ativo e proximidade.', 'ph-funnel'); },
       chips, hasChips: chips.length > 0, filterCount: occFilterCount + '',
       ...this.qselVals(),
       ...this.dpkVals(),
@@ -10982,7 +11591,7 @@ class Component extends DCLogic {
       satBtnBg: s.satPick ? '#232343' : '#fff',
       satBtnFg: s.satPick ? '#ffffff' : '#1b2026',
       satBtnBorder: s.satPick ? '#232343' : '#E5E7EB',
-      tipSat: this.tipHandlers('Imagens de satélite · escolha o período e clique em um ponto do mapa', 'left'),
+      tipSat: this.tipHandlers('Imagens históricas de satélite (Cicatrizes, Antes × Depois) · escolha o período e clique em um ponto do mapa', 'left'),
       qmGroups,
       sourceOptions: (() => {
         const tips = {
@@ -11382,7 +11991,7 @@ class Component extends DCLogic {
           style: { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }
         })
         : null,
-      ...this.wxVals(), ...this.cmpVals(),
+      ...this.wxVals(), ...this.cmpVals(), ...this.swipeVals(), ...this.radarVals(), ...this.smVals(), ...this.descVals(), ...this.updVals(),
       legendPanel: s.legendExpanded && !s.drawer, legendChip: !s.drawer,
       legendCaret: s.legendExpanded ? 'ph-caret-down' : 'ph-caret-up',
       legendInfoOpen: s.legendInfoOpen,
