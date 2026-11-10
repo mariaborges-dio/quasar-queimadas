@@ -1388,9 +1388,18 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
         <button onClick="{{ onFullscreen }}" onMouseEnter="{{ tipFsEnter }}" onMouseLeave="{{ tipFsLeave }}" onFocus="{{ tipFsFocus }}" onBlur="{{ tipFsLeave }}" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid {{ fsBorder }};border-radius:999px;background:{{ fsBg }};box-shadow:0 1px 3px rgba(20,28,36,.16);cursor:pointer;color:{{ fsFg }}" style-hover="background:#ececf3;border-color:#232343">
           <i class="ph {{ fsIcon }}" style="font-size:20px"></i>
         </button>
-        <button onClick="{{ onCapture }}" onMouseEnter="{{ tipCamEnter }}" onMouseLeave="{{ tipCamLeave }}" onFocus="{{ tipCamFocus }}" onBlur="{{ tipCamLeave }}" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #E5E7EB;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(20,28,36,.16);cursor:pointer;color:#1b2026" style-hover="background:#ececf3;border-color:#232343">
+        <div data-pop="cam" style="position:relative;display:flex">
+        <sc-if value="{{ camOpen }}" hint-placeholder-val="{{ false }}">
+          <div role="menu" aria-label="Capturar mapa" style="position:absolute;right:calc(100% + 8px);bottom:0;width:212px;background:#fff;border:1px solid #D8DEE5;border-radius:14px;box-shadow:0 12px 30px rgba(20,28,36,.18);padding:6px;display:flex;flex-direction:column;gap:2px;z-index:900;font-family:Questrial,sans-serif">
+            <span style="padding:6px 10px 4px;font:700 11px/15px Questrial,sans-serif;letter-spacing:.07em;color:#8a949e">CAPTURAR MAPA</span>
+            <button role="menuitem" onClick="{{ onCapPng }}" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;border:0;border-radius:10px;background:transparent;cursor:pointer;font-family:Questrial,sans-serif;font-size:13px;color:#1b2026;text-align:left" style-hover="background:#f2f5f7"><i class="ph ph-image" style="font-size:17px;color:#5b6672"></i>Imagem (PNG)</button>
+            <button role="menuitem" onClick="{{ onCapPdf }}" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 10px;border:0;border-radius:10px;background:transparent;cursor:pointer;font-family:Questrial,sans-serif;font-size:13px;color:#1b2026;text-align:left" style-hover="background:#f2f5f7"><i class="ph ph-file-pdf" style="font-size:17px;color:#5b6672"></i>Documento (PDF)</button>
+          </div>
+        </sc-if>
+        <button onClick="{{ onCapture }}" aria-haspopup="menu" aria-expanded="{{ camOpen }}" aria-label="Capturar mapa" onMouseEnter="{{ tipCamEnter }}" onMouseLeave="{{ tipCamLeave }}" onFocus="{{ tipCamFocus }}" onBlur="{{ tipCamLeave }}" style="display:flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid #E5E7EB;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(20,28,36,.16);cursor:pointer;color:#1b2026" style-hover="background:#ececf3;border-color:#232343">
           <i class="ph ph-camera" style="font-size:20px"></i>
         </button>
+        </div>
       </div>
       </sc-if>
       <div data-wxrow="1" style="display:flex;flex-direction:row;align-items:flex-end;justify-content:flex-end;gap:8px;flex-wrap:wrap-reverse;box-sizing:border-box;width:100%;max-width:100%;align-self:stretch;min-width:0;padding-right:{{ wxBarMr }};padding-left:{{ wxBarMl }}">
@@ -1838,8 +1847,8 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
     </sc-if>
 
     <sc-if value="{{ alertsOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position:absolute;top:8px;right:8px;width:372px;max-height:calc(100% - 16px);background:#fff;border:1px solid #cfd6dc;border-radius:16px;box-shadow:0 4px 14px rgba(20,28,36,.16);z-index:750;display:flex;flex-direction:column">
-      <div style="flex:0 0 auto;padding:11px 12px;border-bottom:1px solid #eceff1;display:flex;align-items:center;justify-content:space-between">
+    <div data-box="alerts" style="position:absolute;top:8px;right:8px;width:372px;max-width:calc(100% - 16px);max-height:calc(100% - 16px);transform:translate({{ alTx }}, {{ alTy }});background:#fff;border:1px solid #cfd6dc;border-radius:16px;box-shadow:0 4px 14px rgba(20,28,36,.16);z-index:750;display:flex;flex-direction:column">
+      <div onPointerDown="{{ onAlDragStart }}" title="Arraste para mover" style="flex:0 0 auto;padding:11px 12px;border-bottom:1px solid #eceff1;display:flex;align-items:center;justify-content:space-between;cursor:grab;touch-action:none;user-select:none">
         <div>
           <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700">Central de alertas<i class="ph ph-info" tabIndex="0" role="button" aria-label="Gatilhos e cadência de e-mail são parametrizados pela Quasar por cliente." onMouseEnter="{{ tipAlertCfgEnter }}" onMouseLeave="{{ tipAlertCfgLeave }}" onFocus="{{ tipAlertCfgFocus }}" onBlur="{{ tipAlertCfgLeave }}" style="font-size:14px;font-weight:400;color:#8a949e;cursor:help" style-hover="color:#232343"></i></div>
           <div style="font-size:12px;color:#8a949e;margin-top:2px">{{ alertSummary }}</div>
@@ -2751,7 +2760,7 @@ i.ph{display:inline-block;line-height:1;vertical-align:-.1em}
 
     <sc-if value="{{ ctxOpen }}" hint-placeholder-val="{{ false }}">
       <div data-pop="ctx" style="position:fixed;left:{{ ctxX }};top:{{ ctxY }};width:{{ ctxW }};max-height:{{ ctxMaxH }};transition:left .24s ease,width .24s ease;display:flex;flex-direction:column;z-index:1200;background:#fff;border:1px solid #D8DEE5;border-radius:16px;box-shadow:0 12px 36px rgba(20,28,36,.22);overflow:hidden;font-family:Questrial,sans-serif">
-        <div style="flex:0 0 auto;display:flex;align-items:flex-start;gap:8px;padding:11px 10px 11px 14px;border-bottom:1px solid #eceff1">
+        <div onPointerDown="{{ onCtxDragStart }}" title="Arraste para mover" style="flex:0 0 auto;display:flex;align-items:flex-start;gap:8px;padding:11px 10px 11px 14px;border-bottom:1px solid #eceff1;cursor:{{ ctxGrab }};touch-action:none;user-select:none">
           <span style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px">
             <sc-if value="{{ ctxShowKind }}" hint-placeholder-val="{{ true }}">
             <span style="display:flex;align-items:center;gap:7px">
@@ -3698,7 +3707,7 @@ class Component extends DCLogic {
     scene: null,
     techOpen: false,
     legendInfoOpen: false,
-    capturing: false,
+    capturing: false, camOpen: false, ctxOff: null, alOff: null,
     deniedOpen: false,
     taCollapsed: false,
     // Queimadas · refinamentos compartilhados com Deslizamento
@@ -5331,7 +5340,13 @@ class Component extends DCLogic {
     const metObs = k === 'met' && s.metPanel && s.metPanel.kind !== 'fc';
     const prefW = k === 'met' ? (metObs ? 420 : 560) : (k === 'stv' && s.stvExpanded ? 9999 : 420);
     const g = z ? { x: Math.round((window.innerWidth - Math.min(1080, window.innerWidth - 64)) / 2), y: 28, w: Math.min(1080, window.innerWidth - 64), maxH: window.innerHeight - 56 } : this.ctxGeom(prefW);
-    const geo = { ctxX: g.x + 'px', ctxY: g.y + 'px', ctxW: g.w + 'px', ctxMaxH: g.maxH + 'px' };
+    // reposicionamento manual (só fora do modo ampliado); clamp mantém o cabeçalho alcançável
+    const off = z ? { dx: 0, dy: 0 } : this.boxOff('ctx');
+    const W = window.innerWidth, H = window.innerHeight;
+    const gx = off.dx ? Math.max(96 - g.w, Math.min(W - 96, g.x + off.dx)) : g.x;
+    const gy = off.dy ? Math.max(8, Math.min(H - 48, g.y + off.dy)) : g.y;
+    const maxH = off.dy ? Math.max(160, Math.min(g.maxH, H - gy - 12)) : g.maxH;
+    const geo = { ctxX: gx + 'px', ctxY: gy + 'px', ctxW: g.w + 'px', ctxMaxH: maxH + 'px', ctxGrab: z ? 'default' : 'grab' };
     if (k === 'met') {
       const m = this.metPanelVals();
       return {
@@ -6450,6 +6465,8 @@ class Component extends DCLogic {
   hiliteSig() { return this.state.selected + '|' + this.state.hover; }
   geomSig() { const s = this.state; return [s.view, s.panelOpen, s.taCollapsed].join('|'); }
   componentDidUpdate() {
+    if (this.state.ctxOff && !this.ctxKind()) this.setState({ ctxOff: null });
+    if (this.state.alOff && !this.state.alertsOpen) this.setState({ alOff: null });
     this.wxBarFit();
     if (!this.map || !(this.mapRef.current && this.mapRef.current.querySelector('.leaflet-pane'))) { this.waitLeaflet(); return; }
     const g = this.geomSig();
@@ -7213,6 +7230,7 @@ class Component extends DCLogic {
     if (s.ulMenu && key !== 'ulmenu') patch.ulMenu = null;
     if (s.tpk && key !== 'tpk') patch.tpk = null;
     if (s.critPick && key !== 'critpick') patch.critPick = null;
+    if (s.camOpen && key !== 'cam') patch.camOpen = false;
     if (Object.keys(patch).length) this.setState(patch);
   };
   // fonte única de tooltip da plataforma: 180 ms no hover, imediato no foco por teclado
@@ -7241,23 +7259,104 @@ class Component extends DCLogic {
 
   // ---------- captura / tela cheia ----------
   stamp() { const d = new Date(); const p = (n) => (n < 10 ? '0' + n : '' + n); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + '-' + p(d.getHours()) + p(d.getMinutes()); }
-  capture = async () => {
+  // ---------- caixas flutuantes arrastáveis (inspector contextual e Central de alertas) ----------
+  // drag só pelo cabeçalho; posição vale enquanto a caixa estiver aberta
+  ctxKey() {
+    const s = this.state, k = this.ctxKind();
+    if (!k) return '';
+    const p = s[k + 'Panel'] || {};
+    return k + ':' + (p.id || p.assetId || p.occId || p.scarId || (p.lat != null ? p.lat + ',' + p.lng : ''));
+  }
+  boxOff(which) {
+    const s = this.state;
+    if (which === 'ctx') return s.ctxOff && s.ctxOff.key === this.ctxKey() ? s.ctxOff : { dx: 0, dy: 0 };
+    return s.alOff || { dx: 0, dy: 0 };
+  }
+  boxDragStart(e, which) {
+    if (e.button != null && e.button !== 0) return;
+    if (which === 'ctx' && this.state.chartZoom) return;
+    const t = e.target;
+    if (t && t.closest && t.closest('button,a,input,select,textarea,label,[role="button"],[tabindex]')) return;
+    const head = e.currentTarget, box = head.parentElement;
+    if (!box) return;
+    e.preventDefault();
+    const r0 = box.getBoundingClientRect(), cur = this.boxOff(which), sx = e.clientX, sy = e.clientY;
+    const prevTr = box.style.transition, prevCur = head.style.cursor;
+    box.style.transition = 'none'; head.style.cursor = 'grabbing';
+    const key = this.ctxKey();
+    const move = (ev) => {
+      const W = window.innerWidth, H = window.innerHeight, keep = 96;
+      let dx = ev.clientX - sx, dy = ev.clientY - sy;
+      dx = Math.max(keep - r0.right, Math.min(W - keep - r0.left, dx));
+      dy = Math.max(8 - r0.top, Math.min(H - 48 - r0.top, dy));
+      const off = { dx: Math.round(cur.dx + dx), dy: Math.round(cur.dy + dy) };
+      if (which === 'ctx') this.setState({ ctxOff: { key, ...off } }); else this.setState({ alOff: off });
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      box.style.transition = prevTr; head.style.cursor = prevCur;
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  }
+  onCtxDragStart = (e) => this.boxDragStart(e, 'ctx');
+  onAlDragStart = (e) => this.boxDragStart(e, 'al');
+  onCapToggle = () => this.setState({ camOpen: !this.state.camOpen, tip: null });
+  printCapturePdf(dataUrl, title) {
+    const html = '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>' + title + '</title><style>'
+      + '@page{size:A4 landscape;margin:10mm}html,body{margin:0}body{font:10pt/1.4 Questrial,Arial,sans-serif;color:#5b6672;display:flex;flex-direction:column;gap:6pt}'
+      + 'img{display:block;max-width:100%;max-height:178mm;object-fit:contain;margin:0 auto}'
+      + '</style></head><body><div>Quasar Queimadas \u00b7 captura do mapa \u00b7 ' + new Date().toLocaleString('pt-BR') + '</div><img src="' + dataUrl + '" alt="Captura do mapa"></body></html>';
+    const fr = document.createElement('iframe');
+    fr.setAttribute('aria-hidden', 'true');
+    fr.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;opacity:0;pointer-events:none';
+    document.body.appendChild(fr);
+    const d = fr.contentWindow.document;
+    d.open(); d.write(html); d.close();
+    const go = () => {
+      try { fr.contentWindow.focus(); fr.contentWindow.print(); } catch (err) { this.toast('N\u00e3o foi poss\u00edvel abrir a impress\u00e3o', 0, 'Tente novamente.', 'ph-warning-circle', 'err'); }
+      setTimeout(() => { try { fr.remove(); } catch (err) { /* já removido */ } }, 60000);
+    };
+    const img = d.querySelector('img');
+    if (img && !img.complete) img.onload = () => setTimeout(go, 50); else setTimeout(go, 250);
+    this.toast('PDF pronto para salvar', 0, 'Escolha \u201cSalvar como PDF\u201d na janela de impress\u00e3o.', 'ph-file-pdf');
+  }
+  capture = async (fmt) => {
     const host = this.mapRef.current && this.mapRef.current.parentElement;
     if (!host) return;
+    const pdf = fmt === 'pdf';
     const name = 'quasar-queimadas-' + this.stamp() + '.png';
-    // modo captura: esconde a cromagem de UI e liga a mini-legenda estática
-    this.setState({ capturing: true, tip: null, bmOpen: false, acctOpen: false, scopeOpen: false, legendInfoOpen: false });
+    // modo captura: esconde a cromagem de UI e liga a mini-legenda estática; inspectors e alertas abertos permanecem
+    this.setState({ capturing: true, camOpen: false, tip: null, bmOpen: false, acctOpen: false, scopeOpen: false, legendInfoOpen: false });
     if (this.map && this.zoomCtl) { try { this.map.removeControl(this.zoomCtl); } catch (err) { /* controle já removido */ } }
     await new Promise((r) => setTimeout(r, 300));
-    let blob = null;
+    let blob = null, dataUrl = null;
     try {
       if (window.html2canvas) {
-        const cv = await window.html2canvas(host, { useCORS: true, backgroundColor: '#dfe3e7', logging: false, scale: 1 });
-        blob = await new Promise((r) => cv.toBlob(r, 'image/png'));
+        // recorte da área do mapa sobre a página inteira: inclui caixas flutuantes (position:fixed) na posição em que estão
+        const r = host.getBoundingClientRect();
+        const keep = [host, document.querySelector('[data-pop="ctx"]'), document.querySelector('[data-box="alerts"]')].filter(Boolean);
+        const cv = await window.html2canvas(document.body, {
+          useCORS: true, backgroundColor: '#dfe3e7', logging: false, scale: pdf ? 2 : 1,
+          x: r.left + window.scrollX, y: r.top + window.scrollY, width: r.width, height: r.height,
+          windowWidth: document.documentElement.clientWidth, windowHeight: document.documentElement.clientHeight,
+          // só o mapa e as caixas contextuais abertas (inspector e alertas); menus, drawers, IA e modais ficam de fora
+          ignoreElements: (n) => {
+            if (!n || n.nodeType !== 1) return false;
+            if (n.getAttribute('data-pop') === 'cam') return true;
+            return !keep.some((k) => k === n || k.contains(n) || n.contains(k));
+          }
+        });
+        if (pdf) dataUrl = cv.toDataURL('image/png');
+        else blob = await new Promise((res) => cv.toBlob(res, 'image/png'));
       }
-    } catch (err) { blob = null; }
+    } catch (err) { blob = null; dataUrl = null; }
     if (this.map && this.zoomCtl) { try { this.zoomCtl.addTo(this.map); } catch (err) { /* mapa recriado */ } }
     this.setState({ capturing: false });
+    if (pdf && dataUrl) { this.printCapturePdf(dataUrl, name.replace('.png', '')); return; }
     if (!blob) { this.toast('Não foi possível gerar a captura', 0, 'Tente novamente em alguns instantes.', 'ph-warning-circle'); return; }
     try {
       if (window.showSaveFilePicker) {
@@ -8074,6 +8173,8 @@ class Component extends DCLogic {
   // a geometria do inspector é derivada no render; ao redimensionar basta repintar
   onWinResize = () => {
     const s = this.state;
+    // viewport mudou: caixas reposicionadas voltam ao encaixe responsivo padrão
+    if (s.ctxOff || s.alOff) this.setState({ ctxOff: null, alOff: null });
     if (s.metPanel || s.stvPanel || s.satPanel || s.scarPanel || s.tpk || s.critPick) this.forceUpdate();
   };
   setMapCursor(v) { const el = this.mapRef.current; if (el) el.style.cursor = v || (this.state.regionDraw || this.fcActive() ? 'crosshair' : ''); }
@@ -11969,7 +12070,10 @@ class Component extends DCLogic {
           }
         };
       }),
-      onCapture: this.capture,
+      onCapture: this.onCapToggle, camOpen: !!s.camOpen,
+      onCapPng: () => this.capture('png'), onCapPdf: () => this.capture('pdf'),
+      onCtxDragStart: this.onCtxDragStart, onAlDragStart: this.onAlDragStart,
+      alTx: ((s.alOff && s.alOff.dx) || 0) + 'px', alTy: ((s.alOff && s.alOff.dy) || 0) + 'px',
       fsIcon: s.fs ? 'ph-corners-in' : 'ph-corners-out',
       fsBg: s.fs ? '#232343' : '#fff', fsFg: s.fs ? '#ffffff' : '#1b2026', fsBorder: s.fs ? '#232343' : '#E5E7EB',
       onFullscreen: this.onFullscreen,
